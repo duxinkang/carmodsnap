@@ -1,5 +1,80 @@
 # 工作规则
 
+## 项目类型
+Next.js 16 AI SaaS 应用（ShipAny Template Two），使用 App Router 架构，React 19.2.1，支持国际化（next-intl）和 MDX。
+
+## 常用命令
+
+### 开发
+- `pnpm dev` - 启动开发服务器（使用 Turbopack）
+- `pnpm build` - 构建生产版本
+- `pnpm start` - 启动生产服务器
+
+### 数据库
+- `pnpm db:push` - 推送 schema 到数据库
+- `pnpm db:migrate` - 运行数据库迁移
+- `pnpm db:studio` - 打开 Drizzle Studio
+- `pnpm db:generate` - 生成数据库迁移文件
+
+### 认证和权限
+- `pnpm auth:generate` - 生成 Better Auth 配置
+- `pnpm rbac:init` - 初始化 RBAC 角色和权限
+- `pnpm rbac:assign` - 分配用户角色
+
+### 代码质量
+- `pnpm lint` - 运行 ESLint
+- `pnpm format` - 格式化代码
+- `pnpm format:check` - 检查代码格式
+
+### 云部署（Cloudflare）
+- `pnpm cf:preview` - 预览 Cloudflare 部署
+- `pnpm cf:deploy` - 部署到 Cloudflare
+- `pnpm cf:upload` - 上传到 Cloudflare
+- `pnpm cf:typegen` - 生成 Cloudflare 类型定义
+
+## 项目架构
+
+### 目录结构
+- `src/app/` - Next.js App Router 路由
+  - `(auth)/` - 认证页面
+  - `(chat)/` - 聊天功能
+  - `(docs)/` - 文档系统
+  - `(landing)/` - 落地页
+  - `api/` - API 端点
+  - `[locale]/` - 国际化路由
+- `src/core/` - 核心功能模块
+  - `auth/` - 认证系统（better-auth）
+  - `db/` - 数据库（Drizzle ORM，支持 PostgreSQL/MySQL/Turso）
+  - `i18n/` - 国际化（next-intl）
+  - `rbac/` - 权限控制
+  - `theme/` - 主题管理
+- `src/shared/` - 共享组件和工具
+  - `blocks/` - 功能组件（chat, form, dashboard 等）
+  - `components/` - 基础 UI 组件
+- `src/config/` - 配置文件
+  - `locale/` - 多语言配置（en, zh）
+  - `db/` - 数据库 schema
+  - `style/` - 全局样式
+
+### 关键特性
+- **数据库抽象**：通过 `src/core/db/provider.ts` 支持多种数据库（PostgreSQL, MySQL, SQLite/Turso），使用兼容性代理处理方言差异
+- **国际化路由**：使用 `[locale]` 动态路由段，所有页面内容在 `src/config/locale/{lang}/` 中配置
+- **RBAC 权限系统**：基于角色的访问控制，权限配置在 `src/core/rbac/`
+- **现代化技术栈**：Tailwind CSS v4, Radix UI, Drizzle ORM, Better Auth
+- **AI 集成**：集成 AI SDK（ai, @ai-sdk/react），支持 OpenRouter, Replicate 等提供商
+- **支付系统**：集成 Stripe, PayPal
+
+### 路径别名
+- `@/*` → `./src/*`
+- `@/.source` → `./.source/index.ts`
+
+### TypeScript
+- 严格模式启用
+- 路径映射已配置
+- 支持 JSX（react-jsx）
+
+## 工作规则
+
 0. 请用中文回复我，每次回复时都叫我[老板]
 
 1. 禁止编写文档

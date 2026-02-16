@@ -1,0 +1,216 @@
+{
+  "page": {
+    "show_sections": [
+      "hero",
+      "features",
+      "configurator",
+      "gallery",
+      "testimonials",
+      "faq",
+      "cta"
+    ],
+    "sections": {
+      "hero": {
+        "id": "hero",
+        "title": "The Ultimate Car Configurator Experience",
+        "highlight_text": "Ultimate",
+        "description": "Visualize, customize, and share your dream car build with our advanced 3D configurator. <br/>Choose from thousands of parts, colors, and accessories.",
+        "announcement": {
+          "badge": "New",
+          "title": "🔥 Advanced 3D Visualization",
+          "url": "/configurator"
+        },
+        "tip": "✨ Perfect for car enthusiasts and professional modders",
+        "buttons": [
+          {
+            "title": "Start Configuring",
+            "icon": "Tune",
+            "url": "/configurator",
+            "target": "_self",
+            "variant": "default"
+          },
+          {
+            "title": "View Gallery",
+            "icon": "Image",
+            "url": "/carmodder",
+            "target": "_blank",
+            "variant": "outline"
+          }
+        ],
+        "show_avatars": true,
+        "avatars_tip": "10k+ users are using our configurator",
+        "show_award": false,
+        "image": {
+          "src": "/imgs/features/configurator.png",
+          "alt": "car configurator",
+          "width": 1200,
+          "height": 800
+        },
+        "image_invert": {
+          "src": "/imgs/features/configurator-dark.png",
+          "alt": "car configurator",
+          "width": 1200,
+          "height": 800
+        },
+        "background_image": {
+          "src": "/imgs/bg/car-config.jpg",
+          "alt": "car configurator"
+        }
+      },
+      "features": {
+        "id": "features",
+        "title": "Powerful Configuration Tools",
+        "description": "Everything you need to create the perfect car build.",
+        "items": [
+          {
+            "title": "Real-time 3D Rendering",
+            "description": "See your changes instantly with our advanced 3D engine.",
+            "icon": "ThreeDRotation"
+          },
+          {
+            "title": "Thousands of Parts",
+            "description": "Choose from our extensive catalog of wheels, body kits, and accessories.",
+            "icon": "Construction"
+          },
+          {
+            "title": "Share Your Creation",
+            "description": "Export your build and share with the community or your local shop.",
+            "icon": "Share"
+          },
+          {
+            "title": "Find Local Shops",
+            "description": "Locate nearby professional installers to bring your vision to life.",
+            "icon": "Store"
+          }
+        ]
+      },
+      "configurator": {
+        "block": "car-configurator",
+        "id": "configurator",
+        "title": "Customize Your Dream Car",
+        "description": "Use our advanced tools to create your perfect build. Every detail matters.",
+        "image": {
+          "src": "/imgs/features/configurator-main.png",
+          "alt": "car configurator interface"
+        },
+        "image_position": "center",
+        "className": "bg-muted"
+      },
+      "gallery": {
+        "id": "gallery",
+        "title": "Community Creations",
+        "description": "Be inspired by builds created by fellow car enthusiasts.",
+        "items": [
+          {
+            "title": "Midnight Runner GTR",
+            "description": "Custom widebody kit with matte finish",
+            "image": {
+              "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuBHNcdsgszUHbz20v14p-dxPnqEV6BOq4wQXh_5RLbyEuOl4L6-xtgl8IAeU7Cany_ZFPI3t0nwo13_WsKo6yCiXbsyWFtegpCtlcUHCSvktPsJzikw_7NkqfUINB3ZRb3mo9zwPKp35j-riN4urK1RK0J_CDefhe0fjOk0h3I7iKbHOaCVsKQi5Ox1BW5oYtfGuw3Qsy_xze4JmfTxO-LB6sjgce6a4XFAJVE43fOsyhfsqeq1MPAWUTKa6kH5v8OcNxYFpXQX_UVn",
+              "alt": "Modified blue Japanese coupe on city street"
+            },
+            "creator": "@kai_works",
+            "likes": "12k"
+          },
+          {
+            "title": "Cyber Porsche 911",
+            "description": "Chrome delete and carbon fiber accents",
+            "image": {
+              "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuCWgCqsD7JPUMDDT0EBw13Ar8OnDBveJmD1T0MEcyfyeSz4aeFunqkYcmEDmBWpMm6zZUSXFsLkhPDInThYn6-yxqn58UyjY6qwmTegIzQsoIktXH65fUF-hPVWyBVe_8nIgkj7UkgA2XvLalb-au7u0IDUkvrrMLPKOuQmUrzYVd0EDPC82syI8g5Pcbut0gT3C9Mi5SPkMboVwXPjBSP-eQewASZjypE0qIayuJdp5VlSCA-Hq10n86tzum1Dn7TAYIctBCamSZVC",
+              "alt": "Dark grey sports car rear view with neon lights"
+            },
+            "creator": "@turbo_tom",
+            "likes": "2.4k"
+          },
+          {
+            "title": "Neon Benz GT",
+            "description": "LED underglow and custom paint job",
+            "image": {
+              "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuDuV_qNiFd_5kV5cnF15sDPXM0YXvWoUQtNnatSkK8m1zWQ6NkjJ67gSu7pEjPrWXd1lmWOTuVz8s3HzOz-GJc8aSXqm-kJUZMc22r5nxV9jHbb59eFhYC2vPoPKLBXcg-yREQzUpF-6LsPBfdpv-tcsWsXoUivjKxbo_8gNTvH9qqLgTlJovwnkaDyLcPqT9RqtW8ATTkk6FcA3JrVWeZfSjJLMOQb3L6cyHkhQheQKeidPHtzq5_pDgkcJSmxppGBd8720Xp8WrMm",
+              "alt": "Neon purple backlit sports car in a tunnel"
+            },
+            "creator": "@sarah_drifts",
+            "likes": "856"
+          }
+        ]
+      },
+      "testimonials": {
+        "id": "testimonials",
+        "title": "What Modders Say",
+        "description": "Hear from car enthusiasts who created amazing builds with our configurator.",
+        "items": [
+          {
+            "name": "Alex Johnson",
+            "role": "Professional Car Designer",
+            "quote": "The 3D visualization accuracy is incredible. I can see exactly how my modifications will look before installing them.",
+            "image": {
+              "src": "/imgs/avatars/1.png",
+              "alt": "alex"
+            }
+          },
+          {
+            "name": "Maria Chen",
+            "role": "Car Enthusiast",
+            "quote": "Finally, a configurator that feels like the real thing. The material simulation is spot-on and the customization options are endless.",
+            "image": {
+              "src": "/imgs/avatars/2.png",
+              "alt": "maria"
+            }
+          },
+          {
+            "name": "Tom Rodriguez",
+            "role": "Auto Shop Owner",
+            "quote": "My customers love bringing me renders from this configurator. It saves us time and leads to better results since expectations are clearly defined.",
+            "image": {
+              "src": "/imgs/avatars/3.png",
+              "alt": "tom"
+            }
+          }
+        ]
+      },
+      "faq": {
+        "id": "faq",
+        "title": "Frequently Asked Questions",
+        "description": "Have another question? Contact us on Discord or by email.",
+        "items": [
+          {
+            "question": "Is the configurator compatible with all car models?",
+            "answer": "Our configurator supports over 450 popular car models, from classic to modern vehicles. If your model isn't available, you can request it through our feedback system."
+          },
+          {
+            "question": "How accurate are the 3D renders?",
+            "answer": "Our renders are highly accurate, showing exact dimensions and material properties. The 3D models are sourced directly from manufacturers and updated regularly."
+          },
+          {
+            "question": "Can I save and share my builds?",
+            "answer": "Yes! You can save your creations to your account and share them via social media or export high-quality renders for local shops."
+          },
+          {
+            "question": "Are there plans for VR support?",
+            "answer": "We're actively developing VR support for an even more immersive experience. Beta access will be available to premium users soon."
+          }
+        ]
+      },
+      "cta": {
+        "id": "cta",
+        "title": "Start Creating Your Dream Car Today",
+        "description": "Join thousands of car enthusiasts using our configurator.",
+        "buttons": [
+          {
+            "title": "Start Configuring",
+            "url": "/configurator",
+            "target": "_self",
+            "icon": "Tune"
+          },
+          {
+            "title": "View Pricing",
+            "url": "/pricing",
+            "target": "_blank",
+            "variant": "outline",
+            "icon": "Info"
+          }
+        ],
+        "className": "bg-muted"
+      }
+    }
+  }
+}
