@@ -1,354 +1,1191 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
+import { Loader2, Sparkles, Download, Image as ImageIcon, Share2, FileText, RefreshCw, Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
+
+import { Link } from '@/core/i18n/navigation';
+import { AIMediaType, AITaskStatus } from '@/extensions/ai/types';
+import { Button } from '@/shared/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { Progress } from '@/shared/components/ui/progress';
+import { Switch } from '@/shared/components/ui/switch';
+import { useAppContext } from '@/shared/contexts/app';
+import { LazyImage } from '@/shared/blocks/common';
+import { Separator } from '@/shared/components/ui/separator';
+import { Badge } from '@/shared/components/ui/badge';
+
+const POLL_INTERVAL = 5000;
+const GENERATION_TIMEOUT = 180000;
+
+const CHINESE_CAR_MODELS = [
+  { id: 'xiaomi-su7', name: '小米 SU7', brand: '小米', type: 'sedan', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', price: 215900 },
+  { id: 'byd-han', name: '比亚迪 汉', brand: '比亚迪', type: 'sedan', image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&h=600&fit=crop', price: 209800 },
+  { id: 'byd-tang', name: '比亚迪 唐', brand: '比亚迪', type: 'suv', image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=600&fit=crop', price: 249800 },
+  { id: 'byd-seal', name: '比亚迪 海豹', brand: '比亚迪', type: 'sedan', image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop', price: 189800 },
+  { id: 'zeekr-001', name: '极氪 001', brand: '极氪', type: 'sedan', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 299000 },
+  { id: 'zeekr-007', name: '极氪 007', brand: '极氪', type: 'sedan', image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop', price: 319000 },
+  { id: 'nio-et7', name: '蔚来 ET7', brand: '蔚来', type: 'sedan', image: 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?w=800&h=600&fit=crop', price: 458000 },
+  { id: 'nio-es6', name: '蔚来 ES6', brand: '蔚来', type: 'suv', image: 'https://images.unsplash.com/photo-15503553417-57478a79f40d?w=800&h=600&fit=crop', price: 368000 },
+  { id: 'xpeng-p7', name: '小鹏 P7', brand: '小鹏', type: 'sedan', image: 'https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=800&h=600&fit=crop', price: 209900 },
+  { id: 'xpeng-g9', name: '小鹏 G9', brand: '小鹏', type: 'suv', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', price: 249900 },
+  { id: 'lixiang-l7', name: '理想 L7', brand: '理想', type: 'suv', image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop', price: 319800 },
+  { id: 'lixiang-l9', name: '理想 L9', brand: '理想', type: 'suv', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop', price: 459800 },
+  { id: 'avatr-11', name: '阿维塔 11', brand: '阿维塔', type: 'suv', image: 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?w=800&h=600&fit=crop', price: 319900 },
+  { id: 'avatr-12', name: '阿维塔 12', brand: '阿维塔', type: 'sedan', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 309900 },
+  { id: 'aion-s', name: '广汽埃安 S', brand: '广汽埃安', type: 'sedan', image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=600&fit=crop', price: 139800 },
+  { id: 'aion-y', name: '广汽埃安 Y', brand: '广汽埃安', type: 'suv', image: 'https://images.unsplash.com/photo-15503553417-57478a79f40d?w=800&h=600&fit=crop', price: 119800 },
+  { id: 'deepal-sl03', name: '深蓝 SL03', brand: '深蓝', type: 'sedan', image: 'https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=800&h=600&fit=crop', price: 149900 },
+  { id: 'deepal-s7', name: '深蓝 S7', brand: '深蓝', type: 'suv', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', price: 169900 },
+  { id: 'voyah-ziyou', name: '岚图 逍遥', brand: '岚图', type: 'suv', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop', price: 276900 },
+  { id: 'im-l7', name: '智己 L7', brand: '智己', type: 'sedan', image: 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?w=800&h=600&fit=crop', price: 369800 },
+];
+
+const WHEEL_STYLES = [
+  { id: 'stock', name: '原厂轮毂', description: '保持原厂轮毂样式', price: 0 },
+  { id: 'sport', name: '运动轮毂', description: '多辐条运动风格', price: 8000 },
+  { id: 'luxury', name: '豪华轮毂', description: '大尺寸豪华风格', price: 12000 },
+  { id: 'forged', name: '锻造轮毂', description: '轻量化锻造工艺', price: 18000 },
+  { id: 'racing', name: '赛道轮毂', description: '专业赛道风格', price: 22000 },
+];
+
+const PAINT_COLORS = [
+  { id: 'midnight-black', name: '午夜黑', color: '#0a0a0a', description: '深邃神秘的黑色', price: 0 },
+  { id: 'pearl-white', name: '珍珠白', color: '#f5f5f5', description: '优雅纯净的白色', price: 0 },
+  { id: 'racing-red', name: '赛道红', color: '#c41e3a', description: '激情澎湃的红色', price: 0 },
+  { id: 'ocean-blue', name: '海洋蓝', color: '#0066cc', description: '深邃宁静的蓝色', price: 0 },
+  { id: 'forest-green', name: '森林绿', color: '#228b22', description: '自然清新的绿色', price: 0 },
+  { id: 'sunset-orange', name: '日落橙', color: '#ff6b35', description: '活力四射的橙色', price: 3000 },
+  { id: 'royal-purple', name: '皇家紫', color: '#6b3fa0', description: '高贵典雅的紫色', price: 3000 },
+  { id: 'titanium-gray', name: '钛金灰', color: '#4a5568', description: '科技感十足的灰色', price: 0 },
+  { id: 'champagne-gold', name: '香槟金', color: '#d4af37', description: '奢华大气的金色', price: 5000 },
+  { id: 'matte-black', name: '哑光黑', color: '#1a1a1a', description: '低调内敛的哑光黑', price: 4000 },
+];
+
+const FINISH_TYPES = [
+  { id: 'gloss', name: 'Gloss Metallic', description: '高光泽度金属漆', price: 0 },
+  { id: 'matte', name: 'Matte Wrap', description: '哑光车身膜', price: 8000 },
+  { id: 'satin', name: 'Satin Pearl', description: '缎面珍珠漆', price: 6000 },
+  { id: 'chrome', name: 'Chrome', description: '镀铬效果', price: 15000 },
+  { id: 'carbon', name: 'Carbon Fiber', description: '碳纤维纹理', price: 20000 },
+];
+
+const MODIFICATION_OPTIONS = [
+  { id: 'lowered', name: '降低车身', description: '运动姿态，降低重心', price: 5000 },
+  { id: 'widebody', name: '宽体套件', description: '更宽的轮距，更激进的外观', price: 15000 },
+  { id: 'spoiler', name: '尾翼', description: '增加下压力，运动风格', price: 3000 },
+  { id: 'diffuser', name: '扩散器', description: '优化空气动力学', price: 4000 },
+  { id: 'side-skirts', name: '侧裙', description: '降低视觉重心', price: 2500 },
+  { id: 'front-lip', name: '前唇', description: '增强前部运动感', price: 2000 },
+];
+
+const ACCENT_OPTIONS = [
+  { id: 'chrome-delete', name: 'Chrome Delete', description: '去除镀铬装饰', price: 1500 },
+  { id: 'carbon-roof', name: 'Carbon Roof', description: '碳纤维车顶', price: 8000 },
+  { id: 'racing-stripes', name: 'Racing Stripes', description: '赛车条纹', price: 2000 },
+  { id: 'custom-badge', name: 'Custom Badge', description: '定制徽章', price: 1000 },
+];
+
+interface GeneratedImage {
+  id: string;
+  url: string;
+  prompt?: string;
+}
+
+interface BackendTask {
+  id: string;
+  status: string;
+  provider: string;
+  model: string;
+  prompt: string | null;
+  taskInfo: string | null;
+  taskResult: string | null;
+}
+
+function parseTaskResult(taskResult: string | null): any {
+  if (!taskResult) return null;
+  try {
+    return JSON.parse(taskResult);
+  } catch {
+    return null;
+  }
+}
+
+function extractImageUrls(result: any): string[] {
+  if (!result) return [];
+  const output = result.output ?? result.images ?? result.data;
+  if (!output) return [];
+  if (typeof output === 'string') return [output];
+  if (Array.isArray(output)) {
+    return output.flatMap((item) => {
+      if (!item) return [];
+      if (typeof item === 'string') return [item];
+      if (typeof item === 'object') {
+        const candidate = item.url ?? item.uri ?? item.image ?? item.src ?? item.imageUrl;
+        return typeof candidate === 'string' ? [candidate] : [];
+      }
+      return [];
+    }).filter(Boolean);
+  }
+  if (typeof output === 'object') {
+    const candidate = output.url ?? output.uri ?? output.image ?? output.src ?? output.imageUrl;
+    if (typeof candidate === 'string') return [candidate];
+  }
+  return [];
+}
 
 export default function CarModderConfigurator() {
   const t = useTranslations('pages.carmodder');
 
+  const [selectedCar, setSelectedCar] = useState(CHINESE_CAR_MODELS[0]);
+  const [selectedWheel, setSelectedWheel] = useState(WHEEL_STYLES[0]);
+  const [selectedColor, setSelectedColor] = useState(PAINT_COLORS[0]);
+  const [selectedFinish, setSelectedFinish] = useState(FINISH_TYPES[0]);
+  const [selectedMods, setSelectedMods] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('paint');
-  const [selectedModel, setSelectedModel] = useState('gtr-alpha');
-  const [selectedColor, setSelectedColor] = useState('midnight');
-  const [chromeDelete, setChromeDelete] = useState(true);
-  const [carbonRoof, setCarbonRoof] = useState(false);
+  const [accentOptions, setAccentOptions] = useState<Record<string, boolean>>({
+    'chrome-delete': false,
+    'carbon-roof': false,
+    'racing-stripes': false,
+    'custom-badge': false,
+  });
 
-  const carModels = [
-    { id: 'gtr-alpha', name: 'GT-R Alpha', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDYteF3CmMGa4Dvr8C54J4R00-1F0pFhGln4vPSVtN6cYRAK6jMs9hfl8-UsPpw1vqyPhpaUrudxXbqO97695sXgM2VxzzjbluiVu8_razlyebXDSRuTdcCegpDZK2WnTD6LnNhi2RSWbfMhFRLzkE4K743AH2VO4pyFFyVRQ2HsjC-44xpDkPG3_Qup0mG0J3pnDpvHM9L3EiiooNBU_3EdR_G7rsP2XhQBsRL6Z_ydQGtGK0LKXMZLYOj7UqAde3vCTZuSMbWNz7j' },
-    { id: 'camaro-ss', name: 'Camaro SS', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDvkdsvIASo9VYxEGtZfE93g2hbXenOuPKkNsXOF7K-pBPngQHMcPyO7yQQkI9bI-PwjxlWzBBdhUnkPHVoszWVbBXszhXSANCdlBdtsyp0YabJmyaPLu2-NyFpD3BWUC-GM09MDw5At_IRGgcNsPgAy_HNX-Rzl2fBmLLuagIU4Kj6SGqshfBmFl6I5gKqUGq3tC8HeaPp3KhCVqT3tGS0XbyyOx-e7wptFbkZkN7aooGBa4AMr325y32rsD4ruISgO529tLIbKEXe' },
-    { id: 'mustang-gt', name: 'Mustang GT', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXO_02dH43yvUrxz5Za3DXRbIzreGDSSLHoeID1-AOx1frhFDdP0LuBfNM2TB1u3YiQBAGRRGOvBEiOzcZ-kB-dWn2m_6kl4Y53equhZ5hx4Evq_8sWu5nSv4i8zJ10nGME_MhAMJr4bXWAIUAQKW62kP-Vx1QUg9ijMwp0tc7faKu0jUc-r8WXq6jWRs7aDV6b5fgKs-UV7HUZoCLWzhB1TnBLPGeOfYalayYZs-AydBLISeDpDI4K5infBflgC-OV4_D0CR7PMVp' },
-    { id: 'charger-srt', name: 'Charger SRT', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBWmjJfBqd3blotv3p7l-bFPEW6bOCzaehZkqwIC26Y0srFqiQqxlOf1OvW3F5DVuiW8oTuG6ZXDS2Z60Q_Hu0HRW_QoIBKkb6RvEeJhYfF_K-tS08Oq4ghlG7mmfIGp_eUJwSrPRL-npve8Fe_lwEBCfyLycd43zTh8bTH8CfsZAbjaIfa1ZvrX_2mkGhR6LM3eVJWOphUq7-zUqIK4spglFW3Ri4eQRUG3pT_ItXs59ciO02DJVFmkNtfZxL8LPFO0Hd2jxHvGP7P' },
-    { id: 'gr-supra', name: 'GR Supra', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAkVVUdghPFve7r32Uh_Y7R-7tdnF502w5kzN6HJuTJ3vcY9deDPz2Df3TeYzzCyVH6DdL4kQyP9oJOLU5eGIxzoDWuJcwm415wYV6Y7JrzCEXqQvpUihmuYpGVdsLwHdv-jbGr_xqPLHRFkSK9diGl9VWbQRVSgCdYIDKQeligqnglfJQLN0DFhaWPfliQTCBHbbrWEqzRyVAlFAZ1-3tqC3FQEd9QMEVUFaMV2yENHIZ6IXw74Ew7j9iyIo3Q_5pEzO0Y4aranHG5' },
-  ];
+  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [taskId, setTaskId] = useState<string | null>(null);
+  const [generationStartTime, setGenerationStartTime] = useState<number | null>(null);
+  const [taskStatus, setTaskStatus] = useState<AITaskStatus | null>(null);
+  const [downloadingImageId, setDownloadingImageId] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const [testMode, setTestMode] = useState(false);
+  const [showAllCars, setShowAllCars] = useState(false);
 
-  const paintColors = [
-    { id: 'midnight', name: 'Midnight', color: '#1a1a1a' },
-    { id: 'crimson', name: 'Crimson', color: '#800020' },
-    { id: 'navy', name: 'Navy', color: '#003366' },
-    { id: 'white', name: 'Pearl White', color: '#f0f0f0' },
-    { id: 'gunmetal', name: 'Gunmetal', color: '#4a5568' },
-    { id: 'gold', name: 'Gold', color: '#d69e2e' },
-    { id: 'gradient', name: 'Purple-Indigo', gradient: 'from-purple-500 to-indigo-500' },
-  ];
+  const { user, isCheckSign, setIsShowSignModal, fetchUserCredits } = useAppContext();
 
-  const finishTypes = [
-    { id: 'gloss-metallic', name: t('glossMetallic') },
-    { id: 'matte-wrap', name: t('matteWrap') },
-    { id: 'satin-pearl', name: t('satinPearl') },
-    { id: 'chrome', name: t('chrome') },
-  ];
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-  const [selectedFinish, setSelectedFinish] = useState('gloss-metallic');
+  const costCredits = 4;
+  const remainingCredits = user?.credits?.remainingCredits ?? 0;
+
+  const toggleMod = (modId: string) => {
+    setSelectedMods((prev) =>
+      prev.includes(modId) ? prev.filter((id) => id !== modId) : [...prev, modId]
+    );
+  };
+
+  const toggleAccent = (accentId: string) => {
+    setAccentOptions((prev) => ({
+      ...prev,
+      [accentId]: !prev[accentId],
+    }));
+  };
+
+  const buildPrompt = useCallback(() => {
+    const parts: string[] = [];
+
+    parts.push(`${selectedCar.name} (${selectedCar.brand}) 完整车身全身照`);
+    parts.push(`车身颜色: ${selectedColor.name} (${selectedFinish.name}漆面)`);
+    parts.push(`轮毂: ${selectedWheel.name}`);
+
+    const activeMods = selectedMods
+      .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id)?.name)
+      .filter(Boolean);
+    if (activeMods.length > 0) {
+      parts.push(`改装: ${activeMods.join('、')}`);
+    }
+
+    const activeAccents = Object.entries(accentOptions)
+      .filter(([_, enabled]) => enabled)
+      .map(([id]) => ACCENT_OPTIONS.find((a) => a.id === id)?.name)
+      .filter(Boolean);
+    if (activeAccents.length > 0) {
+      parts.push(`细节: ${activeAccents.join('、')}`);
+    }
+
+    parts.push('高质量汽车摄影，专业打光，4K分辨率，细节丰富，深色背景，完整展示整车，侧面45度角，车身完整可见，无裁剪');
+
+    return parts.join('，');
+  }, [selectedCar, selectedColor, selectedFinish, selectedWheel, selectedMods, accentOptions]);
+
+  const prompt = useMemo(() => buildPrompt(), [buildPrompt]);
+
+  const resetTaskState = useCallback(() => {
+    setIsGenerating(false);
+    setProgress(0);
+    setTaskId(null);
+    setGenerationStartTime(null);
+    setTaskStatus(null);
+  }, []);
+
+  const pollTaskStatus = useCallback(
+    async (id: string) => {
+      try {
+        if (generationStartTime && Date.now() - generationStartTime > GENERATION_TIMEOUT) {
+          resetTaskState();
+          toast.error('生成超时，请重试');
+          return true;
+        }
+
+        const resp = await fetch('/api/ai/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ taskId: id }),
+        });
+
+        if (!resp.ok) throw new Error(`请求失败: ${resp.status}`);
+
+        const { code, message, data } = await resp.json();
+        if (code !== 0) throw new Error(message || '查询任务失败');
+
+        const task = data as BackendTask;
+        const currentStatus = task.status as AITaskStatus;
+        setTaskStatus(currentStatus);
+
+        const parsedResult = parseTaskResult(task.taskInfo);
+        const imageUrls = extractImageUrls(parsedResult);
+
+        if (currentStatus === AITaskStatus.PENDING) {
+          setProgress((prev) => Math.max(prev, 20));
+          return false;
+        }
+
+        if (currentStatus === AITaskStatus.PROCESSING) {
+          if (imageUrls.length > 0) {
+            setGeneratedImages(
+              imageUrls.map((url, index) => ({
+                id: `${task.id}-${index}`,
+                url,
+                prompt: task.prompt ?? undefined,
+              }))
+            );
+            setProgress((prev) => Math.max(prev, 85));
+          } else {
+            setProgress((prev) => Math.min(prev + 10, 80));
+          }
+          return false;
+        }
+
+        if (currentStatus === AITaskStatus.SUCCESS) {
+          if (imageUrls.length === 0) {
+            toast.error('生成失败，请重试');
+          } else {
+            setGeneratedImages(
+              imageUrls.map((url, index) => ({
+                id: `${task.id}-${index}`,
+                url,
+                prompt: task.prompt ?? undefined,
+              }))
+            );
+            toast.success('图片生成成功');
+          }
+          setProgress(100);
+          resetTaskState();
+          return true;
+        }
+
+        if (currentStatus === AITaskStatus.FAILED) {
+          const errorMessage = parsedResult?.errorMessage || '生成失败';
+          toast.error(errorMessage);
+          resetTaskState();
+          fetchUserCredits();
+          return true;
+        }
+
+        setProgress((prev) => Math.min(prev + 5, 95));
+        return false;
+      } catch (error: any) {
+        console.error('轮询任务状态失败:', error);
+        toast.error(`查询失败: ${error.message}`);
+        resetTaskState();
+        fetchUserCredits();
+        return true;
+      }
+    },
+    [generationStartTime, resetTaskState, fetchUserCredits]
+  );
+
+  useEffect(() => {
+    if (!taskId || !isGenerating) return;
+
+    let cancelled = false;
+    const tick = async () => {
+      if (!taskId) return;
+      const completed = await pollTaskStatus(taskId);
+      if (completed) cancelled = true;
+    };
+
+    tick();
+
+    const interval = setInterval(async () => {
+      if (cancelled || !taskId) {
+        clearInterval(interval);
+        return;
+      }
+      const completed = await pollTaskStatus(taskId);
+      if (completed) clearInterval(interval);
+    }, POLL_INTERVAL);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [taskId, isGenerating, pollTaskStatus]);
+
+  const handleGenerate = async () => {
+    if (!user && !testMode) {
+      setIsShowSignModal(true);
+      return;
+    }
+
+    if (remainingCredits < costCredits && !testMode) {
+      toast.error('积分不足，请充值后继续');
+      return;
+    }
+
+    setIsGenerating(true);
+    setProgress(15);
+    setTaskStatus(AITaskStatus.PENDING);
+    setGeneratedImages([]);
+    setGenerationStartTime(Date.now());
+
+    try {
+      const resp = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mediaType: AIMediaType.IMAGE,
+          scene: 'text-to-image',
+          provider: 'qwen',
+          model: 'qwen-image-max',
+          prompt,
+          options: {
+            size: '1024*1024',
+            n: 1,
+          },
+        }),
+      });
+
+      if (!resp.ok) throw new Error(`请求失败: ${resp.status}`);
+
+      const { code, message, data } = await resp.json();
+      if (code !== 0) throw new Error(message || '创建任务失败');
+
+      const newTaskId = data?.id;
+      if (!newTaskId) throw new Error('响应中缺少任务ID');
+
+      if (data.status === AITaskStatus.SUCCESS && data.taskInfo) {
+        const parsedResult = typeof data.taskInfo === 'string' 
+          ? parseTaskResult(data.taskInfo) 
+          : data.taskInfo;
+        const imageUrls = extractImageUrls(parsedResult);
+        if (imageUrls.length > 0) {
+          setGeneratedImages(
+            imageUrls.map((url, index) => ({
+              id: `${newTaskId}-${index}`,
+              url,
+              prompt,
+            }))
+          );
+          toast.success('图片生成成功');
+          setProgress(100);
+          resetTaskState();
+          await fetchUserCredits();
+          return;
+        }
+      }
+
+      setTaskId(newTaskId);
+      setProgress(25);
+      await fetchUserCredits();
+    } catch (error: any) {
+      console.error('生成图片失败:', error);
+      toast.error(`生成失败: ${error.message}`);
+      resetTaskState();
+    }
+  };
+
+  const handleDownloadImage = async (image: GeneratedImage) => {
+    if (!image.url) return;
+    try {
+      setDownloadingImageId(image.id);
+      const resp = await fetch(`/api/proxy/file?url=${encodeURIComponent(image.url)}`);
+      if (!resp.ok) throw new Error('获取图片失败');
+      const blob = await resp.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `car-mod-${image.id}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 200);
+      toast.success('图片已下载');
+    } catch (error) {
+      console.error('下载图片失败:', error);
+      toast.error('下载失败');
+    } finally {
+      setDownloadingImageId(null);
+    }
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `${selectedCar.name} 改装方案`,
+        text: `查看我的 ${selectedCar.name} 改装方案`,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success('链接已复制到剪贴板');
+    }
+  };
+
+  const taskStatusLabel = useMemo(() => {
+    if (!taskStatus) return '';
+    switch (taskStatus) {
+      case AITaskStatus.PENDING:
+        return '等待模型启动...';
+      case AITaskStatus.PROCESSING:
+        return '正在生成图片...';
+      case AITaskStatus.SUCCESS:
+        return '生成完成';
+      case AITaskStatus.FAILED:
+        return '生成失败';
+      default:
+        return '';
+    }
+  }, [taskStatus]);
+
+  const totalBuildCost = useMemo(() => {
+    let basePrice = selectedCar.price;
+    basePrice += selectedWheel.price;
+    basePrice += selectedColor.price;
+    basePrice += selectedFinish.price;
+    basePrice += selectedMods.reduce((sum, modId) => {
+      const mod = MODIFICATION_OPTIONS.find(m => m.id === modId);
+      return sum + (mod?.price || 0);
+    }, 0);
+    basePrice += Object.entries(accentOptions)
+      .filter(([_, enabled]) => enabled)
+      .reduce((sum, [accentId]) => {
+        const accent = ACCENT_OPTIONS.find(a => a.id === accentId);
+        return sum + (accent?.price || 0);
+      }, 0);
+    return basePrice;
+  }, [selectedCar, selectedWheel, selectedColor, selectedFinish, selectedMods, accentOptions]);
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(price);
+  };
 
   return (
-    <div className="min-h-screen bg-[#131022] text-white overflow-hidden font-[family-name:var(--font-sans)]">
-      <nav className="absolute top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center pointer-events-none">
-        <div className="pointer-events-auto flex items-center gap-3">
-          <motion.div
-            className="w-10 h-10 rounded-full bg-[#4725f4] flex items-center justify-center shadow-[0_0_20px_rgba(71,37,244,0.5)]"
-            whileHover={{ scale: 1.05 }}
+    <div className="min-h-screen bg-[#0a0a1a] text-white overflow-hidden font-[family-name:var(--font-sans)]">
+      {/* Top Navigation */}
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#0a0a1a]/95 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <motion.div 
+            className="flex items-center gap-3"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <span className="material-icons text-white text-xl">speed</span>
+            <motion.div
+              className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.6)]"
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="material-icons text-white text-sm font-bold">sports_car</span>
+            </motion.div>
+            <span className="text-xl font-bold tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">MODPLAYGROUND</span>
           </motion.div>
-          <span className="text-xl font-bold tracking-widest uppercase">ModPlayground</span>
-        </div>
-        <div className="pointer-events-auto flex gap-4">
-          <motion.button
-            className="p-3 rounded-full bg-[#26233b]/50 hover:bg-[#26233b] transition-colors backdrop-blur-md border border-white/5"
-            whileHover={{ scale: 1.05 }}
+          <motion.div 
+            className="flex items-center gap-6"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <span className="material-icons text-white/70">account_circle</span>
-          </motion.button>
-          <motion.button
-            className="p-3 rounded-full bg-[#26233b]/50 hover:bg-[#26233b] transition-colors backdrop-blur-md border border-white/5"
-            whileHover={{ scale: 1.05 }}
-          >
-            <span className="material-icons text-white/70">menu</span>
-          </motion.button>
-        </div>
-      </nav>
-
-      <main className="flex-1 flex relative h-screen">
-        <section className="flex-1 relative bg-gradient-to-br from-[#1a162e] to-[#0d0b16] flex items-center justify-center">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#4725f4]/10 via-transparent to-transparent opacity-50"></div>
-          <div className="absolute bottom-0 w-full h-1/2 bg-[linear-gradient(to_top,rgba(71,37,244,0.05)_1px,transparent_1px),linear-gradient(to_right,rgba(71,37,244,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:linear-gradient(to_top,black,transparent)]"></div>
-
-          <div className="relative w-full max-w-5xl aspect-[16/9] z-10 group">
-            <motion.img
-              key={selectedModel}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsZWumdXQb7TShmm6XfRQwTXJAyf3KHIFPmLS-U7ZFanr2PddZ1EiCieYOdYC_0HYXxoUpN987fwAmFKyDy-ffMZakhAgeLZUxUjE-gx727W4zaIUmtWcloEjq0UR5wejDfLSOpICKNyuFetz9iDQin3MycbNggpD3qm6IIbg_Hh99jMCOXiSfp83uaGmEvaAbTJoCvIo5qnqcnWll0u52jse0t4fXXq7xw5rfRMtBA_pBvO2nQjzxiZxkgyH73mgYvZv1z85LSyED"
-              alt="GT-R Alpha Car"
-              className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-transform duration-700 ease-out group-hover:scale-105"
-            />
-
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="bg-black/50 backdrop-blur-md text-xs px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-2">
-                <span className="material-icons text-sm">360</span> Drag to Rotate
-              </div>
-              <div className="bg-black/50 backdrop-blur-md text-xs px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-2">
-                <span className="material-icons text-sm">zoom_in</span> Scroll to Zoom
-              </div>
-            </div>
-          </div>
-
-          <div className="absolute top-28 left-8 z-20">
-            <h1 className="text-5xl font-bold text-white mb-2 tracking-tight">{t('carName')}</h1>
-            <div className="flex items-center gap-3">
-              <span className="bg-[#4725f4]/20 text-[#4725f4] border border-[#4725f4]/30 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider">AWD</span>
-              <span className="text-white/60 text-sm">3.8L V6 Twin-Turbo</span>
-            </div>
-            <div className="mt-6">
-              <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{t('totalBuildCost')}</p>
-              <p className="text-3xl text-[#4725f4] font-bold">{t('carPrice')}</p>
-            </div>
-          </div>
-
-          <div className="absolute bottom-32 right-[440px] flex flex-col gap-2 z-20">
-            <motion.button
-              className="w-10 h-10 rounded-full bg-[#1c1833] border border-white/10 text-white/80 hover:bg-[#4725f4] hover:text-white hover:border-[#4725f4] transition-all flex items-center justify-center shadow-lg"
-              title={t('interiorView')}
-              whileHover={{ scale: 1.05 }}
-            >
-              <span className="material-icons text-lg">airline_seat_recline_extra</span>
-            </motion.button>
-            <motion.button
-              className="w-10 h-10 rounded-full bg-[#4725f4] border border-[#4725f4] text-white transition-all flex items-center justify-center shadow-lg shadow-[#4725f4]/50"
-              title={t('exteriorView')}
-              whileHover={{ scale: 1.05 }}
-            >
-              <span className="material-icons text-lg">directions_car</span>
-            </motion.button>
-            <motion.button
-              className="w-10 h-10 rounded-full bg-[#1c1833] border border-white/10 text-white/80 hover:bg-[#4725f4] hover:text-white hover:border-[#4725f4] transition-all flex items-center justify-center shadow-lg"
-              title={t('nightMode')}
-              whileHover={{ scale: 1.05 }}
-            >
-              <span className="material-icons text-lg">dark_mode</span>
-            </motion.button>
-          </div>
-        </section>
-
-        <aside className="w-[400px] bg-[#1c192e] border-l border-white/5 flex flex-col z-30 shadow-2xl relative">
-          <div className="px-6 pt-8 pb-4">
-            <div className="flex p-1 bg-[#26233b] rounded-full mb-6">
-              {['paint', 'wheels', 'stance'].map((tab) => (
-                <motion.button
-                  key={tab}
-                  className={`flex-1 py-2 px-3 rounded-full text-xs font-bold uppercase tracking-wide transition-all ${
-                    activeTab === tab
-                      ? 'bg-[#4725f4] text-white shadow-[0_0_20px_-5px_rgba(71,37,244,0.5)]'
-                      : 'text-white/60 hover:text-white'
-                  }`}
-                  onClick={() => setActiveTab(tab)}
-                  whileHover={{ scale: activeTab === tab ? 1 : 1.02 }}
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setTestMode(!testMode)}
+                className={`text-xs ${testMode ? 'text-[#6366f1] bg-[#6366f1]/10' : 'text-white/60'} border border-white/10`}
+              >
+                {testMode ? '🧪 测试模式开启' : '🧪 测试模式关闭'}
+              </Button>
+              {user ? (
+                <>
+                  <motion.div 
+                    className="px-4 py-2 bg-[#131324] rounded-full border border-white/10 flex items-center gap-2"
+                    whileHover={{ scale: 1.05, borderColor: 'rgba(99,102,241,0.5)' }}
+                  >
+                    <span className="text-sm text-white/60">积分:</span>
+                    <span className="text-sm font-medium text-[#6366f1]">{remainingCredits}</span>
+                  </motion.div>
+                  <Badge variant="outline" className="text-white/80 border-white/20">
+                    {user?.email?.split('@')[0] || '用户'}
+                  </Badge>
+                </>
+              ) : (
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setIsShowSignModal(true)} 
+                  className="text-white/80 hover:text-white border border-white/10 hover:border-[#6366f1] transition-all"
                 >
-                  {t(`${tab}Tab`)}
-                </motion.button>
-              ))}
+                  登录
+                </Button>
+              )}
             </div>
-            <div className="flex justify-between items-end mb-4">
-              <h2 className="text-2xl font-bold">{t(`${activeTab}Title`)}</h2>
-              <span className="text-xs text-[#4725f4] bg-[#4725f4]/10 px-2 py-1 rounded border border-[#4725f4]/20">+${t(`${activeTab}Price`)}</span>
-            </div>
-            <p className="text-sm text-white/50 leading-relaxed">{t(`${activeTab}Description`)}</p>
-          </div>
+          </motion.div>
+        </div>
+      </header>
 
-          <div className="flex-1 overflow-y-auto px-6 pb-24 space-y-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            {activeTab === 'paint' && (
-              <>
-                <div>
-                  <h3 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-3">{t('finishType')}</h3>
-                  <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                    {finishTypes.map((finish) => (
-                      <motion.button
-                        key={finish.id}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                          selectedFinish === finish.id
-                            ? 'bg-[#26233b] border border-[#4725f4] text-[#4725f4] shadow-[0_0_20px_-5px_rgba(71,37,244,0.5)]'
-                            : 'bg-[#26233b] border border-white/5 hover:border-white/20 text-white/60'
-                        }`}
-                        onClick={() => setSelectedFinish(finish.id)}
+      <main className="pt-16 pb-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Left Sidebar - Car Info */}
+            <motion.div 
+              className="lg:col-span-3 space-y-6"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="space-y-6">
+                <motion.div 
+                  className="bg-gradient-to-br from-[#131324] to-[#1a1a3a] rounded-2xl p-6 border border-white/10 shadow-lg"
+                  whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <h2 className="text-2xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">{selectedCar.name}</h2>
+                  <div className="flex items-center gap-3 mb-6">
+                    <motion.span 
+                      className="px-4 py-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full text-xs font-medium shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      AWD
+                    </motion.span>
+                    <span className="text-white/60 text-sm">{selectedCar.brand} {selectedCar.type === 'sedan' ? '轿车' : 'SUV'}</span>
+                  </div>
+                  <div className="mb-4">
+                    <h3 className="text-white/60 text-sm mb-2 uppercase tracking-wider">Total Build Cost</h3>
+                    <motion.p 
+                      className="text-3xl font-bold text-[#6366f1]"
+                      key={totalBuildCost}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {formatPrice(totalBuildCost)}
+                    </motion.p>
+                  </div>
+                  <Separator className="bg-white/10 my-4" />
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/60 text-sm">基础价格</span>
+                    <span className="text-sm font-medium">{formatPrice(selectedCar.price)}</span>
+                  </div>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-white/60 text-sm">改装成本</span>
+                    <span className="text-sm font-medium text-[#6366f1]">+{formatPrice(totalBuildCost - selectedCar.price)}</span>
+                  </div>
+                </motion.div>
+
+                <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                  <CardHeader className="pb-3 bg-[#1a1a2e] border-b border-white/10">
+                    <CardTitle className="text-sm font-medium text-white/80 uppercase tracking-wider">配置详情</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 p-6">
+                    <motion.div 
+                      className="flex justify-between items-center py-3 border-b border-white/5"
+                      whileHover={{ x: 5 }}
+                    >
+                      <span className="text-white/60 text-sm">基础车型</span>
+                      <span className="font-medium">{formatPrice(selectedCar.price)}</span>
+                    </motion.div>
+                    <motion.div 
+                      className="flex justify-between items-center py-3 border-b border-white/5"
+                      whileHover={{ x: 5 }}
+                    >
+                      <span className="text-white/60 text-sm">轮毂</span>
+                      <span className="font-medium">{formatPrice(selectedWheel.price)}</span>
+                    </motion.div>
+                    <motion.div 
+                      className="flex justify-between items-center py-3 border-b border-white/5"
+                      whileHover={{ x: 5 }}
+                    >
+                      <span className="text-white/60 text-sm">漆面</span>
+                      <span className="font-medium">{formatPrice(selectedColor.price + selectedFinish.price)}</span>
+                    </motion.div>
+                    {selectedMods.length > 0 && (
+                      <div className="py-3 border-b border-white/5">
+                        <span className="text-white/60 text-sm block mb-3 uppercase tracking-wider">改装套件</span>
+                        {selectedMods.map((id) => {
+                          const mod = MODIFICATION_OPTIONS.find((m) => m.id === id);
+                          return mod ? (
+                            <motion.div 
+                              key={id} 
+                              className="flex justify-between items-center py-2"
+                              whileHover={{ x: 5 }}
+                            >
+                              <span className="text-sm">{mod.name}</span>
+                              <span className="text-sm text-[#6366f1]">+{formatPrice(mod.price)}</span>
+                            </motion.div>
+                          ) : null;
+                        })}
+                      </div>
+                    )}
+                    {Object.entries(accentOptions).some(([_, enabled]) => enabled) && (
+                      <div className="py-3">
+                        <span className="text-white/60 text-sm block mb-3 uppercase tracking-wider">细节装饰</span>
+                        {Object.entries(accentOptions)
+                          .filter(([_, enabled]) => enabled)
+                          .map(([id]) => {
+                            const accent = ACCENT_OPTIONS.find((a) => a.id === id);
+                            return accent ? (
+                              <motion.div 
+                                key={id} 
+                                className="flex justify-between items-center py-2"
+                                whileHover={{ x: 5 }}
+                              >
+                                <span className="text-sm">{accent.name}</span>
+                                <span className="text-sm text-[#6366f1]">+{formatPrice(accent.price)}</span>
+                              </motion.div>
+                            ) : null;
+                          })}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </motion.div>
+
+            {/* Center - Car Preview */}
+            <motion.div 
+              className="lg:col-span-5 space-y-6"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <Card className="bg-[#131324] border-white/10 overflow-hidden shadow-xl">
+                <CardContent className="p-0">
+                  <div className="relative">
+                    {generatedImages.length > 0 ? (
+                      <motion.div 
+                        className="aspect-[16/9] bg-gradient-to-br from-black to-[#0a0a1a] relative rounded-xl overflow-hidden"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <LazyImage
+                          src={generatedImages[0].url}
+                          alt={`${selectedCar.name} 改装效果图`}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
+                          <div className="p-6 w-full">
+                            <h3 className="text-xl font-bold mb-2">{selectedCar.name} 改装效果</h3>
+                            <p className="text-white/60 text-sm mb-4">{prompt}</p>
+                            <div className="flex gap-3">
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={() => handleDownloadImage(generatedImages[0])}
+                                disabled={downloadingImageId === generatedImages[0].id}
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                              >
+                                {downloadingImageId === generatedImages[0].id ? (
+                                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                ) : (
+                                  <>
+                                    <Download className="w-4 h-4 mr-2" />
+                                    下载
+                                  </>
+                                )}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={handleShare}
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                              >
+                                <Share2 className="w-4 h-4 mr-2" />
+                                分享
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ) : (
+                      <motion.div 
+                        className="aspect-[16/9] bg-gradient-to-br from-[#1a1a2e] to-[#0a0a1a] relative flex items-center justify-center overflow-hidden"
                         whileHover={{ scale: 1.02 }}
                       >
-                        {finish.name}
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{t('manufacturerColors')}</h3>
-                  <div className="grid grid-cols-4 gap-4">
-                    {paintColors.map((colorOption) => (
-                      <motion.div
-                        key={colorOption.id}
-                        className="group relative cursor-pointer"
-                        onClick={() => setSelectedColor(colorOption.id)}
-                        whileHover={{ scale: 1.1 }}
-                      >
-                        <div
-                          className={`w-full aspect-square rounded-full border-2 relative overflow-hidden ${
-                            selectedColor === colorOption.id
-                              ? 'border-[#4725f4] shadow-[0_0_20px_rgba(71,37,244,0.5)]'
-                              : 'border-transparent group-hover:border-white/20'
-                          } ${colorOption.gradient ? `bg-gradient-to-br ${colorOption.gradient}` : ''}`}
-                          style={colorOption.color ? { backgroundColor: colorOption.color } : {}}
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent"></div>
-                          <div className="absolute top-2 left-2 w-4 h-2 bg-white/20 rounded-full blur-[2px]"></div>
+                        <img
+                          src={selectedCar.image}
+                          alt={selectedCar.name}
+                          className="w-full h-full object-cover opacity-70 transition-opacity duration-300 hover:opacity-90"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
+                          }}
+                        />
+                        <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-lg">
+                          <span className="text-sm font-medium">{selectedCar.name}</span>
                         </div>
-                        {selectedColor === colorOption.id && (
-                          <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap font-medium text-white">
-                            {t(`colors.${colorOption.id}`)}
-                          </span>
-                        )}
                       </motion.div>
-                    ))}
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Car Selection */}
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider">选择车型</h3>
+                  <Badge variant="outline" className="text-white/60 border-white/10">
+                    {CHINESE_CAR_MODELS.length} 款车型
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {(showAllCars ? CHINESE_CAR_MODELS : CHINESE_CAR_MODELS.slice(0, 4)).map((car) => (
                     <motion.div
-                      className="group relative cursor-pointer flex items-center justify-center"
-                      whileHover={{ scale: 1.1 }}
+                      key={car.id}
+                      className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedCar.id === car.id ? 'border-[#6366f1] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-white/20'}`}
+                      onClick={() => setSelectedCar(car)}
+                      whileHover={{ scale: 1.05, y: -5 }}
+                      whileTap={{ scale: 0.95 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
                     >
-                      <div className="w-full aspect-square rounded-full bg-[#26233b] border-2 border-dashed border-white/20 flex items-center justify-center text-white/40 hover:text-white hover:border-white/40 transition-colors">
-                        <span className="material-icons text-lg">add</span>
+                      <div className="aspect-[4/3] bg-[#1a1a2e] relative overflow-hidden">
+                        <motion.img
+                          src={car.image}
+                          alt={car.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&h=150&fit=crop';
+                          }}
+                          whileHover={{ scale: 1.1 }}
+                        />
+                        {selectedCar.id === car.id && (
+                          <motion.div 
+                            className="absolute inset-0 bg-[#6366f1]/20 backdrop-blur-sm flex items-center justify-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <span className="material-icons text-[#6366f1] text-2xl">check_circle</span>
+                          </motion.div>
+                        )}
                       </div>
-                      <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                        {t('custom')}
-                      </span>
+                      <div className="p-3 bg-[#131324] border-t border-white/10">
+                        <p className="text-xs text-white/40 mb-1">{car.brand}</p>
+                        <p className="text-sm font-medium truncate">{car.name}</p>
+                        <p className="text-xs text-[#6366f1] mt-1">{formatPrice(car.price)}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+                <div className="flex justify-center mt-4">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowAllCars(!showAllCars)}
+                    className="text-white/60 hover:text-white hover:bg-white/10"
+                  >
+                    {showAllCars ? (
+                      <>
+                        <ChevronUp className="w-4 h-4 mr-2" />
+                        收起
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="w-4 h-4 mr-2" />
+                        查看全部 {CHINESE_CAR_MODELS.length} 款车型
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Generation Progress */}
+              {isGenerating && (
+                <Card className="bg-[#131324] border-white/10 shadow-lg">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <CardContent className="space-y-4 p-6">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium">生成进度</span>
+                        <span className="text-[#6366f1] font-medium">{progress}%</span>
+                      </div>
+                      <Progress value={progress} className="h-3 bg-white/10 rounded-full overflow-hidden">
+                        <motion.div 
+                          className="h-full bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full"
+                          style={{ width: `${progress}%` }}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 0.5, ease: "easeOut" }}
+                        />
+                      </Progress>
+                      {taskStatusLabel && (
+                        <motion.p 
+                          className="text-sm text-white/60 text-center"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {taskStatusLabel}
+                        </motion.p>
+                      )}
+                      <div className="flex justify-center mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            resetTaskState();
+                            setGeneratedImages([]);
+                          }}
+                          className="text-white/60 hover:text-white"
+                        >
+                          <RefreshCw className="w-4 h-4 mr-2" />
+                          取消生成
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </motion.div>
+                </Card>
+              )}
+            </motion.div>
+
+            {/* Right Sidebar - Modification Options */}
+            <motion.div 
+              className="lg:col-span-4 space-y-6"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <div className="space-y-6">
+                {/* Tab Navigation */}
+                <motion.div 
+                  className="bg-[#131324] rounded-xl p-1 flex gap-2 border border-white/10"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  {['paint', 'wheels', 'mods', 'accents'].map((tab) => (
+                    <motion.button
+                      key={tab}
+                      className={`flex-1 px-4 py-3 text-sm font-medium transition-all rounded-lg ${activeTab === tab ? 'bg-[#1a1a2e] text-white shadow-lg' : 'text-white/60 hover:text-white'}`}
+                      onClick={() => setActiveTab(tab)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {tab === 'paint' && 'PAINT'}
+                      {tab === 'wheels' && 'WHEELS'}
+                      {tab === 'mods' && 'MODS'}
+                      {tab === 'accents' && 'ACCENTS'}
+                    </motion.button>
+                  ))}
+                </motion.div>
+
+                {/* Paint Options */}
+                {activeTab === 'paint' && (
+                  <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <CardHeader className="bg-gradient-to-r from-[#1a1a2e] to-[#131324] border-b border-white/10 p-6">
+                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Paint Lab</CardTitle>
+                      <p className="text-white/60 text-sm mt-1">Select a finish and color. Premium finishes include ceramic coating.</p>
+                    </CardHeader>
+                    <CardContent className="space-y-8 p-6">
+                      {/* Finish Type */}
+                      <div>
+                        <h3 className="text-sm font-medium text-white/60 mb-4 uppercase tracking-wider">Finish Type</h3>
+                        <div className="flex flex-wrap gap-3">
+                          {FINISH_TYPES.map((finish) => (
+                            <motion.button
+                              key={finish.id}
+                              className={`px-5 py-3 rounded-xl text-sm transition-all ${selectedFinish.id === finish.id ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]' : 'bg-[#1a1a2e] text-white/60 hover:text-white border border-white/10'}`}
+                              onClick={() => setSelectedFinish(finish)}
+                              whileHover={{ scale: 1.03, y: -2 }}
+                              whileTap={{ scale: 0.97 }}
+                            >
+                              {finish.name}
+                              {finish.price > 0 && (
+                                <span className="ml-2 text-xs font-medium">+{formatPrice(finish.price)}</span>
+                              )}
+                            </motion.button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Manufacturer Colors */}
+                      <div>
+                        <h3 className="text-sm font-medium text-white/60 mb-4 uppercase tracking-wider">Manufacturer Colors</h3>
+                        <div className="grid grid-cols-5 gap-4">
+                          {PAINT_COLORS.map((color) => (
+                            <motion.div
+                              key={color.id}
+                              className={`relative cursor-pointer group ${selectedColor.id === color.id ? 'ring-2 ring-[#6366f1] ring-offset-2 ring-offset-[#131324]' : ''}`}
+                              onClick={() => setSelectedColor(color)}
+                              whileHover={{ scale: 1.15, y: -5 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <div
+                                className="w-12 h-12 rounded-full shadow-lg border-2 border-white/20 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                                style={{ backgroundColor: color.color }}
+                              />
+                              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-[#1a1a2e] px-2 py-1 rounded-lg border border-white/10">
+                                {color.name}
+                                {color.price > 0 && (
+                                  <span className="ml-1 text-[#6366f1]">+{formatPrice(color.price)}</span>
+                                )}
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </motion.div>
+                </Card>
+                )}
+
+                {/* Wheel Options */}
+                {activeTab === 'wheels' && (
+                  <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <CardHeader className="bg-gradient-to-r from-[#1a1a2e] to-[#131324] border-b border-white/10 p-6">
+                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Wheel Selector</CardTitle>
+                      <p className="text-white/60 text-sm mt-1">Choose wheel style and size for your build.</p>
+                    </CardHeader>
+                    <CardContent className="space-y-4 p-6">
+                      {WHEEL_STYLES.map((wheel) => (
+                        <motion.div
+                          key={wheel.id}
+                          className={`p-5 rounded-xl cursor-pointer transition-all border ${selectedWheel.id === wheel.id ? 'border-[#6366f1] bg-gradient-to-r from-[#1a1a2e] to-[#131324] shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-white/5 hover:border-white/10 bg-[#131324]'}`}
+                          onClick={() => setSelectedWheel(wheel)}
+                          whileHover={{ scale: 1.02, y: -3 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <div className="flex items-start gap-4">
+                            <motion.div 
+                              className="w-14 h-14 rounded-full bg-gradient-to-br from-[#1a1a2e] to-[#131324] flex items-center justify-center border border-white/10"
+                              whileHover={{ rotate: 10 }}
+                            >
+                              <span className="material-icons text-[#6366f1] text-lg">sports_motorsports</span>
+                            </motion.div>
+                            <div className="flex-1">
+                              <div className="flex justify-between items-center mb-2">
+                                <h4 className="font-bold text-white">{wheel.name}</h4>
+                                {wheel.price > 0 && (
+                                  <motion.span 
+                                    className="text-sm font-medium text-[#6366f1]"
+                                    whileHover={{ scale: 1.1 }}
+                                  >
+                                    +{formatPrice(wheel.price)}
+                                  </motion.span>
+                                )}
+                              </div>
+                              <p className="text-xs text-white/60">{wheel.description}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </CardContent>
+                  </motion.div>
+                </Card>
+                )}
+
+                {/* Modification Options */}
+                {activeTab === 'mods' && (
+                  <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <CardHeader className="bg-gradient-to-r from-[#1a1a2e] to-[#131324] border-b border-white/10 p-6">
+                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Performance & Styling</CardTitle>
+                      <p className="text-white/60 text-sm mt-1">Enhance your vehicle's appearance and performance.</p>
+                    </CardHeader>
+                    <CardContent className="space-y-3 p-6">
+                      {MODIFICATION_OPTIONS.map((mod) => (
+                        <motion.div 
+                          key={mod.id} 
+                          className="flex items-center justify-between py-4 border-b border-white/5"
+                          whileHover={{ x: 5 }}
+                        >
+                          <motion.div 
+                            className="flex items-center gap-4"
+                            onClick={() => toggleMod(mod.id)}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <motion.div 
+                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer ${selectedMods.includes(mod.id) ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] border-[#6366f1] shadow-[0_0_10px_rgba(99,102,241,0.4)]' : 'border-white/20'}`}
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              {selectedMods.includes(mod.id) && (
+                                <motion.span 
+                                  className="material-icons text-white text-xs"
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  check
+                                </motion.span>
+                              )}
+                            </motion.div>
+                            <div>
+                              <p className="text-sm font-medium text-white">{mod.name}</p>
+                              <p className="text-xs text-white/60">{mod.description}</p>
+                            </div>
+                          </motion.div>
+                          <motion.span 
+                            className="text-sm font-medium text-[#6366f1]"
+                            whileHover={{ scale: 1.1 }}
+                          >
+                            +{formatPrice(mod.price)}
+                          </motion.span>
+                        </motion.div>
+                      ))}
+                    </CardContent>
+                  </motion.div>
+                </Card>
+                )}
+
+                {/* Accent Options */}
+                {activeTab === 'accents' && (
+                  <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <CardHeader className="bg-gradient-to-r from-[#1a1a2e] to-[#131324] border-b border-white/10 p-6">
+                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Accent Details</CardTitle>
+                      <p className="text-white/60 text-sm mt-1">Add custom touches to your build.</p>
+                    </CardHeader>
+                    <CardContent className="space-y-4 p-6">
+                      {ACCENT_OPTIONS.map((accent) => (
+                        <motion.div 
+                          key={accent.id} 
+                          className="flex items-center justify-between py-4 border-b border-white/5"
+                          whileHover={{ x: 5 }}
+                        >
+                          <div>
+                            <p className="text-sm font-medium text-white">{accent.name}</p>
+                            <p className="text-xs text-white/60">{accent.description}</p>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <motion.span 
+                              className="text-sm font-medium text-[#6366f1]"
+                              whileHover={{ scale: 1.1 }}
+                            >
+                              +{formatPrice(accent.price)}
+                            </motion.span>
+                            <Switch
+                              checked={accentOptions[accent.id]}
+                              onCheckedChange={() => toggleAccent(accent.id)}
+                              className="data-[state=checked]:bg-[#6366f1]"
+                            />
+                          </div>
+                        </motion.div>
+                      ))}
+                    </CardContent>
+                  </motion.div>
+                </Card>
+                )}
+
+                {/* Action Buttons */}
+                <div className="space-y-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                  >
+                    <Button
+                      className="w-full py-6 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] hover:from-[#4f46e5] hover:to-[#7c3aed] text-lg font-bold shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all duration-300"
+                      onClick={handleGenerate}
+                      disabled={isGenerating}
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin mr-3" />
+                          生成中...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-5 h-5 mr-3" />
+                          生成效果图
+                        </>
+                      )}
+                    </Button>
+                  </motion.div>
+                  <div className="flex gap-3">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                      <Button
+                        variant="secondary"
+                        className="flex-1 py-4 bg-gradient-to-r from-[#1a1a2e] to-[#131324] hover:from-[#252540] hover:to-[#1a1a2e] border border-white/10 font-medium transition-all duration-300"
+                        onClick={handleShare}
+                      >
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Share
+                      </Button>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                    >
+                      <Button
+                        variant="secondary"
+                        className="flex-1 py-4 bg-gradient-to-r from-[#1a1a2e] to-[#131324] hover:from-[#252540] hover:to-[#1a1a2e] border border-white/10 font-medium transition-all duration-300"
+                      >
+                        <FileText className="w-4 h-4 mr-2" />
+                        Quote
+                      </Button>
                     </motion.div>
                   </div>
+                  <motion.div 
+                    className="text-center mt-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                  >
+                    <p className="text-xs text-white/40">
+                      生成效果图需要 {costCredits} 积分
+                      {user && ` (剩余: ${remainingCredits})`}
+                    </p>
+                  </motion.div>
                 </div>
-
-                <div>
-                  <h3 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-4">{t('accents')}</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-[#26233b] border border-white/5 hover:border-white/10 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#111] flex items-center justify-center">
-                          <span className="material-icons text-white/50 text-sm">visibility_off</span>
-                        </div>
-                        <span className="text-sm font-medium">{t('chromeDelete')}</span>
-                      </div>
-                      <motion.div
-                        className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
-                          chromeDelete ? 'bg-[#4725f4] shadow-[0_0_20px_-5px_rgba(71,37,244,0.5)]' : 'bg-white/10'
-                        }`}
-                        onClick={() => setChromeDelete(!chromeDelete)}
-                      >
-                        <motion.div
-                          className={`absolute top-1 w-3 h-3 bg-white rounded-full shadow-sm ${chromeDelete ? 'right-1' : 'left-1'}`}
-                          animate={{ left: chromeDelete ? 'auto' : '4px', right: chromeDelete ? '4px' : 'auto' }}
-                        />
-                      </motion.div>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-[#26233b] border border-white/5 hover:border-white/10 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#111] flex items-center justify-center">
-                          <span className="material-icons text-white/50 text-sm">wb_sunny</span>
-                        </div>
-                        <span className="text-sm font-medium">{t('carbonRoof')}</span>
-                      </div>
-                      <motion.div
-                        className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
-                          carbonRoof ? 'bg-[#4725f4] shadow-[0_0_20px_-5px_rgba(71,37,244,0.5)]' : 'bg-white/10'
-                        }`}
-                        onClick={() => setCarbonRoof(!carbonRoof)}
-                      >
-                        <motion.div
-                          className={`absolute top-1 w-3 h-3 bg-white rounded-full shadow-sm ${carbonRoof ? 'right-1' : 'left-1'}`}
-                          animate={{ left: carbonRoof ? 'auto' : '4px', right: carbonRoof ? '4px' : 'auto' }}
-                        />
-                      </motion.div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {activeTab === 'wheels' && (
-              <div className="text-center py-12 text-white/40">
-                <span className="material-icons text-4xl mb-4">album</span>
-                <p>{t('wheelsDescription')}</p>
               </div>
-            )}
-
-            {activeTab === 'stance' && (
-              <div className="text-center py-12 text-white/40">
-                <span className="material-icons text-4xl mb-4">tune</span>
-                <p>{t('stanceDescription')}</p>
-              </div>
-            )}
-          </div>
-
-          <div className="absolute bottom-0 left-0 w-full bg-[#1c192e]/95 backdrop-blur-xl border-t border-white/5 p-6 flex flex-col gap-3">
-            <motion.button
-              className="w-full py-4 bg-[#4725f4] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#361bb5] transition-colors shadow-[0_0_30px_-5px_rgba(71,37,244,0.8)] flex items-center justify-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span>{t('saveBuild')}</span>
-              <span className="material-icons text-lg">arrow_forward</span>
-            </motion.button>
-            <div className="flex gap-3">
-              <motion.button
-                className="flex-1 py-3 bg-[#26233b] text-white rounded-xl text-sm font-bold border border-white/5 hover:bg-white/5 transition-colors"
-                whileHover={{ scale: 1.02 }}
-              >
-                {t('share')}
-              </motion.button>
-              <motion.button
-                className="flex-1 py-3 bg-[#26233b] text-white rounded-xl text-sm font-bold border border-white/5 hover:bg-white/5 transition-colors"
-                whileHover={{ scale: 1.02 }}
-              >
-                {t('quote')}
-              </motion.button>
-            </div>
-          </div>
-        </aside>
-      </main>
-
-      <section className="absolute bottom-6 left-6 right-[424px] z-40">
-        <div className="bg-[rgba(19,16,34,0.7)] backdrop-blur-xl rounded-2xl p-4 border border-white/10 shadow-2xl">
-          <div className="flex items-center gap-4 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            {carModels.map((model) => (
-              <motion.div
-                key={model.id}
-                className={`flex-shrink-0 w-48 rounded-xl p-3 cursor-pointer transition-all ${
-                  selectedModel === model.id
-                    ? 'bg-[#4725f4]/20 border border-[#4725f4]'
-                    : 'bg-[#26233b]/40 border border-white/5 hover:bg-[#26233b] hover:border-white/20'
-                }`}
-                onClick={() => setSelectedModel(model.id)}
-                whileHover={{ scale: 1.05 }}
-              >
-                <div className="w-full h-20 mb-2 relative flex items-center justify-center">
-                  <img
-                    src={model.image}
-                    alt={`${model.name} silhouette`}
-                    className={`w-full h-full object-contain mix-blend-screen transition-all ${
-                      selectedModel === model.id ? 'opacity-100' : 'opacity-50 grayscale group-hover:opacity-80 group-hover:grayscale-0'
-                    }`}
-                  />
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className={`text-sm font-bold uppercase tracking-wide ${
-                    selectedModel === model.id ? 'text-white' : 'text-white/60'
-                  }`}>{model.name}</span>
-                  {selectedModel === model.id && (
-                    <span className="w-2 h-2 rounded-full bg-[#4725f4] shadow-[0_0_10px_rgba(71,37,244,1)]"></span>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+            </motion.div>
           </div>
         </div>
-      </section>
-
-      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+      </main>
     </div>
   );
 }

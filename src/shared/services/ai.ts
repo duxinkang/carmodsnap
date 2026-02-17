@@ -3,13 +3,11 @@ import {
   FalProvider,
   GeminiProvider,
   KieProvider,
+  QwenProvider,
   ReplicateProvider,
 } from '@/extensions/ai';
 import { Configs, getAllConfigs } from '@/shared/models/config';
 
-/**
- * get ai manager with configs
- */
 export function getAIManagerWithConfigs(configs: Configs) {
   const aiManager = new AIManager();
 
@@ -44,6 +42,16 @@ export function getAIManagerWithConfigs(configs: Configs) {
     aiManager.addProvider(
       new GeminiProvider({
         apiKey: configs.gemini_api_key,
+      })
+    );
+  }
+
+  if (configs.qwen_api_key) {
+    aiManager.addProvider(
+      new QwenProvider({
+        apiKey: configs.qwen_api_key,
+        baseUrl: configs.qwen_base_url,
+        customStorage: configs.qwen_custom_storage === 'true',
       })
     );
   }
