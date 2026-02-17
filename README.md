@@ -311,6 +311,9 @@ pnpm db:migrate
 
 # 初始化权限
 pnpm rbac:init
+
+# 增加积分
+npx tsx scripts/with-env.ts npx tsx scripts/add-credits.ts --email=d541449473@gmail.com --credits=100
 ```
 
 ## 环境变量
