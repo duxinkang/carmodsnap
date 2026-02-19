@@ -140,15 +140,6 @@ function getAuthPlugins(configs: Record<string, string>) {
             baseDelay: 1000, // Base delay in ms (default: 1000)
             maxAttempts: 1, // Only attempt once to avoid multiple error logs (default: 5)
           },
-          // Error handling
-          onError: (error) => {
-            // Silently handle FedCM errors
-            if (error.message.includes('FedCM') || error.message.includes('NetworkError') || error.message.includes('AbortError')) {
-              return;
-            }
-            // Log other errors
-            console.warn('Google One Tap error:', error);
-          },
         })
       );
     }

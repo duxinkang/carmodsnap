@@ -98,6 +98,6 @@ export class LocalStorageProvider implements StorageProvider {
   getPublicUrl(options: { key: string; bucket?: string }): string {
     // In local storage, we return a placeholder URL
     const uploadPath = this.getUploadPath();
-    return `/uploads/${key}`;
+    return `/uploads/${options.key}`;
   }
 }
