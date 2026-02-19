@@ -1,4 +1,4 @@
-import { R2Provider, S3Provider, StorageManager } from '@/extensions/storage';
+import { R2Provider, S3Provider, LocalStorageProvider, StorageManager } from '@/extensions/storage';
 import { Configs, getAllConfigs } from '@/shared/models/config';
 
 /**
@@ -6,6 +6,14 @@ import { Configs, getAllConfigs } from '@/shared/models/config';
  */
 export function getStorageServiceWithConfigs(configs: Configs) {
   const storageManager = new StorageManager();
+
+  // Add Local provider for development (always available)
+  storageManager.addProvider(
+    new LocalStorageProvider({
+      uploadPath: 'uploads',
+    }),
+    true // Set Local as default for development
+  );
 
   // Add R2 provider if configured
   if (
@@ -28,7 +36,7 @@ export function getStorageServiceWithConfigs(configs: Configs) {
         endpoint: configs.r2_endpoint, // Optional custom endpoint
         publicDomain: configs.r2_domain,
       }),
-      true // Set R2 as default
+      false // Don't override default if local is set
     );
   }
 
