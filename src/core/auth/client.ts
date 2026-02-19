@@ -81,7 +81,7 @@ const AUTH_GET_SESSION_MIN_INTERVAL_MS =
 
 // create default auth client, without plugins
 export const authClient = createAuthClient({
-  baseURL: envConfigs.auth_url,
+  baseURL: typeof window !== 'undefined' ? window.location.origin : envConfigs.auth_url,
   fetchOptions: {
     // Avoid amplifying request storms (e.g. during env/db switching in dev).
     // IMPORTANT: auth mutations (sign-in/sign-up) must be non-retriable,
@@ -99,7 +99,7 @@ export const { useSession, signIn, signUp, signOut } = authClient;
 // get auth client with plugins
 export function getAuthClient(configs: Record<string, string>) {
   const authClient = createAuthClient({
-    baseURL: envConfigs.auth_url,
+    baseURL: typeof window !== 'undefined' ? window.location.origin : envConfigs.auth_url,
     plugins: getAuthPlugins(configs),
     fetchOptions: {
       // Avoid amplifying request storms (e.g. during env/db switching in dev).

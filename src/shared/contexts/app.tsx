@@ -120,22 +120,30 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const showOneTap = useCallback(async (configs: Record<string, string>) => {
     try {
+      // Skip one tap in development to avoid FedCM errors
+      const isDevelopment = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+      if (isDevelopment) {
+        return;
+      }
+      
       const authClient = getAuthClient(configs);
-      await authClient.oneTap({
-        callbackURL: '/',
-        onPromptNotification: (notification: any) => {
-          // Handle prompt dismissal silently
-          // This callback is triggered when the prompt is dismissed or skipped
-          if (process.env.NODE_ENV !== 'production') {
-            console.log('One Tap prompt notification:', notification);
-          }
-        },
-        // fetchOptions: {
-        //   onSuccess: () => {
-        //     router.push('/');
-        //   },
-        // },
-      });
+      if (authClient && authClient.oneTap) {
+        await authClient.oneTap({
+          callbackURL: '/',
+          onPromptNotification: (notification: any) => {
+            // Handle prompt dismissal silently
+            // This callback is triggered when the prompt is dismissed or skipped
+            if (process.env.NODE_ENV !== 'production') {
+              console.log('One Tap prompt notification:', notification);
+            }
+          },
+          // fetchOptions: {
+          //   onSuccess: () => {
+          //     router.push('/');
+          //   },
+          // },
+        });
+      }
     } catch (error) {
       // Silently handle One Tap cancellation errors
       // These errors occur when users close the prompt or decline to sign in
