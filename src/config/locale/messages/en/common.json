@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "ShipAny Template Two",
-    "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups. Ship Fast with a variety of templates and components.",
-    "keywords": "shipany, shipany-boilerplate, shipany-template-two-demo"
+    "title": "ModSnap",
+    "description": "ModSnap lets you instantly visualize your car with any mods in 360°—see the full transformation before you spend a dime.",
+    "keywords": "modsnap, car-modification-visualizer, 360-car-customizer, automotive-styling-preview, car-parts-visualization"
   },
   "sign": {
     "sign_in_title": "Sign In",
