@@ -121,23 +121,37 @@ function getAuthPlugins(configs: Record<string, string>) {
 
   // google one tap plugin
   if (configs.google_client_id && configs.google_one_tap_enabled === 'true') {
-    authPlugins.push(
-      oneTapClient({
-        clientId: configs.google_client_id,
-        // Optional client configuration:
-        autoSelect: false,
-        cancelOnTapOutside: false,
-        context: 'signin',
-        additionalOptions: {
-          // Any extra options for the Google initialize method
-        },
-        // Configure prompt behavior and exponential backoff:
-        promptOptions: {
-          baseDelay: 1000, // Base delay in ms (default: 1000)
-          maxAttempts: 1, // Only attempt once to avoid multiple error logs (default: 5)
-        },
-      })
-    );
+    // Skip one tap in development to avoid FedCM errors
+    const isDevelopment = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+    if (!isDevelopment) {
+      authPlugins.push(
+        oneTapClient({
+          clientId: configs.google_client_id,
+          // Optional client configuration:
+          autoSelect: false,
+          cancelOnTapOutside: false,
+          context: 'signin',
+          additionalOptions: {
+            // Disable FedCM to avoid network errors
+            useFedCM: false,
+          },
+          // Configure prompt behavior and exponential backoff:
+          promptOptions: {
+            baseDelay: 1000, // Base delay in ms (default: 1000)
+            maxAttempts: 1, // Only attempt once to avoid multiple error logs (default: 5)
+          },
+          // Error handling
+          onError: (error) => {
+            // Silently handle FedCM errors
+            if (error.message.includes('FedCM') || error.message.includes('NetworkError') || error.message.includes('AbortError')) {
+              return;
+            }
+            // Log other errors
+            console.warn('Google One Tap error:', error);
+          },
+        })
+      );
+    }
   }
 
   return authPlugins;

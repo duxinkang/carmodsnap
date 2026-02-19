@@ -132,6 +132,11 @@ export default async function DynamicPage({
   const dynamicPageSlug =
     typeof slug === 'string' ? slug : (slug as string[]).join('.') || '';
 
+  // filter invalid slug (files with extensions or dev server paths like @vite/client)
+  if (dynamicPageSlug.includes('.') || dynamicPageSlug.startsWith('@')) {
+    return notFound();
+  }
+
   const messageKey = `pages.${dynamicPageSlug}`;
 
   try {

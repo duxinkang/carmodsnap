@@ -496,66 +496,6 @@ export default function CarModderConfigurator() {
 
   return (
     <div className="min-h-screen bg-[#0a0a1a] text-white overflow-hidden font-[family-name:var(--font-sans)]">
-      {/* Top Navigation */}
-      <header className="fixed top-0 left-0 w-full z-50 bg-[#0a0a1a]/95 backdrop-blur-lg border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <motion.div 
-            className="flex items-center gap-3"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.div
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.6)]"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="material-icons text-white text-sm font-bold">sports_car</span>
-            </motion.div>
-            <span className="text-xl font-bold tracking-wider uppercase bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">MODPLAYGROUND</span>
-          </motion.div>
-          <motion.div 
-            className="flex items-center gap-6"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setTestMode(!testMode)}
-                className={`text-xs ${testMode ? 'text-[#6366f1] bg-[#6366f1]/10' : 'text-white/60'} border border-white/10`}
-              >
-                {testMode ? '🧪 测试模式开启' : '🧪 测试模式关闭'}
-              </Button>
-              {user ? (
-                <>
-                  <motion.div 
-                    className="px-4 py-2 bg-[#131324] rounded-full border border-white/10 flex items-center gap-2"
-                    whileHover={{ scale: 1.05, borderColor: 'rgba(99,102,241,0.5)' }}
-                  >
-                    <span className="text-sm text-white/60">积分:</span>
-                    <span className="text-sm font-medium text-[#6366f1]">{remainingCredits}</span>
-                  </motion.div>
-                  <Badge variant="outline" className="text-white/80 border-white/20">
-                    {user?.email?.split('@')[0] || '用户'}
-                  </Badge>
-                </>
-              ) : (
-                <Button 
-                  variant="ghost" 
-                  onClick={() => setIsShowSignModal(true)} 
-                  className="text-white/80 hover:text-white border border-white/10 hover:border-[#6366f1] transition-all"
-                >
-                  登录
-                </Button>
-              )}
-            </div>
-          </motion.div>
-        </div>
-      </header>
-
       <main className="pt-16 pb-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

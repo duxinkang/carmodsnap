@@ -59,39 +59,7 @@ export default function CarModderLanding() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden font-[family-name:var(--font-sans)]">
-      <nav className="fixed top-0 left-0 w-full z-50 transition-all duration-300 py-6">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <motion.div
-            className="flex items-center gap-2 group cursor-pointer"
-            whileHover={{ scale: 1.05 }}
-          >
-            <div className="w-10 h-10 bg-[#4725f4] rounded-full flex items-center justify-center group-hover:shadow-[0_0_30px_rgba(71,37,244,0.4)] transition-all duration-300">
-              <span className="material-icons text-white text-xl">speed</span>
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white">MOD<span className="text-[#4725f4]">HERO</span></span>
-          </motion.div>
-
-          <div className="hidden md:flex items-center gap-1 p-1.5 bg-[rgba(19,16,34,0.6)] backdrop-blur-md rounded-full border border-white/5">
-            <Link className="px-6 py-2.5 text-sm font-medium text-white hover:bg-white/10 rounded-full transition-colors" href="/showcases">{t('gallery')}</Link>
-            <a className="px-6 py-2.5 text-sm font-medium text-white hover:bg-white/10 rounded-full transition-colors" href="#">{t('partsStore')}</a>
-            <Link className="px-6 py-2.5 text-sm font-medium text-white hover:bg-white/10 rounded-full transition-colors" href="/showcases">{t('community')}</Link>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button className="hidden md:block text-sm font-medium text-gray-300 hover:text-white transition-colors">{t('login')}</button>
-            <Link href="/carmodder">
-              <motion.button
-                className="bg-white text-[#131022] px-6 py-3 rounded-full text-sm font-bold hover:bg-gray-200 transition-colors flex items-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {t('startBuilding')}
-                <span className="material-icons text-sm">arrow_forward</span>
-              </motion.button>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      {/* Navigation handled by layout */}
 
       <section className="relative min-h-screen flex items-center pt-24 overflow-hidden">
         <div className="absolute inset-0 bg-[#050505] z-0">
