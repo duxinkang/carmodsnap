@@ -1,18 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 export default function CarModderLanding() {
   const t = useTranslations('pages.carmodder');
-  const router = useRouter();
-  const [email, setEmail] = useState('');
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [vehicleType, setVehicleType] = useState('');
-  const [serviceType, setServiceType] = useState('');
 
   const featuredConfigs = [
     {
@@ -59,24 +54,6 @@ export default function CarModderLanding() {
 
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
-  };
-
-  const handleSearchShops = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // 解析位置信息
-    const locationParts = email.split(',').map((s) => s.trim());
-    const city = locationParts[0] || '';
-    const state = locationParts[1] || '';
-
-    // 构建搜索 URL
-    const params = new URLSearchParams();
-    if (city) params.set('city', city);
-    if (state) params.set('state', state);
-    if (vehicleType) params.set('vehicle_type', vehicleType);
-    if (serviceType) params.set('service', serviceType);
-
-    router.push(`/shops?${params.toString()}`);
   };
 
   return (
@@ -316,6 +293,7 @@ export default function CarModderLanding() {
         </div>
       </section>
 
+      {/* FIND A LOCAL PRO SECTION - Commented out
       <section id="find-shop" className="w-full min-h-[85vh] flex items-center justify-center relative pt-24 px-4 sm:px-6 lg:px-8">
         <div className="absolute inset-0 z-0 opacity-40">
           <img alt="Dark modified sports car in a neon garage" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeDhVSJUkBVkpoG9AOd9dsm7vvj6NthGMQubdP4mwBTjqbBzWxmtS1T8yXVIX7Ka2atZ-PovVsgo9HWl_kw-lFP_D8gNQrvNv6Ov3WuDWK8oSfRrfOoDKry6k2B8cLIy0QCxqVpkqNC4XXQEgyFbm-ogJvmihSr6tkCXilQTasy3JrlbAJ8paKSY7wQWto5bb6emKIsvdDHKW-Q58kcaku2cC-Dlqo8gMkWHEZHcbeFDZ3kaMFB85SeoD3cDjymFUZ-oq3SdEASfKO" />
@@ -430,6 +408,7 @@ export default function CarModderLanding() {
           </motion.div>
         </div>
       </section>
+      */}
 
       <section className="w-full py-20 px-4 sm:px-6 relative z-10 bg-[#131022] border-t border-slate-800">
         <div className="max-w-3xl mx-auto">
@@ -480,7 +459,7 @@ export default function CarModderLanding() {
             <span className="material-icons">more_vert</span>
           </button>
 
-          <a href="#find-shop">
+          {/* <a href="#find-shop">
             <motion.button
               className="flex items-center gap-2 bg-[#4725f4] hover:bg-[#361bb8] text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-[#4725f4]/30 transition-all hover:scale-105 active:scale-95 group relative overflow-hidden"
               whileHover={{ scale: 1.05 }}
@@ -490,7 +469,7 @@ export default function CarModderLanding() {
               <span className="material-icons text-xl">location_on</span>
               <span className="whitespace-nowrap">{t('findLocalWrapShop')}</span>
             </motion.button>
-          </a>
+          </a> */}
         </div>
       </div>
 
