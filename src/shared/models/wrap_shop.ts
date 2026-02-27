@@ -78,7 +78,7 @@ export async function getWrapShops(filter: WrapShopFilter) {
           eq(wrapShopService.available, true)
         )
       );
-    shopIds = serviceResults.map((r) => r.shopId);
+    shopIds = serviceResults.map((r: { shopId: string }) => r.shopId);
     if (shopIds.length > 0) {
       conditions.push(
         or(
@@ -287,7 +287,7 @@ export async function updateShopRating(shopId: string) {
     return;
   }
 
-  const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+  const totalRating = reviews.reduce((sum: number, review: { rating: number }) => sum + review.rating, 0);
   const avgRating = Math.round((totalRating / reviews.length) * 100); // 放大 100 倍
 
   await db()
