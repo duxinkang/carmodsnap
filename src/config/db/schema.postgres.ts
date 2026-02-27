@@ -555,3 +555,175 @@ export const chatMessage = table(
     index('idx_chat_message_user_id').on(table.userId, table.status),
   ]
 );
+
+// 改装店相关表
+export const wrapShop = table(
+  'wrap_shop',
+  {
+    id: text('id').primaryKey(),
+    name: text('name').notNull(), // 店铺名称
+    slug: text('slug').unique().notNull(), // URL 友好名称
+    description: text('description'), // 店铺描述
+    logo: text('logo'), // 店铺 logo
+    images: text('images'), // 店铺图片 JSON 数组
+    email: text('email'),
+    phone: text('phone'),
+    website: text('website'),
+    address: text('address').notNull(), // 街道地址
+    city: text('city').notNull(),
+    state: text('state'), // 省/州
+    country: text('country').notNull().default('US'),
+    postalCode: text('postal_code'), // 邮政编码
+    latitude: text('latitude'), // 纬度
+    longitude: text('longitude'), // 经度
+    rating: integer('rating').default(0).notNull(), // 评分 (0-5, 放大 100 倍存储整数)
+    reviewCount: integer('review_count').default(0).notNull(), // 评论数量
+    serviceCount: integer('service_count').default(0).notNull(), // 服务数量
+    status: text('status').notNull().default('active'), // active, inactive, pending
+    certified: boolean('certified').default(false).notNull(), // 是否认证店铺
+    featured: boolean('featured').default(false).notNull(), // 是否推荐店铺
+    metadata: text('metadata'), // 额外元数据
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    // 按城市和省/州搜索
+    index('idx_wrap_shop_city_state').on(table.city, table.state),
+    // 按状态和认证状态搜索
+    index('idx_wrap_shop_status_certified').on(table.status, table.certified),
+    // 按评分排序
+    index('idx_wrap_shop_rating').on(table.rating),
+    // 地理位置索引
+    index('idx_wrap_shop_location').on(table.latitude, table.longitude),
+  ]
+);
+
+// 改装店服务项目
+export const wrapShopService = table(
+  'wrap_shop_service',
+  {
+    id: text('id').primaryKey(),
+    shopId: text('shop_id')
+      .notNull()
+      .references(() => wrapShop.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(), // 服务名称
+    slug: text('slug').notNull(), // 服务标识 full_wrap, chrome_delete, ppf, tint, ceramic
+    description: text('description'), // 服务描述
+    priceFrom: integer('price_from'), // 起始价格 (美元分)
+    priceTo: integer('price_to'), // 结束价格 (美元分)
+    duration: text('duration'), // 预计工期
+    available: boolean('available').default(true).notNull(), // 是否可用
+    sort: integer('sort').default(0).notNull(),
+    metadata: text('metadata'), // 额外元数据
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    // 按店铺 ID 查询服务
+    index('idx_wrap_shop_service_shop_id').on(table.shopId),
+    // 按店铺和服务类型查询
+    index('idx_wrap_shop_service_shop_slug').on(table.shopId, table.slug),
+  ]
+);
+
+// 改装店评论
+export const wrapShopReview = table(
+  'wrap_shop_review',
+  {
+    id: text('id').primaryKey(),
+    shopId: text('shop_id')
+      .notNull()
+      .references(() => wrapShop.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    rating: integer('rating').notNull(), // 评分 1-5
+    title: text('title'), // 评论标题
+    content: text('content').notNull(), // 评论内容
+    images: text('images'), // 评论图片 JSON 数组
+    serviceType: text('service_type'), // 使用的服务类型
+    vehicleModel: text('vehicle_model'), // 车型
+    approved: boolean('approved').default(false).notNull(), // 是否已审核
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    // 按店铺 ID 查询评论
+    index('idx_wrap_shop_review_shop_id').on(table.shopId),
+    // 按用户 ID 查询评论
+    index('idx_wrap_shop_review_user_id').on(table.userId),
+    // 查询已审核评论
+    index('idx_wrap_shop_review_approved').on(table.approved),
+  ]
+);
+
+// 报价请求
+export const quoteRequest = table(
+  'quote_request',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .references(() => user.id, { onDelete: 'set null' }),
+    email: text('email').notNull(), // 联系邮箱
+    name: text('name'), // 联系人姓名
+    phone: text('phone'), // 联系电话
+    location: text('location').notNull(), // 用户位置 (邮政编码或城市)
+    vehicleType: text('vehicle_type'), // 车型类别 jdm, euro, muscle, exotic, truck
+    vehicleModel: text('vehicle_model'), // 具体车型
+    serviceType: text('service_type').notNull(), // 服务类型
+    description: text('description'), // 需求描述
+    images: text('images'), // 项目图片 JSON 数组
+    budget: integer('budget'), // 预算 (美元分)
+    timeline: text('timeline'), // 期望工期
+    status: text('status').notNull().default('pending'), // pending, sent, completed, cancelled
+    metadata: text('metadata'), // 额外元数据
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    // 按状态查询
+    index('idx_quote_request_status').on(table.status),
+    // 按服务类型查询
+    index('idx_quote_request_service_type').on(table.serviceType),
+    // 按创建时间排序
+    index('idx_quote_request_created_at').on(table.createdAt),
+  ]
+);
+
+// 报价请求分配给店铺
+export const quoteRequestShop = table(
+  'quote_request_shop',
+  {
+    id: text('id').primaryKey(),
+    quoteRequestId: text('quote_request_id')
+      .notNull()
+      .references(() => quoteRequest.id, { onDelete: 'cascade' }),
+    shopId: text('shop_id')
+      .notNull()
+      .references(() => wrapShop.id, { onDelete: 'cascade' }),
+    status: text('status').notNull().default('pending'), // pending, viewed, quoted, declined
+    quotedPrice: integer('quoted_price'), // 报价金额
+    quotedAt: timestamp('quoted_at'), // 报价时间
+    message: text('message'), // 店铺留言
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    // 按报价请求 ID 查询
+    index('idx_quote_request_shop_quote_id').on(table.quoteRequestId),
+    // 按店铺 ID 查询
+    index('idx_quote_request_shop_shop_id').on(table.shopId),
+    // 按状态查询
+    index('idx_quote_request_shop_status').on(table.status),
+  ]
+);

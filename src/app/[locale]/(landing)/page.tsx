@@ -4,11 +4,15 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function CarModderLanding() {
   const t = useTranslations('pages.carmodder');
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [vehicleType, setVehicleType] = useState('');
+  const [serviceType, setServiceType] = useState('');
 
   const featuredConfigs = [
     {
@@ -55,6 +59,24 @@ export default function CarModderLanding() {
 
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
+  };
+
+  const handleSearchShops = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // 解析位置信息
+    const locationParts = email.split(',').map((s) => s.trim());
+    const city = locationParts[0] || '';
+    const state = locationParts[1] || '';
+
+    // 构建搜索 URL
+    const params = new URLSearchParams();
+    if (city) params.set('city', city);
+    if (state) params.set('state', state);
+    if (vehicleType) params.set('vehicle_type', vehicleType);
+    if (serviceType) params.set('service', serviceType);
+
+    router.push(`/shops?${params.toString()}`);
   };
 
   return (
@@ -336,7 +358,7 @@ export default function CarModderLanding() {
               <p className="text-slate-400 text-sm">{t('getQuotesFromCertifiedShops')}</p>
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSearchShops}>
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-300 ml-2 uppercase tracking-wide">{t('locationLabel')}</label>
                 <div className="relative">
@@ -355,7 +377,11 @@ export default function CarModderLanding() {
                 <label className="text-xs font-semibold text-slate-300 ml-2 uppercase tracking-wide">{t('vehicleLabel')}</label>
                 <div className="relative">
                   <span className="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">directions_car</span>
-                  <select className="w-full bg-[#26233b] border border-slate-700 text-white pl-12 pr-10 py-3.5 rounded-full focus:outline-none focus:border-[#4725f4] focus:ring-1 focus:ring-[#4725f4] appearance-none cursor-pointer text-slate-300" defaultValue="">
+                  <select
+                    className="w-full bg-[#26233b] border border-slate-700 text-white pl-12 pr-10 py-3.5 rounded-full focus:outline-none focus:border-[#4725f4] focus:ring-1 focus:ring-[#4725f4] appearance-none cursor-pointer text-slate-300"
+                    value={vehicleType}
+                    onChange={(e) => setVehicleType(e.target.value)}
+                  >
                     <option disabled value="">{t('selectCarModel')}</option>
                     <option value="jdm">{t('jdmCars')}</option>
                     <option value="euro">{t('euroCars')}</option>
@@ -371,7 +397,11 @@ export default function CarModderLanding() {
                 <label className="text-xs font-semibold text-slate-300 ml-2 uppercase tracking-wide">{t('serviceLabel')}</label>
                 <div className="relative">
                   <span className="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">format_paint</span>
-                  <select className="w-full bg-[#26233b] border border-slate-700 text-white pl-12 pr-10 py-3.5 rounded-full focus:outline-none focus:border-[#4725f4] focus:ring-1 focus:ring-[#4725f4] appearance-none cursor-pointer text-slate-300" defaultValue="">
+                  <select
+                    className="w-full bg-[#26233b] border border-slate-700 text-white pl-12 pr-10 py-3.5 rounded-full focus:outline-none focus:border-[#4725f4] focus:ring-1 focus:ring-[#4725f4] appearance-none cursor-pointer text-slate-300"
+                    value={serviceType}
+                    onChange={(e) => setServiceType(e.target.value)}
+                  >
                     <option disabled value="">{t('modificationType')}</option>
                     <option value="full_wrap">{t('fullColorChange')}</option>
                     <option value="chrome_delete">{t('chromeDelete')}</option>
@@ -384,6 +414,7 @@ export default function CarModderLanding() {
               </div>
 
               <motion.button
+                type="submit"
                 className="w-full bg-[#4725f4] hover:bg-[#361bb8] text-white font-bold py-4 rounded-full mt-2 shadow-lg shadow-[#4725f4]/25 hover:shadow-[#4725f4]/40 transition-all duration-300 flex items-center justify-center gap-2 group"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
