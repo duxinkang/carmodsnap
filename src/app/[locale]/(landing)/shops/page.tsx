@@ -28,6 +28,7 @@ interface Shop {
   serviceCount: number;
   certified: boolean;
   featured: boolean;
+  source?: string;
 }
 
 interface SearchResponse {
