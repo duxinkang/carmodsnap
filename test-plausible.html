@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plausible Test</title>
+    <!-- Plausible Analytics -->
+    <script async src="https://plausible.io/js/pa-YOmqvvvwybD2JWwNG4WGq.js"></script>
+    <script>
+        window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)}
+        // Test event tracking
+        setTimeout(() => {
+            console.log('Testing Plausible event tracking...');
+            plausible('pageview');
+            console.log('Plausible pageview event sent');
+        }, 1000);
+    </script>
+</head>
+<body>
+    <h1>Plausible Analytics Test</h1>
+    <p>This page is testing Plausible Analytics integration.</p>
+    <p>Check your browser's developer console and network tab to see if Plausible scripts are loaded and events are sent.</p>
+</body>
+</html>

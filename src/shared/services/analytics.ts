@@ -14,6 +14,13 @@ import { Configs, getAllConfigs } from '@/shared/models/config';
 export function getAnalyticsManagerWithConfigs(configs: Configs) {
   const analytics = new AnalyticsManager();
 
+  // Debug: Check if Plausible configs are present
+  console.log('Plausible configs:', {
+    plausible_domain: configs.plausible_domain,
+    plausible_src: configs.plausible_src,
+    hasBoth: configs.plausible_domain && configs.plausible_src
+  });
+
   // google analytics
   if (configs.google_analytics_id) {
     analytics.addProvider(
@@ -30,12 +37,15 @@ export function getAnalyticsManagerWithConfigs(configs: Configs) {
 
   // plausible
   if (configs.plausible_domain && configs.plausible_src) {
+    console.log('Adding Plausible analytics provider');
     analytics.addProvider(
       new PlausibleAnalyticsProvider({
         domain: configs.plausible_domain,
         src: configs.plausible_src,
       })
     );
+  } else {
+    console.log('Plausible configs missing, skipping');
   }
 
   // openpanel
