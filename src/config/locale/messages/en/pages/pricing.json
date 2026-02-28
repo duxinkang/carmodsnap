@@ -1,158 +1,49 @@
 {
   "metadata": {
     "title": "Pricing",
-    "description": "Start with a plan"
+    "description": "Choose a plan to get started"
   },
   "page": {
     "title": "ModSnap Pricing",
     "sections": {
       "pricing": {
         "id": "pricing",
-        "title": "Pricing",
-        "description": "Get all features of ModSnap, visualize your car's modified look in full 360° instantly.",
+        "title": "Monthly Subscription",
+        "description": "AI-powered car modification visualization, visualize your car's modified look instantly.",
         "groups": [
           {
-            "name": "one-time",
-            "title": "Pay as you go"
-          },
-          {
             "name": "monthly",
-            "title": "Monthly",
-            "is_featured": true,
-            "label": "save 15%"
-          },
-          {
-            "name": "yearly",
-            "title": "Annually"
+            "title": "Monthly Subscription",
+            "is_featured": true
           }
         ],
         "items": [
           {
             "title": "Starter",
-            "description": "Get started with your first SaaS startup.",
+            "description": "Experience AI car modification, 100 credits/month.",
             "features_title": "Includes",
             "features": [
-              "100 credits, valid for 1 month",
-              "NextJS boilerplate",
-              "SEO-friendly structure",
-              "Payment with Stripe",
-              "Data storage with Supabase",
-              "Google Oauth & One-Tap Login",
-              "i18n support"
-            ],
-            "interval": "one-time",
-            "amount": 9900,
-            "currency": "USD",
-            "price": "$99",
-            "original_price": "$199",
-            "unit": "",
-            "is_featured": false,
-            "tip": "Pay once. Build unlimited projects!",
-            "button": {
-              "title": "Get ShipAny",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "starter",
-            "product_name": "ModSnap Boilerplate Starter",
-            "credits": 100,
-            "valid_days": 30,
-            "group": "one-time"
-          },
-          {
-            "title": "Standard",
-            "description": "Ship Fast with your SaaS Startups.",
-            "label": "Popular",
-            "features_title": "Everything in Starter, plus",
-            "features": [
-              "200 credits, valid for 3 month",
-              "Deploy with Vercel or Cloudflare",
-              "Generation of Privacy & Terms",
-              "Google Analytics Integration",
-              "Google Search Console Integration",
-              "Discord community",
-              "Technical support for your first ship",
-              "Lifetime updates"
-            ],
-            "interval": "one-time",
-            "amount": 19900,
-            "currency": "USD",
-            "price": "$199",
-            "original_price": "$299",
-            "unit": "",
-            "is_featured": true,
-            "tip": "Pay once. Build unlimited projects!",
-            "button": {
-              "title": "Get ShipAny",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "standard",
-            "product_name": "ModSnap Boilerplate Standard",
-            "credits": 200,
-            "valid_days": 90,
-            "group": "one-time"
-          },
-          {
-            "title": "Premium",
-            "description": "Ship Any AI SaaS Startups.",
-            "features_title": "Everything in Standard, plus",
-            "features": [
-              "300 credits, valid for 1 year",
-              "Business Functions with AI",
-              "User Center",
-              "Credits System",
-              "API Sales for your SaaS",
-              "Admin System",
-              "Priority Technical Support"
-            ],
-            "interval": "one-time",
-            "amount": 29900,
-            "currency": "USD",
-            "price": "$299",
-            "original_price": "$399",
-            "unit": "",
-            "is_featured": false,
-            "tip": "Pay once. Build unlimited projects!",
-            "button": {
-              "title": "Get ShipAny",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "premium",
-            "product_name": "ModSnap Boilerplate Premium",
-            "credits": 300,
-            "valid_days": 365,
-            "group": "one-time"
-          },
-          {
-            "title": "Starter",
-            "description": "Get started with your first SaaS startup.",
-            "features_title": "Includes",
-            "features": [
-              "100 credits, valid for 1 month",
-              "NextJS boilerplate",
-              "SEO-friendly structure",
-              "Payment with Stripe",
-              "Data storage with Supabase",
-              "Google Oauth & One-Tap Login",
-              "i18n support"
+              "100 credits/month",
+              "AI car modification visualization",
+              "Basic modification effects",
+              "HD image download",
+              "Multi-language support"
             ],
             "interval": "month",
-            "amount": 1990,
+            "amount": 990,
             "currency": "USD",
-            "price": "$19.90",
-            "original_price": "$29.90",
+            "price": "$9.9",
+            "original_price": "$19.9",
             "unit": "/ month",
             "is_featured": false,
-            "tip": "Pay monthly. Build unlimited projects!",
+            "tip": "Low-cost AI modification experience!",
             "button": {
-              "title": "Get ModSnap",
+              "title": "Subscribe Starter",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
             "product_id": "starter-monthly",
-            "product_name": "ModSnap Boilerplate Starter Monthly",
+            "product_name": "ModSnap Starter Monthly",
             "credits": 100,
             "valid_days": 30,
             "group": "monthly",
@@ -160,171 +51,68 @@
           },
           {
             "title": "Standard",
-            "description": "Ship Fast with your SaaS Startups.",
+            "description": "Advanced modification design, 300 credits/month.",
             "label": "Popular",
             "features_title": "Everything in Starter, plus",
             "features": [
-              "200 credits, valid for 1 month",
-              "Deploy with Vercel or Cloudflare",
-              "Generation of Privacy & Terms",
-              "Google Analytics Integration",
-              "Google Search Console Integration",
-              "Discord community",
-              "Technical support for your first ship",
-              "Lifetime updates"
+              "300 credits/month",
+              "Advanced modification effects",
+              "Multi-angle views",
+              "4K HD download",
+              "Save modification projects",
+              "Priority generation queue"
             ],
             "interval": "month",
-            "amount": 16900,
+            "amount": 1990,
             "currency": "USD",
-            "price": "$169",
-            "original_price": "$199",
+            "price": "$19.9",
+            "original_price": "$39.9",
             "unit": "/ month",
             "is_featured": true,
-            "tip": "Pay monthly. Ship Fast with your SaaS Startups.",
+            "tip": "Most popular choice!",
             "button": {
-              "title": "Get ModSnap",
+              "title": "Subscribe Standard",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
             "product_id": "standard-monthly",
-            "product_name": "ModSnap Boilerplate Standard Monthly",
-            "credits": 200,
+            "product_name": "ModSnap Standard Monthly",
+            "credits": 300,
             "valid_days": 30,
             "group": "monthly",
             "plan_name": "Standard"
           },
           {
             "title": "Premium",
-            "description": "Ship Any AI SaaS Startups.",
+            "description": "Professional modification studio, 800 credits/month.",
             "features_title": "Everything in Standard, plus",
             "features": [
-              "300 credits, valid for 1 month",
-              "Business Functions with AI",
-              "User Center",
-              "Credits System",
-              "API Sales for your SaaS",
-              "Admin System",
-              "Priority Technical Support"
+              "800 credits/month",
+              "All modification modes",
+              "Batch generation",
+              "8K Ultra HD download",
+              "Commercial license",
+              "API access",
+              "Exclusive technical support"
             ],
             "interval": "month",
-            "amount": 24900,
+            "amount": 2990,
             "currency": "USD",
-            "price": "$249",
-            "original_price": "$299",
+            "price": "$29.9",
+            "original_price": "$59.9",
             "unit": "/ month",
             "is_featured": false,
-            "tip": "Pay monthly. Ship Any AI SaaS Startups.",
+            "tip": "Best for power users!",
             "button": {
-              "title": "Get ModSnap",
+              "title": "Subscribe Premium",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
             "product_id": "premium-monthly",
-            "product_name": "ModSnap Boilerplate Premium Monthly",
-            "credits": 300,
+            "product_name": "ModSnap Premium Monthly",
+            "credits": 800,
             "valid_days": 30,
             "group": "monthly",
-            "plan_name": "Premium"
-          },
-          {
-            "title": "Starter",
-            "description": "Get started with your first SaaS startup.",
-            "features_title": "Includes",
-            "features": [
-              "100 credits, valid for 1 year",
-              "NextJS boilerplate",
-              "SEO-friendly structure",
-              "Payment with Stripe",
-              "Data storage with Supabase",
-              "Google Oauth & One-Tap Login",
-              "i18n support"
-            ],
-            "interval": "year",
-            "amount": 20300,
-            "currency": "USD",
-            "price": "$203",
-            "original_price": "$238.80",
-            "unit": "/ year",
-            "is_featured": false,
-            "tip": "Pay annually and save 15%!",
-            "button": {
-              "title": "Get ModSnap",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "starter-yearly",
-            "product_name": "ModSnap Boilerplate Starter Annually",
-            "credits": 1200,
-            "valid_days": 365,
-            "group": "yearly",
-            "plan_name": "Starter"
-          },
-          {
-            "title": "Standard",
-            "description": "Ship Fast with your SaaS Startups.",
-            "label": "Popular",
-            "features_title": "Everything in Starter, plus",
-            "features": [
-              "200 credits, valid for 1 year",
-              "Deploy with Vercel or Cloudflare",
-              "Generation of Privacy & Terms",
-              "Google Analytics Integration",
-              "Google Search Console Integration",
-              "Discord community",
-              "Technical support for your first ship",
-              "Lifetime updates"
-            ],
-            "interval": "year",
-            "amount": 154800,
-            "currency": "USD",
-            "price": "$129",
-            "original_price": "$169",
-            "unit": "/ month",
-            "is_featured": true,
-            "tip": "Pay annually. Ship Fast with your SaaS Startups.",
-            "button": {
-              "title": "Get ModSnap",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "standard-yearly",
-            "product_name": "ModSnap Boilerplate Standard Annually",
-            "credits": 2400,
-            "valid_days": 365,
-            "group": "yearly",
-            "plan_name": "Standard"
-          },
-          {
-            "title": "Premium",
-            "description": "Ship Any AI SaaS Startups.",
-            "features_title": "Everything in Standard, plus",
-            "features": [
-              "300 credits, valid for 1 year",
-              "Business Functions with AI",
-              "User Center",
-              "Credits System",
-              "API Sales for your SaaS",
-              "Admin System",
-              "Priority Technical Support"
-            ],
-            "interval": "year",
-            "amount": 226800,
-            "currency": "USD",
-            "price": "$189",
-            "original_price": "$249",
-            "unit": "/ month",
-            "is_featured": false,
-            "tip": "Pay annually. Ship Any AI SaaS Startups.",
-            "button": {
-              "title": "Get ModSnap",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "premium-yearly",
-            "product_name": "ModSnap Boilerplate Premium Annually",
-            "credits": 3600,
-            "valid_days": 365,
-            "group": "yearly",
             "plan_name": "Premium"
           }
         ]
