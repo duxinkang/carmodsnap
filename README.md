@@ -1,6 +1,6 @@
 # CarModeView - 汽车改装可视化平台
 
-基于 ShipAny Template Two 构建的汽车改装可视化平台，支持实时 3D 配置器、社区展示和本地服务商对接。
+基于 ModSnap 构建的汽车改装可视化平台，支持实时 3D 配置器、社区展示和本地服务商对接。
 
 ## 项目结构
 
@@ -8,8 +8,8 @@
 carmodeview/
 ├── .claude/                    # Claude AI 技能配置
 │   └── skills/                 # 自定义技能模块
-│       ├── shipany-page-builder/   # 页面构建器技能
-│       └── shipany-quick-start/    # 快速启动技能
+│       ├── modsnap-page-builder/   # 页面构建器技能
+│       └── modsnap-quick-start/    # 快速启动技能
 ├── .github/                    # GitHub 配置
 │   └── workflows/              # CI/CD 工作流
 ├── .source/                    # 源码配置
@@ -335,8 +335,8 @@ AUTH_SECRET=your_auth_secret
 
 ## 文档
 
-详细文档请参考 [ShipAny Document](https://shipany.ai/docs/quick-start)
+详细文档请参考 [ModSnap Document](#)
 
 ## 许可证
 
-本项目基于 ShipAny Template Two 构建，请遵守 [ShipAny LICENSE](./LICENSE)
+本项目基于 ModSnap 构建，请遵守 [ModSnap LICENSE](./LICENSE)

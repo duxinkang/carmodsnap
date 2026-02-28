@@ -15,15 +15,15 @@
     "sections": {
       "hero": {
         "id": "hero",
-        "title": "Ship AI Startups in hours, not days",
-        "highlight_text": "in hours",
-        "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups.<br/>Ship Fast with a variety of templates and components.",
+        "title": "Transform Your Car with AI-Powered Modifications",
+        "highlight_text": "AI-Powered",
+        "description": "ModSnap is an AI-powered car modification platform.<br/>Visualize and customize your car with cutting-edge 3D technology.",
         "announcement": {
           "badge": "New",
-          "title": "🎉 ShipAny Template Two",
+          "title": "🎉 ModSnap Platform Launch",
           "url": "/pricing"
         },
-        "tip": "🎁 Special offer for the first 1000 users",
+        "tip": "🎁 Special offer for early adopters",
         "buttons": [
           {
             "title": "Get Started",
@@ -41,7 +41,7 @@
           }
         ],
         "show_avatars": true,
-        "avatars_tip": "999+ users are using ShipAny",
+        "avatars_tip": "999+ users are using ModSnap",
         "show_award": false,
         "image": {
           "src": "/imgs/features/admin.png",
@@ -62,7 +62,7 @@
       },
       "logos": {
         "id": "logos",
-        "title": "ShipAny is built on the shoulders of giants",
+        "title": "ModSnap is built on the shoulders of giants",
         "items": [
           {
             "title": "Next.js",
@@ -104,17 +104,17 @@
       "introduce": {
         "block": "features-list",
         "id": "introduce",
-        "title": "What is ShipAny",
+        "title": "What is ModSnap",
         "label": "Introduce",
-        "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups, including templates, components, and documentation.",
+        "description": "ModSnap is an AI-powered car modification platform, including 3D visualization, community showcases, and local service provider connections.",
         "image": {
           "src": "/imgs/features/landing-page.png",
           "alt": "introduce"
         },
         "items": [
           {
-            "title": "Ready-to-use Templates",
-            "description": "Choose from dozens of production-ready AI SaaS templates to quickly start your project.",
+            "title": "3D Car Configurator",
+            "description": "Visualize your car modifications in real-time with our advanced 3D rendering technology.",
             "icon": "RiNextjsFill",
             "image": {
               "src": "/imgs/features/1.png",
@@ -122,8 +122,8 @@
             }
           },
           {
-            "title": "Infrastructure Setup",
-            "description": "Get instant access to scalable infrastructure with best practices built-in.",
+            "title": "Community Showcases",
+            "description": "Explore and share car modification ideas with our vibrant community of car enthusiasts.",
             "icon": "RiDatabase2Line",
             "image": {
               "src": "/imgs/features/2.png",
@@ -131,8 +131,8 @@
             }
           },
           {
-            "title": "Quick Deployment",
-            "description": "Deploy your AI SaaS application to production in hours, not days.",
+            "title": "Local Service Providers",
+            "description": "Connect with trusted local mechanics and shops to bring your modification ideas to life.",
             "icon": "RiCloudyFill",
             "image": {
               "src": "/imgs/features/3.png",
@@ -140,8 +140,8 @@
             }
           },
           {
-            "title": "AI Integration",
-            "description": "Integrate AI into your project with ease using our built-in AI SDK.",
+            "title": "AI-Powered Suggestions",
+            "description": "Get personalized modification suggestions based on your car model and preferences.",
             "icon": "RiRobot2Line",
             "image": {
               "src": "/imgs/features/4.png",
@@ -154,13 +154,13 @@
       "benefits": {
         "block": "features-accordion",
         "id": "benefits",
-        "title": "Why Choose ShipAny",
+        "title": "Why Choose ModSnap",
         "label": "Benefits",
-        "description": "Get everything you need to launch your AI startup - from ready-to-use templates to technical support.",
+        "description": "Get everything you need to transform your car - from 3D visualization to local service connections.",
         "items": [
           {
-            "title": "Complete Framework",
-            "description": "Built on Next.js with authentication, payments, and AI integration - everything works out of the box.",
+            "title": "Complete Platform",
+            "description": "Built on Next.js with 3D rendering, community features, and service provider integration - everything works out of the box.",
             "icon": "RiNextjsFill",
             "image": {
               "src": "/imgs/features/user-billing.png",
@@ -168,8 +168,8 @@
             }
           },
           {
-            "title": "Rich Templates Library",
-            "description": "Choose from various AI SaaS templates to kickstart your project - chatbots, image generation, and more.",
+            "title": "Realistic Visualization",
+            "description": "See exactly how your modifications will look before making any changes to your car.",
             "icon": "RiClapperboardAiLine",
             "image": {
               "src": "/imgs/features/admin-settings.png",
@@ -177,8 +177,8 @@
             }
           },
           {
-            "title": "Technical Guidance",
-            "description": "Get dedicated support and join our developer community to ensure your successful launch.",
+            "title": "Community Support",
+            "description": "Join our community of car enthusiasts and get feedback on your modification ideas.",
             "icon": "RiCodeFill",
             "image": {
               "src": "/imgs/features/landing-page.png",
@@ -190,8 +190,8 @@
       "usage": {
         "block": "features-step",
         "id": "usage",
-        "title": "How to Launch with ShipAny",
-        "description": "Get your AI SaaS startup running in three simple steps:",
+        "title": "How to Use ModSnap",
+        "description": "Transform your car in three simple steps:",
         "image": {
           "src": "/imgs/features/1.png",
           "alt": "usage"
@@ -200,32 +200,32 @@
         "text_align": "center",
         "items": [
           {
-            "title": "Get ShipAny",
-            "description": "Buy ShipAny with a one-time payment. Check your email for the code and documentation.",
+            "title": "Select Your Car",
+            "description": "Choose your car model from our extensive database of makes and models.",
             "image": {
               "src": "/imgs/features/5.png",
               "alt": "usage"
             }
           },
           {
-            "title": "Start Your Project",
-            "description": "Read the documentation and clone the code of ShipAny. Start building your AI SaaS startup.",
+            "title": "Customize Your Modifications",
+            "description": "Use our 3D configurator to experiment with different modifications and see the results in real-time.",
             "image": {
               "src": "/imgs/features/6.png",
               "alt": "usage"
             }
           },
           {
-            "title": "Customize Your Project",
-            "description": "Modify the template with your data and contents. Specific AI functionality needs.",
+            "title": "Connect with Service Providers",
+            "description": "Find trusted local mechanics and shops to bring your modification ideas to life.",
             "image": {
               "src": "/imgs/features/7.png",
               "alt": "usage"
             }
           },
           {
-            "title": "Deploy to Production",
-            "description": "Deploy your project to production with a few steps and start serving customers immediately.",
+            "title": "Share Your Creation",
+            "description": "Show off your modified car to the community and get feedback from other enthusiasts.",
             "image": {
               "src": "/imgs/features/8.png",
               "alt": "usage"
@@ -236,70 +236,70 @@
       },
       "features": {
         "id": "features",
-        "title": "Key Features of ShipAny",
-        "description": "Everything you need to launch your AI SaaS startup quickly and efficiently.",
+        "title": "Key Features of ModSnap",
+        "description": "Everything you need to transform your car with confidence.",
         "items": [
           {
-            "title": "Next.js Boilerplate",
-            "description": "Production-ready Next.js templates with SEO-friendly structure and i18n support.",
+            "title": "3D Visualization",
+            "description": "Realistic 3D rendering of your car with various modification options.",
             "icon": "RiNextjsFill"
           },
           {
-            "title": "Authentication & Payments",
-            "description": "Integrated Google OAuth, one-tap login, and Stripe payment processing.",
+            "title": "Community Showcases",
+            "description": "Browse and share modification ideas with other car enthusiasts.",
             "icon": "RiKey2Fill"
           },
           {
-            "title": "Data Infrastructure",
-            "description": "Built-in Supabase integration for reliable and scalable data storage.",
+            "title": "Local Service Connections",
+            "description": "Find trusted mechanics and shops in your area.",
             "icon": "RiDatabase2Line"
           },
           {
-            "title": "One-Click Deployment",
-            "description": "Seamless deployment to Vercel or Cloudflare with automated setup.",
+            "title": "AI-Powered Suggestions",
+            "description": "Get personalized modification recommendations based on your car and preferences.",
             "icon": "RiCloudy2Fill"
           },
           {
-            "title": "Business Analytics",
-            "description": "Integrated Google Analytics and Search Console for tracking growth.",
+            "title": "Mobile-Friendly",
+            "description": "Access ModSnap from any device, anywhere.",
             "icon": "RiBarChart2Line"
           },
           {
-            "title": "AI-Ready Infrastructure",
-            "description": "Pre-configured AI integration with built-in credits system and API sales.",
+            "title": "Secure & Private",
+            "description": "Your personal information and modification plans are kept secure.",
             "icon": "RiRobot2Line"
           }
         ]
       },
       "stats": {
         "id": "stats",
-        "title": "People Love ShipAny",
-        "description": "for it's easy to use and fast to ship.",
+        "title": "People Love ModSnap",
+        "description": "for its realistic visualization and easy-to-use platform.",
         "items": [
           {
             "title": "999+",
-            "description": "Customers"
+            "description": "Users"
           },
           {
             "title": "200+",
-            "description": "Blocks"
+            "description": "Car Models"
           },
           {
             "title": "50+",
-            "description": "Templates"
+            "description": "Modification Options"
           }
         ],
         "className": "bg-muted"
       },
       "testimonials": {
         "id": "testimonials",
-        "title": "What Users Say About ShipAny",
-        "description": "Hear from developers and founders who launched their AI startups with ShipAny.",
+        "title": "What Users Say About ModSnap",
+        "description": "Hear from car enthusiasts who transformed their vehicles with ModSnap.",
         "items": [
           {
             "name": "David Chen",
-            "role": "Founder of AIWallpaper.shop",
-            "quote": "ShipAny saved us months of development time. We launched our AI wallpaper business in just 2 days and got our first paying customer within a week!",
+            "role": "Car Enthusiast",
+            "quote": "ModSnap helped me visualize my dream car before making any changes. The 3D renderings were incredibly realistic!",
             "image": {
               "src": "/imgs/avatars/1.png",
               "alt": "david"
@@ -307,8 +307,8 @@
           },
           {
             "name": "Rachel Kim",
-            "role": "CTO at HeyBeauty.ai",
-            "quote": "The pre-built AI infrastructure is a game-changer. We didn't have to worry about architecture - just focused on our AI beauty tech and went live fast.",
+            "role": "Car Owner",
+            "quote": "I was able to find a trusted mechanic in my area through ModSnap. The entire process was seamless!",
             "image": {
               "src": "/imgs/avatars/2.png",
               "alt": "rachel"
@@ -316,8 +316,8 @@
           },
           {
             "name": "Marcus Thompson",
-            "role": "Solo Developer",
-            "quote": "As a solo developer, ShipAny gave me everything I needed - auth, payments, AI integration, and beautiful UI. Launched my SaaS in a weekend!",
+            "role": "Car Collector",
+            "quote": "The community showcases gave me so many ideas for my classic car collection. ModSnap is a game-changer!",
             "image": {
               "src": "/imgs/avatars/3.png",
               "alt": "marcus"
@@ -325,8 +325,8 @@
           },
           {
             "name": "Sofia Garcia",
-            "role": "CEO of Melodisco",
-            "quote": "The templates are production-ready and highly customizable. We built our AI music platform in hours instead of months. Incredible time-to-market!",
+            "role": "Car Customizer",
+            "quote": "As a professional customizer, ModSnap has become an essential tool for showing clients what their car will look like.",
             "image": {
               "src": "/imgs/avatars/4.png",
               "alt": "sofia"
@@ -334,8 +334,8 @@
           },
           {
             "name": "James Wilson",
-            "role": "Tech Lead at GPTs.works",
-            "quote": "ShipAny's infrastructure is rock-solid. We scaled from 0 to 10k users without touching the backend. Best investment for our AI startup.",
+            "role": "Car Enthusiast",
+            "quote": "The AI suggestions were spot-on! I never would have thought of some of the modifications that were recommended.",
             "image": {
               "src": "/imgs/avatars/5.png",
               "alt": "james"
@@ -343,8 +343,8 @@
           },
           {
             "name": "Anna Zhang",
-            "role": "Startup Founder",
-            "quote": "From idea to launch in 3 days! ShipAny's templates and deployment tools made it possible to test our AI business concept incredibly fast.",
+            "role": "First-time Car Owner",
+            "quote": "ModSnap made it easy for me to understand what modifications would look like on my first car. I'm thrilled with the results!",
             "image": {
               "src": "/imgs/avatars/6.png",
               "alt": "anna"
@@ -354,43 +354,43 @@
       },
       "faq": {
         "id": "faq",
-        "title": "Frequently Asked Questions About ShipAny",
+        "title": "Frequently Asked Questions About ModSnap",
         "description": "Have another question? Contact us on Discord or by email.",
         "items": [
           {
-            "question": "What exactly is ShipAny and how does it work?",
-            "answer": "ShipAny is a comprehensive NextJS boilerplate designed specifically for building AI SaaS startups. It provides ready-to-use templates, infrastructure setup, and deployment tools that help you launch your AI business in hours instead of days."
+            "question": "What exactly is ModSnap and how does it work?",
+            "answer": "ModSnap is an AI-powered car modification platform that allows you to visualize and customize your car with 3D technology. It also helps you connect with local service providers to bring your ideas to life."
           },
           {
-            "question": "Do I need advanced technical skills to use ShipAny?",
-            "answer": "While basic programming knowledge is helpful, ShipAny is designed to be developer-friendly. Our templates and documentation make it easy to get started, even if you're not an expert in AI or cloud infrastructure."
+            "question": "Do I need technical skills to use ModSnap?",
+            "answer": "No! ModSnap is designed to be user-friendly. You don't need any technical skills to use our 3D configurator or browse the community showcases."
           },
           {
-            "question": "What types of AI SaaS can I build with ShipAny?",
-            "answer": "ShipAny supports a wide range of AI applications, from content generation to data analysis tools. Our templates cover popular use cases like AI chatbots, content generators, image processing apps, and more."
+            "question": "What types of cars does ModSnap support?",
+            "answer": "ModSnap supports a wide range of car makes and models, from popular brands to rare classics. Our database is constantly growing."
           },
           {
-            "question": "How long does it typically take to launch with ShipAny?",
-            "answer": "With ShipAny, you can have a working prototype in hours and a production-ready application in hours. Our one-click deployment and pre-configured infrastructure significantly reduce the traditional months-long development cycle."
+            "question": "How realistic are the 3D renderings?",
+            "answer": "Our 3D renderings are highly realistic, giving you a clear idea of how your modifications will look in real life. We use advanced rendering technology to ensure accuracy."
           },
           {
-            "question": "What's included in the ShipAny infrastructure?",
-            "answer": "ShipAny provides a complete infrastructure stack including authentication, database setup, API integration, payment processing, and scalable cloud deployment. Everything is pre-configured following industry best practices."
+            "question": "How do I connect with service providers?",
+            "answer": "ModSnap has a directory of trusted local mechanics and shops. You can browse providers in your area, read reviews, and contact them directly through the platform."
           },
           {
-            "question": "Can I customize the templates to match my brand?",
-            "answer": "Absolutely! All ShipAny templates are fully customizable. You can modify the design, features, and functionality to match your brand identity and specific business requirements while maintaining the robust underlying infrastructure."
+            "question": "Is ModSnap free to use?",
+            "answer": "ModSnap offers both free and premium plans. The free plan allows you to use the basic 3D configurator and browse the community. Premium plans offer additional features like advanced customization options and priority service provider connections."
           }
         ]
       },
       "cta": {
         "id": "cta",
-        "title": "Ship your first AI SaaS Startup",
-        "description": "Start from here, ship with ShipAny.",
+        "title": "Transform Your Car Today",
+        "description": "Start from here, create with ModSnap.",
         "buttons": [
           {
-            "title": "Get ShipAny",
-            "url": "https://shipany.ai",
+            "title": "Get ModSnap",
+            "url": "#",
             "target": "_blank",
             "icon": "Zap"
           },
@@ -407,7 +407,7 @@
       "subscribe": {
         "id": "subscribe",
         "title": "Subscribe to our newsletter",
-        "description": "Get the latest news and updates from ShipAny.",
+        "description": "Get the latest news and updates from ModSnap.",
         "submit": {
           "input": {
             "placeholder": "Enter your email"

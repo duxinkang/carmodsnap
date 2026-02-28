@@ -95,11 +95,11 @@
   "footer": {
     "id": "footer",
     "brand": {
-      "title": "ShipAny Two",
-      "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups. Ship Fast with a variety of templates and components.",
+      "title": "ModSnap",
+      "description": "ModSnap is an AI-powered car modification platform. Visualize and customize your car with cutting-edge 3D technology.",
       "logo": {
         "src": "/logo.png",
-        "alt": "ShipAny Two",
+        "alt": "ModSnap",
         "width": 1024,
         "height": 1024
       },
@@ -151,18 +151,18 @@
           "title": "Friends",
           "children": [
             {
-              "title": "ShipAny",
-              "url": "https://shipany.ai",
+              "title": "ModSnap",
+              "url": "#",
               "target": "_blank"
             },
             {
-              "title": "ThinkAny",
-              "url": "https://thinkany.ai",
+              "title": "CarModeView",
+              "url": "#",
               "target": "_blank"
             },
             {
-              "title": "MCP.so",
-              "url": "https://mcp.so",
+              "title": "AutoMod",
+              "url": "#",
               "target": "_blank"
             }
           ]

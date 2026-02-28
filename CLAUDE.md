@@ -1,7 +1,7 @@
 # 工作规则
 
 ## 项目类型
-Next.js 16 AI SaaS 应用（ShipAny Template Two），使用 App Router 架构，React 19.2.1，支持国际化（next-intl）和 MDX。
+Next.js 16 AI 汽车改装平台（ModSnap），使用 App Router 架构，React 19.2.1，支持国际化（next-intl）和 MDX。
 
 ## 常用命令
 

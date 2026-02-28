@@ -15,15 +15,15 @@
     "sections": {
       "hero": {
         "id": "hero",
-        "title": "一小时快速上线你的 AI 创业项目",
-        "highlight_text": "一小时",
-        "description": "ShipAny 是用于构建 AI SaaS 创业项目的 NextJS 项目模板。<br/>集成常用功能，快速上线你的产品。",
+        "title": "用 AI 技术打造你的梦想座驾",
+        "highlight_text": "AI 技术",
+        "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台。<br/>使用先进的 3D 技术可视化和定制你的爱车。",
         "announcement": {
           "badge": "全新",
-          "title": "🎉 ShipAny 模板二已发布",
+          "title": "🎉 ModSnap 平台正式上线",
           "url": "/pricing"
         },
-        "tip": "🎁 前 1000 名用户特价优惠",
+        "tip": "🎁 早期用户特别优惠",
         "buttons": [
           {
             "title": "立即开始",
@@ -41,7 +41,7 @@
           }
         ],
         "show_avatars": true,
-        "avatars_tip": "999+ 用户在使用 ShipAny 上站",
+        "avatars_tip": "999+ 用户正在使用 ModSnap",
         "show_award": false,
         "image": {
           "src": "/imgs/features/admin.png",
@@ -61,7 +61,7 @@
         }
       },
       "logos": {
-        "title": "ShipAny 使用以下技术栈构建",
+        "title": "ModSnap 使用以下技术栈构建",
         "items": [
           {
             "title": "Next.js",
@@ -103,17 +103,17 @@
       "introduce": {
         "block": "features-list",
         "id": "introduce",
-        "title": "ShipAny 是什么？",
+        "title": "ModSnap 是什么？",
         "label": "产品简介",
-        "description": "ShipAny 是专为 AI SaaS 创业项目打造的 NextJS 脚手架，包括丰富模板、组件及文档。",
+        "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台，包括 3D 可视化、社区展示和本地服务商对接。",
         "image": {
           "src": "/imgs/features/landing-page.png",
           "alt": "introduce"
         },
         "items": [
           {
-            "title": "开箱即用的模板",
-            "description": "从数十款生产级 AI SaaS 模板中选择，快速开启你的项目。",
+            "title": "3D 汽车配置器",
+            "description": "使用先进的 3D 渲染技术实时可视化你的汽车改装效果。",
             "icon": "RiNextjsFill",
             "image": {
               "src": "/imgs/features/1.png",
@@ -121,8 +121,8 @@
             }
           },
           {
-            "title": "基础设施搭建",
-            "description": "内置最佳实践，即刻拥有可扩展的基础设施。",
+            "title": "社区展示",
+            "description": "与充满活力的汽车爱好者社区一起探索和分享改装创意。",
             "icon": "RiDatabase2Line",
             "image": {
               "src": "/imgs/features/2.png",
@@ -130,8 +130,8 @@
             }
           },
           {
-            "title": "极速部署",
-            "description": "AI SaaS 产品快速上线，助力小时级交付。",
+            "title": "本地服务商对接",
+            "description": "连接可信的本地 mechanic 和店铺，将你的改装创意变为现实。",
             "icon": "RiCloudyFill",
             "image": {
               "src": "/imgs/features/3.png",
@@ -139,8 +139,8 @@
             }
           },
           {
-            "title": "AI 集成",
-            "description": "通过内置的 AI SDK，轻松为你的项目集成 AI 能力。",
+            "title": "AI 智能推荐",
+            "description": "基于你的车型和偏好，获得个性化的改装建议。",
             "icon": "RiRobot2Line",
             "image": {
               "src": "/imgs/features/4.png",
@@ -153,13 +153,13 @@
       "benefits": {
         "block": "features-accordion",
         "id": "benefits",
-        "title": "为何选择 ShipAny",
+        "title": "为何选择 ModSnap",
         "label": "产品优势",
-        "description": "你获得一切 AI 创业所需——从开箱即用的模板到专业技术支持。",
+        "description": "获得你所需的一切，从 3D 可视化到本地服务连接，让你的爱车焕然一新。",
         "items": [
           {
-            "title": "全栈解决方案",
-            "description": "基于 Next.js，集成认证、支付、AI，一站式开箱即用。",
+            "title": "完整平台",
+            "description": "基于 Next.js，集成 3D 渲染、社区功能和服务商对接，一站式开箱即用。",
             "icon": "RiNextjsFill",
             "image": {
               "src": "/imgs/features/user-billing.png",
@@ -167,8 +167,8 @@
             }
           },
           {
-            "title": "丰富模板库",
-            "description": "多样的 AI SaaS 模板，点击即用，涵盖聊天、图像生成等多场景。",
+            "title": "真实可视化",
+            "description": "在对汽车进行任何改动之前，准确了解改装效果。",
             "icon": "RiClapperboardAiLine",
             "image": {
               "src": "/imgs/features/admin-settings.png",
@@ -176,8 +176,8 @@
             }
           },
           {
-            "title": "专属技术指导",
-            "description": "享受专属技术支持与开发者社区，为你的成功保驾护航。",
+            "title": "社区支持",
+            "description": "加入我们的汽车爱好者社区，获取对改装创意的反馈。",
             "icon": "RiCodeFill",
             "image": {
               "src": "/imgs/features/landing-page.png",
@@ -189,8 +189,8 @@
       "usage": {
         "block": "features-step",
         "id": "usage",
-        "title": "三步使用 ShipAny 极速上线",
-        "description": "只需三步，快速开启你的 AI SaaS 创业之路：",
+        "title": "三步使用 ModSnap 打造梦想座驾",
+        "description": "只需三步，开启你的汽车改装之旅：",
         "image": {
           "src": "/imgs/features/1.png",
           "alt": "usage"
@@ -199,32 +199,32 @@
         "text_align": "center",
         "items": [
           {
-            "title": "获取 ShipAny",
-            "description": "一次性购买 ShipAny，查收邮件获取代码与文档。",
+            "title": "选择你的车型",
+            "description": "从我们广泛的品牌和车型数据库中选择你的爱车。",
             "image": {
               "src": "/imgs/features/5.png",
               "alt": "usage"
             }
           },
           {
-            "title": "启动你的项目",
-            "description": "阅读说明文档，克隆 ShipAny 代码，开始开发你的 AI SaaS 项目。",
+            "title": "定制你的改装方案",
+            "description": "使用我们的 3D 配置器尝试不同的改装方案，实时查看效果。",
             "image": {
               "src": "/imgs/features/6.png",
               "alt": "usage"
             }
           },
           {
-            "title": "个性化定制",
-            "description": "根据需求修改模板内容和数据，配置专属 AI 能力。",
+            "title": "连接服务商",
+            "description": "找到可信的本地 mechanic 和店铺，将你的改装创意变为现实。",
             "image": {
               "src": "/imgs/features/7.png",
               "alt": "usage"
             }
           },
           {
-            "title": "部署上线",
-            "description": "简单几步将你的项目推向生产环境，立刻为客户提供服务。",
+            "title": "分享你的作品",
+            "description": "向社区展示你的改装爱车，获取其他爱好者的反馈。",
             "image": {
               "src": "/imgs/features/8.png",
               "alt": "usage"
@@ -235,45 +235,45 @@
       },
       "features": {
         "id": "features",
-        "title": "ShipAny 核心功能",
-        "description": "一切你需要的工具，助力 AI SaaS 项目高效上线。",
+        "title": "ModSnap 核心功能",
+        "description": "一切你需要的工具，让你自信地改造你的爱车。",
         "items": [
           {
-            "title": "Next.js 项目模板",
-            "description": "生产就绪、支持 SEO 与多语言的 Next.js 脚手架。",
+            "title": "3D 可视化",
+            "description": "你的爱车与各种改装选项的逼真 3D 渲染。",
             "icon": "RiNextjsFill"
           },
           {
-            "title": "身份认证与支付",
-            "description": "集成谷歌 OAuth、一键登录，以及 Stripe 支付。",
+            "title": "社区展示",
+            "description": "浏览和分享与其他汽车爱好者的改装创意。",
             "icon": "RiKey2Fill"
           },
           {
-            "title": "数据基础设施",
-            "description": "内置 Supabase，稳定可靠的数据存储。",
+            "title": "本地服务连接",
+            "description": "找到你所在地区的可信 mechanic 和店铺。",
             "icon": "RiDatabase2Line"
           },
           {
-            "title": "一键部署",
-            "description": "自动化部署到 Vercel 或 Cloudflare，极速上线。",
+            "title": "AI 智能推荐",
+            "description": "基于你的车型和偏好，获得个性化的改装建议。",
             "icon": "RiCloudy2Fill"
           },
           {
-            "title": "商业分析",
-            "description": "集成 Google Analytics、Search Console，助力业务增长。",
+            "title": "移动友好",
+            "description": "随时随地从任何设备访问 ModSnap。",
             "icon": "RiBarChart2Line"
           },
           {
-            "title": "AI 原生基础设施",
-            "description": "预置 AI 集成、积分系统和 API 售卖能力。",
+            "title": "安全私密",
+            "description": "你的个人信息和改装计划得到安全保护。",
             "icon": "RiRobot2Line"
           }
         ]
       },
       "stats": {
         "id": "stats",
-        "title": "用户喜爱 ShipAny",
-        "description": "因其易用且上线飞快。",
+        "title": "用户喜爱 ModSnap",
+        "description": "因其逼真的可视化效果和易用的平台。",
         "items": [
           {
             "title": "999+",
@@ -281,24 +281,24 @@
           },
           {
             "title": "200+",
-            "description": "组件块"
+            "description": "款车型"
           },
           {
             "title": "50+",
-            "description": "专业模板"
+            "description": "种改装选项"
           }
         ],
         "className": "bg-muted"
       },
       "testimonials": {
         "id": "testimonials",
-        "title": "用户对 ShipAny 的评价",
-        "description": "听听开发者与创始人用 ShipAny 快速上线 AI 创业项目的故事。",
+        "title": "用户对 ModSnap 的评价",
+        "description": "听听汽车爱好者如何通过 ModSnap 改造他们的爱车。",
         "items": [
           {
             "name": "David Chen",
-            "role": "AIWallpaper.shop 创始人",
-            "quote": "ShipAny 为我们节省了数月开发时间。2 天上线 AI 壁纸业务，一周内就收到了第一笔付费订单！",
+            "role": "汽车爱好者",
+            "quote": "ModSnap 帮助我在进行任何改动之前可视化我的梦想座驾。3D 渲染效果非常逼真！",
             "image": {
               "src": "/imgs/avatars/1.png",
               "alt": "david"
@@ -306,8 +306,8 @@
           },
           {
             "name": "Rachel Kim",
-            "role": "HeyBeauty.ai CTO",
-            "quote": "内置 AI 基础设施颠覆了开发体验，无需担心架构，只需专注核心功能，极快落地。",
+            "role": "车主",
+            "quote": "通过 ModSnap，我找到了当地可信的 mechanic。整个过程非常顺畅！",
             "image": {
               "src": "/imgs/avatars/2.png",
               "alt": "rachel"
@@ -315,8 +315,8 @@
           },
           {
             "name": "Marcus Thompson",
-            "role": "独立开发者",
-            "quote": "作为独立开发者，ShipAny 满足了全部需求——认证、支付、AI 集成、美观界面，一个周末上线 SaaS！",
+            "role": "汽车收藏家",
+            "quote": "社区展示给我的经典车收藏提供了很多创意。ModSnap 是一个游戏规则改变者！",
             "image": {
               "src": "/imgs/avatars/3.png",
               "alt": "marcus"
@@ -324,8 +324,8 @@
           },
           {
             "name": "Sofia Garcia",
-            "role": "Melodisco CEO",
-            "quote": "模板高度可定制且生产级。我们几小时内搭建出了 AI 音乐平台，上市周期大大缩短！",
+            "role": "汽车定制师",
+            "quote": "作为专业定制师，ModSnap 已成为向客户展示他们的汽车将会是什么样子的必备工具。",
             "image": {
               "src": "/imgs/avatars/4.png",
               "alt": "sofia"
@@ -333,8 +333,8 @@
           },
           {
             "name": "James Wilson",
-            "role": "GPTs.works 技术负责人",
-            "quote": "ShipAny 基础设施极其稳定。我们从 0 到 1 万用户，无需关心后端维护，是最棒的 AI 创业投资。",
+            "role": "汽车爱好者",
+            "quote": "AI 推荐非常准确！我从未想过一些被推荐的改装方案。",
             "image": {
               "src": "/imgs/avatars/5.png",
               "alt": "james"
@@ -342,8 +342,8 @@
           },
           {
             "name": "Anna Zhang",
-            "role": "创业者",
-            "quote": "从想法到上线，仅用 3 天！ShipAny 模板和部署工具让我们极快验证 AI 商业创意。",
+            "role": "首次车主",
+            "quote": "ModSnap 让我轻松了解改装会如何改变我的第一辆车。我对结果非常满意！",
             "image": {
               "src": "/imgs/avatars/6.png",
               "alt": "anna"
@@ -353,43 +353,43 @@
       },
       "faq": {
         "id": "faq",
-        "title": "关于 ShipAny 的常见问题",
+        "title": "关于 ModSnap 的常见问题",
         "description": "还有其他问题？欢迎加入 Discord 或发邮件联系我们。",
         "items": [
           {
-            "question": "ShipAny 是什么？怎么帮到我？",
-            "answer": "ShipAny 是专为 AI SaaS 创业设计的 NextJS 全套脚手架，内含开箱即用的模板、基础设施搭建和部署工具，让你数小时内上线 AI 产品。"
+            "question": "ModSnap 是什么？它如何帮助我？",
+            "answer": "ModSnap 是一个 AI 驱动的汽车改装可视化平台，允许你使用 3D 技术可视化和定制你的爱车。它还帮助你连接本地服务商，将你的创意变为现实。"
           },
           {
-            "question": "使用 ShipAny 需要很高的技术水平吗？",
-            "answer": "有基础编程知识即可上手。ShipAny 面向开发者友好，详细文档和模板让初学者也能轻松起步，不需深厚 AI 或云计算背景。"
+            "question": "使用 ModSnap 需要技术技能吗？",
+            "answer": "不需要！ModSnap 设计为用户友好。你不需要任何技术技能来使用我们的 3D 配置器或浏览社区展示。"
           },
           {
-            "question": "ShipAny 支持哪些类型的 AI SaaS 项目？",
-            "answer": "ShipAny 支持内容生成、数据分析、AI 聊天机器人、图片/内容生成器等多种主流 AI 应用场景。"
+            "question": "ModSnap 支持哪些类型的汽车？",
+            "answer": "ModSnap 支持广泛的汽车品牌和车型，从流行品牌到稀有经典车型。我们的数据库不断增长。"
           },
           {
-            "question": "用 ShipAny 一般多久能上线？",
-            "answer": "借助 ShipAny，可在数小时内拿到产品原型并上线生产环境，预配置的一键部署大幅缩短开发周期。"
+            "question": "3D 渲染效果有多逼真？",
+            "answer": "我们的 3D 渲染效果非常逼真，让你清楚地了解改装在现实生活中的样子。我们使用先进的渲染技术确保准确性。"
           },
           {
-            "question": "ShipAny 的基础设施包括哪些内容？",
-            "answer": "包含认证、数据库、API 集成、支付、云端部署等全栈解决方案，全部遵循业界最佳实践预配置。"
+            "question": "如何连接服务商？",
+            "answer": "ModSnap 拥有可信的本地 mechanic 和店铺目录。你可以浏览你所在地区的服务商，阅读评论，并通过平台直接联系他们。"
           },
           {
-            "question": "模板是否支持定制自己的品牌？",
-            "answer": "当然支持！所有模板均可自定义设计、功能和品牌，既保持基础架构稳定，又能满足个性扩展需求。"
+            "question": "ModSnap 是免费使用的吗？",
+            "answer": "ModSnap 提供免费和高级计划。免费计划允许你使用基本的 3D 配置器和浏览社区。高级计划提供额外功能，如高级定制选项和优先服务商连接。"
           }
         ]
       },
       "cta": {
         "id": "cta",
-        "title": "发布你的第一个 AI SaaS 项目",
-        "description": "从这里出发，用 ShipAny 极速交付。",
+        "title": "今天就改造你的爱车",
+        "description": "从这里出发，用 ModSnap 创造你的梦想座驾。",
         "buttons": [
           {
-            "title": "获取 ShipAny",
-            "url": "https://shipany.ai",
+            "title": "获取 ModSnap",
+            "url": "#",
             "target": "_blank",
             "icon": "Zap"
           },
@@ -406,7 +406,7 @@
       "subscribe": {
         "id": "subscribe",
         "title": "订阅我们的邮件通知",
-        "description": "获取 ShipAny 最新资讯与产品动态。",
+        "description": "获取 ModSnap 最新资讯与产品动态。",
         "submit": {
           "input": {
             "placeholder": "输入邮箱"
