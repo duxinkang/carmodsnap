@@ -210,7 +210,7 @@ export default function CarModderConfigurator() {
     };
     setSelectedCar(customCar);
     setShowCustomInput(false);
-    toast.success(t('ui.carAdded'));
+    toast.success(t('carAdded'));
   }, [t]);
 
   const { user, isCheckSign, setIsShowSignModal, fetchUserCredits } = useAppContext();
@@ -239,15 +239,15 @@ export default function CarModderConfigurator() {
     const parts: string[] = [];
 
     parts.push(`${isZh ? selectedCar.nameZh : selectedCar.name} (${selectedCar.brand})`);
-    parts.push(`${t('ui.paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name} (${isZh ? selectedFinish.nameZh : selectedFinish.name}${t('ui.paintFinish')})`);
-    parts.push(`${t('ui.wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name}`);
+    parts.push(`${t('paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name} (${isZh ? selectedFinish.nameZh : selectedFinish.name}${t('paintFinish')})`);
+    parts.push(`${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name}`);
 
     const activeMods = selectedMods
       .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id))
       .map(m => isZh ? m?.nameZh : m?.name)
       .filter(Boolean);
     if (activeMods.length > 0) {
-      parts.push(`${t('ui.modifications')}: ${activeMods.join('、')}`);
+      parts.push(`${t('modifications_')}: ${activeMods.join('、')}`);
     }
 
     const activeAccents = Object.entries(accentOptions)
@@ -256,10 +256,10 @@ export default function CarModderConfigurator() {
       .map(a => isZh ? a?.nameZh : a?.name)
       .filter(Boolean);
     if (activeAccents.length > 0) {
-      parts.push(`${t('ui.details')}: ${activeAccents.join('、')}`);
+      parts.push(`${t('details')}: ${activeAccents.join('、')}`);
     }
 
-    parts.push(t('ui.promptSuffix'));
+    parts.push(t('promptSuffix'));
 
     return parts.join(', ');
   }, [selectedCar, selectedColor, selectedFinish, selectedWheel, selectedMods, accentOptions]);
@@ -279,7 +279,7 @@ export default function CarModderConfigurator() {
       try {
         if (generationStartTime && Date.now() - generationStartTime > GENERATION_TIMEOUT) {
           resetTaskState();
-          toast.error(t('ui.generationTimeout'));
+          toast.error(t('generationTimeout'));
           return true;
         }
 
@@ -289,10 +289,10 @@ export default function CarModderConfigurator() {
           body: JSON.stringify({ taskId: id }),
         });
 
-        if (!resp.ok) throw new Error(`${t('ui.requestFailed')}: ${resp.status}`);
+        if (!resp.ok) throw new Error(`${t('requestFailed')}: ${resp.status}`);
 
         const { code, message, data } = await resp.json();
-        if (code !== 0) throw new Error(message || t('ui.queryTaskFailed'));
+        if (code !== 0) throw new Error(message || t('queryTaskFailed'));
 
         const task = data as BackendTask;
         const currentStatus = task.status as AITaskStatus;
@@ -324,7 +324,7 @@ export default function CarModderConfigurator() {
 
         if (currentStatus === AITaskStatus.SUCCESS) {
           if (imageUrls.length === 0) {
-            toast.error(toast.error(t('generationFailed')));
+            toast.error(t('generationFailed'));
           } else {
             setGeneratedImages(
               imageUrls.map((url, index) => ({
@@ -333,7 +333,7 @@ export default function CarModderConfigurator() {
                 prompt: task.prompt ?? undefined,
               }))
             );
-            toast.success(toast.success(t('generationComplete')));
+            toast.success(t('generationComplete'));
           }
           setProgress(100);
           resetTaskState();
@@ -352,7 +352,7 @@ export default function CarModderConfigurator() {
         return false;
       } catch (error: any) {
         console.error('轮询任务状态失败:', error);
-        toast.error(`${t('ui.queryFailed')}: ${error.message}`);
+        toast.error(`${t('queryFailed')}: ${error.message}`);
         resetTaskState();
         fetchUserCredits();
         return true;
@@ -422,13 +422,13 @@ export default function CarModderConfigurator() {
         }),
       });
 
-      if (!resp.ok) throw new Error(`${t('ui.requestFailed')}: ${resp.status}`);
+      if (!resp.ok) throw new Error(`${t('requestFailed')}: ${resp.status}`);
 
       const { code, message, data } = await resp.json();
-      if (code !== 0) throw new Error(message || t('ui.queryTaskFailed'));
+      if (code !== 0) throw new Error(message || t('queryTaskFailed'));
 
       const newTaskId = data?.id;
-      if (!newTaskId) throw new Error(t('ui.queryTaskFailed'));
+      if (!newTaskId) throw new Error(t('queryTaskFailed'));
 
       if (data.status === AITaskStatus.SUCCESS && data.taskInfo) {
         const parsedResult = typeof data.taskInfo === 'string' 
@@ -443,7 +443,7 @@ export default function CarModderConfigurator() {
               prompt,
             }))
           );
-          toast.success(toast.success(t('generationComplete')));
+          toast.success(t('generationComplete'));
           setProgress(100);
           resetTaskState();
           await fetchUserCredits();
@@ -456,7 +456,7 @@ export default function CarModderConfigurator() {
       await fetchUserCredits();
     } catch (error: any) {
       console.error('生成图片失败:', error);
-      toast.error(`${t('ui.generationFailed')}: ${error.message}`);
+      toast.error(`${t('generationFailed')}: ${error.message}`);
       resetTaskState();
     }
   };
@@ -476,10 +476,10 @@ export default function CarModderConfigurator() {
       link.click();
       document.body.removeChild(link);
       setTimeout(() => URL.revokeObjectURL(blobUrl), 200);
-      toast.success(toast.success(t('downloadSuccess') || 'Image downloaded'));
+      toast.success(isZh ? '图片下载成功' : 'Image downloaded');
     } catch (error) {
       console.error('下载图片失败:', error);
-      toast.error(toast.error(t('downloadFailed') || 'Download failed'));
+      toast.error(isZh ? '图片下载失败' : 'Download failed');
     } finally {
       setDownloadingImageId(null);
     }
@@ -489,13 +489,13 @@ export default function CarModderConfigurator() {
     const carName = isZh ? selectedCar.nameZh : selectedCar.name;
     if (navigator.share) {
       navigator.share({
-        title: t('ui.shareTitle', { car: carName }),
-        text: t('ui.shareText', { car: carName }),
+        title: t('shareTitle', { car: carName }),
+        text: t('shareText', { car: carName }),
         url: window.location.href,
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      toast.success(t('ui.linkCopied'));
+      toast.success(t('linkCopied'));
     }
   };
 
@@ -503,13 +503,13 @@ export default function CarModderConfigurator() {
     if (!taskStatus) return '';
     switch (taskStatus) {
       case AITaskStatus.PENDING:
-        return t('ui.waitingModel');
+        return t('waitingModel');
       case AITaskStatus.PROCESSING:
-        return t('ui.generatingImage');
+        return t('generatingImage');
       case AITaskStatus.SUCCESS:
-        return t('ui.generationComplete');
+        return t('generationComplete');
       case AITaskStatus.FAILED:
-        return t('ui.generationFailed');
+        return t('generationFailed');
       default:
         return '';
     }
@@ -579,9 +579,9 @@ export default function CarModderConfigurator() {
                       className="px-4 py-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full text-xs font-medium shadow-[0_0_10px_rgba(99,102,241,0.4)] text-white"
                       whileHover={{ scale: 1.05 }}
                     >
-                      {t('ui.awd')}
+                      {t('awd')}
                     </motion.span>
-                    <span className="text-muted-foreground text-sm">{selectedCar.brand} {selectedCar.type === 'sedan' ? t('ui.sedan') : t('ui.suv')}</span>
+                    <span className="text-muted-foreground text-sm">{selectedCar.brand} {selectedCar.type === 'sedan' ? t('sedan') : t('suv')}</span>
                   </div>
                   <div className="mb-4">
                     <h3 className="text-muted-foreground text-sm mb-2 uppercase tracking-wider">{t('totalBuildCost')}</h3>
@@ -597,44 +597,44 @@ export default function CarModderConfigurator() {
                   </div>
                   <Separator className="bg-border my-4" />
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">{t('ui.basePrice')}</span>
+                    <span className="text-muted-foreground text-sm">{t('basePrice')}</span>
                     <span className="text-sm font-medium">{formatPrice(selectedCar.price)}</span>
                   </div>
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-muted-foreground text-sm">{t('ui.modCost')}</span>
+                    <span className="text-muted-foreground text-sm">{t('modCost')}</span>
                     <span className="text-sm font-medium text-[#6366f1]">+{formatPrice(totalBuildCost - selectedCar.price)}</span>
                   </div>
                 </motion.div>
 
                 <Card className="bg-card border-border shadow-lg overflow-hidden">
                   <CardHeader className="pb-3 bg-card border-b border-border">
-                    <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{t('ui.configDetails')}</CardTitle>
+                    <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{t('configDetails')}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 p-6">
                     <motion.div 
                       className="flex justify-between items-center py-3 border-b border-muted"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-muted-foreground text-sm">{t('ui.baseModel')}</span>
+                      <span className="text-muted-foreground text-sm">{t('baseModel')}</span>
                       <span className="font-medium">{formatPrice(selectedCar.price)}</span>
                     </motion.div>
                     <motion.div 
                       className="flex justify-between items-center py-3 border-b border-muted"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-muted-foreground text-sm">{t('ui.wheels')}</span>
+                      <span className="text-muted-foreground text-sm">{t('wheels')}</span>
                       <span className="font-medium">{formatPrice(selectedWheel.price)}</span>
                     </motion.div>
                     <motion.div 
                       className="flex justify-between items-center py-3 border-b border-muted"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-muted-foreground text-sm">{t('ui.paint')}</span>
+                      <span className="text-muted-foreground text-sm">{t('paint')}</span>
                       <span className="font-medium">{formatPrice(selectedColor.price + selectedFinish.price)}</span>
                     </motion.div>
                     {selectedMods.length > 0 && (
                       <div className="py-3 border-b border-muted">
-                        <span className="text-muted-foreground text-sm block mb-3 uppercase tracking-wider">{t('ui.modKit')}</span>
+                        <span className="text-muted-foreground text-sm block mb-3 uppercase tracking-wider">{t('modKit')}</span>
                         {selectedMods.map((id) => {
                           const mod = MODIFICATION_OPTIONS.find((m) => m.id === id);
                           return mod ? (
@@ -652,7 +652,7 @@ export default function CarModderConfigurator() {
                     )}
                     {Object.entries(accentOptions).some(([_, enabled]) => enabled) && (
                       <div className="py-3">
-                        <span className="text-muted-foreground text-sm block mb-3 uppercase tracking-wider">{t('ui.accentsDetail')}</span>
+                        <span className="text-muted-foreground text-sm block mb-3 uppercase tracking-wider">{t('accentsDetail')}</span>
                         {Object.entries(accentOptions)
                           .filter(([_, enabled]) => enabled)
                           .map(([id]) => {
@@ -694,12 +694,12 @@ export default function CarModderConfigurator() {
                       >
                         <LazyImage
                           src={generatedImages[0].url}
-                          alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('ui.modEffect')}`}
+                          alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
                           <div className="p-6 w-full">
-                            <h3 className="text-xl font-bold mb-2">{isZh ? selectedCar.nameZh : selectedCar.name} {t('ui.modEffect')}</h3>
+                            <h3 className="text-xl font-bold mb-2">{isZh ? selectedCar.nameZh : selectedCar.name} {t('modEffect')}</h3>
                             <p className="text-muted-foreground text-sm mb-4">{prompt}</p>
                             <div className="flex gap-3">
                               <Button
@@ -714,7 +714,7 @@ export default function CarModderConfigurator() {
                                 ) : (
                                   <>
                                     <Download className="w-4 h-4 mr-2" />
-                                    {t('ui.download')}
+                                    {t('download')}
                                   </>
                                 )}
                               </Button>
@@ -725,7 +725,7 @@ export default function CarModderConfigurator() {
                                 className="bg-muted/10 hover:bg-muted/20 backdrop-blur-sm"
                               >
                                 <Share2 className="w-4 h-4 mr-2" />
-                                {t('ui.share')}
+                                {t('share')}
                               </Button>
                             </div>
                           </div>
@@ -756,9 +756,9 @@ export default function CarModderConfigurator() {
               {/* Car Selection */}
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{t('ui.selectCarModel')}</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{t('selectCarModel')}</h3>
                   <Badge variant="outline" className="text-muted-foreground border-border">
-                    {CHINESE_CAR_MODELS.length} {t('ui.carModelsCount')}
+                    {CHINESE_CAR_MODELS.length} {t('carModelsCount')}
                   </Badge>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -776,7 +776,7 @@ export default function CarModderConfigurator() {
                       <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center">
                         <span className="text-2xl font-light text-muted-foreground">+</span>
                       </div>
-                      <p className="text-xs font-medium text-muted-foreground">{t('ui.customCar')}</p>
+                      <p className="text-xs font-medium text-muted-foreground">{t('customCar')}</p>
                     </div>
                     <div className="p-3 bg-card border-t border-border">
                       <p className="text-xs text-muted-foreground/60 mb-1">Custom</p>
@@ -835,12 +835,12 @@ export default function CarModderConfigurator() {
                     {showAllCars ? (
                       <>
                         <ChevronUp className="w-4 h-4 mr-2" />
-                        {t('ui.collapse')}
+                        {t('collapse')}
                       </>
                     ) : (
                       <>
                         <ChevronDown className="w-4 h-4 mr-2" />
-                        {t('ui.viewAll')} {CHINESE_CAR_MODELS.length} {t('ui.carModelsCount')}
+                        {t('viewAll')} {CHINESE_CAR_MODELS.length} {t('carModelsCount')}
                       </>
                     )}
                   </Button>
@@ -857,7 +857,7 @@ export default function CarModderConfigurator() {
                   >
                     <CardContent className="space-y-4 p-6">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium">{t('ui.generationProgress')}</span>
+                        <span className="font-medium">{t('generationProgress')}</span>
                         <span className="text-[#6366f1] font-medium">{progress}%</span>
                       </div>
                       <Progress value={progress} className="h-3 bg-border rounded-full overflow-hidden">
@@ -890,7 +890,7 @@ export default function CarModderConfigurator() {
                           className="text-muted-foreground hover:text-foreground"
                         >
                           <RefreshCw className="w-4 h-4 mr-2" />
-                          {t('ui.cancelGenerate')}
+                          {t('cancelGenerate')}
                         </Button>
                       </div>
                     </CardContent>
@@ -1164,12 +1164,12 @@ export default function CarModderConfigurator() {
                       {isGenerating ? (
                         <>
                           <Loader2 className="w-5 h-5 animate-spin mr-3" />
-                          {t('ui.generating')}
+                          {t('generating')}
                         </>
                       ) : (
                         <>
                           <Sparkles className="w-5 h-5 mr-3" />
-                          {t('ui.generateImage')}
+                          {t('generateImage')}
                         </>
                       )}
                     </Button>
@@ -1187,7 +1187,7 @@ export default function CarModderConfigurator() {
                         onClick={handleShare}
                       >
                         <Share2 className="w-4 h-4 mr-2" />
-                        {t('ui.share')}
+                        {t('share')}
                       </Button>
                     </motion.div>
                     <motion.div
@@ -1201,7 +1201,7 @@ export default function CarModderConfigurator() {
                         className="w-full py-4 bg-card hover:bg-muted border border-border font-medium transition-all duration-300"
                       >
                         <FileText className="w-4 h-4 mr-2" />
-                        {t('ui.quote')}
+                        {t('quote')}
                       </Button>
                     </motion.div>
                   </div>
@@ -1212,8 +1212,8 @@ export default function CarModderConfigurator() {
                     transition={{ duration: 0.5, delay: 0.5 }}
                   >
                     <p className="text-xs text-muted-foreground/40">
-                      {t('ui.creditsRequired', { credits: costCredits })}
-                      {user && ` ${t('ui.remaining', { credits: remainingCredits })}`}
+                      {t('creditsRequired', { credits: costCredits })}
+                      {user && ` ${t('remaining', { credits: remainingCredits })}`}
                     </p>
                   </motion.div>
                 </div>
