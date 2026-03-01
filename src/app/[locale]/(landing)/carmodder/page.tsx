@@ -778,7 +778,7 @@ export default function CarModderConfigurator() {
                     <div className="p-3 bg-card border-t border-border">
                       <p className="text-xs text-muted-foreground/60 mb-1">Custom</p>
                       <p className="text-sm font-medium truncate">输入你的爱车</p>
-                      <p className="text-xs text-[#6366f1] mt-1">免费体验</p>
+                      <p className="text-xs text-[#6366f1] mt-1">基础功能免费</p>
                     </div>
                   </motion.div>
 
