@@ -12,6 +12,14 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+  input,
+  select,
+  textarea {
+    @apply border-border outline-ring/50 bg-background;
+  }
+  button {
+    @apply border-border outline-ring/50 cursor-pointer;
+  }
 }
 
 .container {
@@ -25,16 +33,6 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-input,
-select,
-textarea {
-  @apply border-border outline-ring/50 bg-background;
-}
-
-button {
-  @apply border-border outline-ring/50 cursor-pointer;
 }
 
 pre {
@@ -116,39 +114,15 @@ pre {
   mix-blend-mode: normal;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
 .animate-marquee {
   animation: marquee 30s linear infinite;
-}
-
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
 }
 
 .animate-shimmer {
   animation: shimmer 2s linear infinite;
 }
 
-.material-icons{width: 1em;direction: rtl;} 
+.material-icons {
+  width: 1em;
+  direction: rtl;
+}

@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { Card, CardContent } from '@/shared/components/ui/card';
+import { cn } from '@/shared/lib/utils';
 
 export interface CustomCarInputData {
   brand: string;
@@ -46,7 +47,10 @@ const CAR_TYPES = [
 const CURRENT_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: 30 }, (_, i) => CURRENT_YEAR - i);
 
-export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
+export function CustomCarInput({ 
+  onSubmit, 
+  onCancel
+}: CustomCarInputProps) {
   const [formData, setFormData] = useState<CustomCarInputData>({
     brand: '',
     model: '',
@@ -76,7 +80,7 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
+      className="space-y-6 p-6 rounded-2xl bg-card text-foreground border border-border shadow-xl"
     >
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">自定义车型</h2>
@@ -92,6 +96,7 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
             placeholder="例如：Honda"
             value={formData.brand}
             onChange={(e) => setFormData(prev => ({ ...prev, brand: e.target.value }))}
+            className="bg-background border-border text-foreground"
           />
         </div>
         <div className="space-y-2">
@@ -100,6 +105,7 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
             placeholder="例如：Civic Type R"
             value={formData.model}
             onChange={(e) => setFormData(prev => ({ ...prev, model: e.target.value }))}
+            className="bg-background border-border text-foreground"
           />
         </div>
         <div className="space-y-2">
@@ -108,7 +114,7 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
             value={String(formData.year)}
             onValueChange={(value) => setFormData(prev => ({ ...prev, year: Number(value) }))}
           >
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="bg-background border-border text-foreground"><SelectValue /></SelectTrigger>
             <SelectContent>
               {YEARS.map(year => (
                 <SelectItem key={year} value={String(year)}>{year}</SelectItem>
@@ -122,7 +128,7 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
             value={formData.type}
             onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
           >
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger className="bg-background border-border text-foreground"><SelectValue /></SelectTrigger>
             <SelectContent>
               {CAR_TYPES.map(type => (
                 <SelectItem key={type.id} value={type.id}>{type.nameZh}</SelectItem>
@@ -139,12 +145,13 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
           value={formData.description || ''}
           onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
           rows={3}
+          className="bg-background border-border text-foreground"
         />
       </div>
 
       <div className="space-y-2">
         <Label>上传车辆照片（可选）</Label>
-        <Card className="border-dashed">
+        <Card className="border-dashed bg-background/50 border-border">
           <CardContent className="p-6">
             {formData.imageUrl ? (
               <div className="relative">
@@ -156,8 +163,8 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
               </div>
             ) : (
               <label className="flex flex-col items-center cursor-pointer">
-                <Upload className="w-8 h-8 text-white/40 mb-2" />
-                <span className="text-sm text-white/60">点击上传图片</span>
+                <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">点击上传图片</span>
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
               </label>
             )}
@@ -167,7 +174,7 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
 
       <div className="flex gap-3 pt-4">
         <Button variant="secondary" className="flex-1" onClick={onCancel}>取消</Button>
-        <Button className="flex-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6]"
+        <Button className="flex-1 bg-primary text-primary-foreground hover:opacity-90"
           onClick={handleSubmit} disabled={!formData.brand || !formData.model}>
           开始改装
         </Button>
@@ -175,3 +182,4 @@ export function CustomCarInput({ onSubmit, onCancel }: CustomCarInputProps) {
     </motion.div>
   );
 }
+

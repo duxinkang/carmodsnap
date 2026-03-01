@@ -24,53 +24,53 @@ const GENERATION_TIMEOUT = 180000;
 
 const CHINESE_CAR_MODELS = [
   // Honda
-  { id: 'honda-civic', name: 'Honda Civic', nameZh: '本田思域', brand: 'Honda', type: 'sedan', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', localImage: '/imgs/cars/honda-civic.jpg', price: 150000 },
-  { id: 'honda-s2000', name: 'Honda S2000', nameZh: '本田 S2000', brand: 'Honda', type: 'roadster', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', localImage: '/imgs/cars/honda-s2000.jpg', price: 350000 },
+  { id: 'honda-civic', name: 'Honda Civic', nameZh: '本田思域', brand: 'Honda', type: 'sedan', image: '/imgs/cars/honda-civic.jpg', localImage: '/imgs/cars/honda-civic.jpg', price: 150000 },
+  { id: 'honda-s2000', name: 'Honda S2000', nameZh: '本田 S2000', brand: 'Honda', type: 'roadster', image: '/imgs/cars/honda-s2000.jpg', localImage: '/imgs/cars/honda-s2000.jpg', price: 350000 },
   // Toyota / Subaru
-  { id: 'toyota-86-brz', name: 'Toyota 86 / Subaru BRZ', nameZh: '丰田 86/斯巴鲁 BRZ', brand: 'Toyota/Subaru', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/toyota-86-brz.jpg', price: 280000 },
-  { id: 'toyota-supra', name: 'Toyota Supra', nameZh: '丰田 Supra', brand: 'Toyota', type: 'sports', image: 'https://images.unsplash.com/photo-1590059390239-03c9e748e0eb?w=800&h=600&fit=crop', localImage: '/imgs/cars/toyota-supra.jpg', price: 600000 },
-  { id: 'toyota-ae86', name: 'Toyota AE86', nameZh: '丰田 AE86', brand: 'Toyota', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/toyota-ae86.jpg', price: 150000 },
-  { id: 'subaru-wrx', name: 'Subaru WRX / STI', nameZh: '斯巴鲁 WRX/STI', brand: 'Subaru', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/subaru-wrx.jpg', price: 350000 },
+  { id: 'toyota-86-brz', name: 'Toyota 86 / Subaru BRZ', nameZh: '丰田 86/斯巴鲁 BRZ', brand: 'Toyota/Subaru', type: 'coupe', image: '/imgs/cars/toyota-86-brz.jpg', localImage: '/imgs/cars/toyota-86-brz.jpg', price: 280000 },
+  { id: 'toyota-supra', name: 'Toyota Supra', nameZh: '丰田 Supra', brand: 'Toyota', type: 'sports', image: '/imgs/cars/toyota-supra.jpg', localImage: '/imgs/cars/toyota-supra.jpg', price: 600000 },
+  { id: 'toyota-ae86', name: 'Toyota AE86', nameZh: '丰田 AE86', brand: 'Toyota', type: 'coupe', image: '/imgs/cars/toyota-ae86.jpg', localImage: '/imgs/cars/toyota-ae86.jpg', price: 150000 },
+  { id: 'subaru-wrx', name: 'Subaru WRX / STI', nameZh: '斯巴鲁 WRX/STI', brand: 'Subaru', type: 'sedan', image: '/imgs/cars/subaru-wrx.jpg', localImage: '/imgs/cars/subaru-wrx.jpg', price: 350000 },
   // Volkswagen
-  { id: 'vw-golf', name: 'Volkswagen Golf', nameZh: '大众高尔夫', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', localImage: '/imgs/cars/vw-golf.jpg', price: 150000 },
-  { id: 'vw-beetle', name: 'Volkswagen Beetle', nameZh: '大众甲壳虫', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', localImage: '/imgs/cars/vw-beetle.jpg', price: 200000 },
+  { id: 'vw-golf', name: 'Volkswagen Golf', nameZh: '大众高尔夫', brand: 'Volkswagen', type: 'hatchback', image: '/imgs/cars/vw-golf.jpg', localImage: '/imgs/cars/vw-golf.jpg', price: 150000 },
+  { id: 'vw-beetle', name: 'Volkswagen Beetle', nameZh: '大众甲壳虫', brand: 'Volkswagen', type: 'hatchback', image: '/imgs/cars/vw-beetle.jpg', localImage: '/imgs/cars/vw-beetle.jpg', price: 200000 },
   // Nissan
-  { id: 'nissan-gtr', name: 'Nissan Skyline GT-R', nameZh: '日产 GT-R', brand: 'Nissan', type: 'sports', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/nissan-gtr.jpg', price: 1500000 },
-  { id: 'nissan-silvia', name: 'Nissan Silvia (S13-S15)', nameZh: '日产 Silvia', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/nissan-silvia.jpg', price: 200000 },
-  { id: 'nissan-370z', name: 'Nissan 350Z / 370Z', nameZh: '日产 370Z', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/nissan-370z.jpg', price: 350000 },
+  { id: 'nissan-gtr', name: 'Nissan Skyline GT-R', nameZh: '日产 GT-R', brand: 'Nissan', type: 'sports', image: '/imgs/cars/nissan-gtr.jpg', localImage: '/imgs/cars/nissan-gtr.jpg', price: 1500000 },
+  { id: 'nissan-silvia', name: 'Nissan Silvia (S13-S15)', nameZh: '日产 Silvia', brand: 'Nissan', type: 'coupe', image: '/imgs/cars/nissan-silvia.jpg', localImage: '/imgs/cars/nissan-silvia.jpg', price: 200000 },
+  { id: 'nissan-370z', name: 'Nissan 350Z / 370Z', nameZh: '日产 370Z', brand: 'Nissan', type: 'coupe', image: '/imgs/cars/nissan-370z.jpg', localImage: '/imgs/cars/nissan-370z.jpg', price: 350000 },
   // Mazda
-  { id: 'mazda-mx5', name: 'Mazda MX-5 (Miata)', nameZh: '马自达 MX-5', brand: 'Mazda', type: 'roadster', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', localImage: '/imgs/cars/mazda-mx5.jpg', price: 350000 },
-  { id: 'mazda-rx7', name: 'Mazda RX-7', nameZh: '马自达 RX-7', brand: 'Mazda', type: 'coupe', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', localImage: '/imgs/cars/mazda-rx7.jpg', price: 500000 },
+  { id: 'mazda-mx5', name: 'Mazda MX-5 (Miata)', nameZh: '马自达 MX-5', brand: 'Mazda', type: 'roadster', image: '/imgs/cars/mazda-mx5.jpg', localImage: '/imgs/cars/mazda-mx5.jpg', price: 350000 },
+  { id: 'mazda-rx7', name: 'Mazda RX-7', nameZh: '马自达 RX-7', brand: 'Mazda', type: 'coupe', image: '/imgs/cars/mazda-rx7.jpg', localImage: '/imgs/cars/mazda-rx7.jpg', price: 500000 },
   // BMW
-  { id: 'bmw-3series', name: 'BMW 3 Series', nameZh: '宝马 3 系', brand: 'BMW', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', localImage: '/imgs/cars/bmw-3series.jpg', price: 300000 },
-  { id: 'bmw-m3', name: 'BMW M3 / M4', nameZh: '宝马 M3/M4', brand: 'BMW', type: 'sports', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', localImage: '/imgs/cars/bmw-m3.jpg', price: 800000 },
+  { id: 'bmw-3series', name: 'BMW 3 Series', nameZh: '宝马 3 系', brand: 'BMW', type: 'sedan', image: '/imgs/cars/bmw-3series.jpg', localImage: '/imgs/cars/bmw-3series.jpg', price: 300000 },
+  { id: 'bmw-m3', name: 'BMW M3 / M4', nameZh: '宝马 M3/M4', brand: 'BMW', type: 'sports', image: '/imgs/cars/bmw-m3.jpg', localImage: '/imgs/cars/bmw-m3.jpg', price: 800000 },
   // Ford
-  { id: 'ford-mustang', name: 'Ford Mustang', nameZh: '福特野马', brand: 'Ford', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', localImage: '/imgs/cars/ford-mustang.jpg', price: 400000 },
-  { id: 'ford-f150', name: 'Ford F-150 / Raptor', nameZh: '福特 F-150', brand: 'Ford', type: 'truck', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop', localImage: '/imgs/cars/ford-f150.jpg', price: 600000 },
+  { id: 'ford-mustang', name: 'Ford Mustang', nameZh: '福特野马', brand: 'Ford', type: 'coupe', image: '/imgs/cars/ford-mustang.jpg', localImage: '/imgs/cars/ford-mustang.jpg', price: 400000 },
+  { id: 'ford-f150', name: 'Ford F-150 / Raptor', nameZh: '福特 F-150', brand: 'Ford', type: 'truck', image: '/imgs/cars/ford-f150.jpg', localImage: '/imgs/cars/ford-f150.jpg', price: 600000 },
   // Mitsubishi
-  { id: 'mitsubishi-evo', name: 'Mitsubishi Lancer Evolution', nameZh: '三菱 EVO', brand: 'Mitsubishi', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/mitsubishi-evo.jpg', price: 450000 },
+  { id: 'mitsubishi-evo', name: 'Mitsubishi Lancer Evolution', nameZh: '三菱 EVO', brand: 'Mitsubishi', type: 'sedan', image: '/imgs/cars/mitsubishi-evo.jpg', localImage: '/imgs/cars/mitsubishi-evo.jpg', price: 450000 },
   // Porsche
-  { id: 'porsche-911', name: 'Porsche 911', nameZh: '保时捷 911', brand: 'Porsche', type: 'sports', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', localImage: '/imgs/cars/porsche-911.jpg', price: 1500000 },
+  { id: 'porsche-911', name: 'Porsche 911', nameZh: '保时捷 911', brand: 'Porsche', type: 'sports', image: '/imgs/cars/porsche-911.jpg', localImage: '/imgs/cars/porsche-911.jpg', price: 1500000 },
   // Jeep / Suzuki / Land Rover
-  { id: 'jeep-wrangler', name: 'Jeep Wrangler', nameZh: '吉普牧马人', brand: 'Jeep', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', localImage: '/imgs/cars/jeep-wrangler.jpg', price: 450000 },
-  { id: 'suzuki-jimny', name: 'Suzuki Jimny', nameZh: '铃木吉姆尼', brand: 'Suzuki', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', localImage: '/imgs/cars/suzuki-jimny.jpg', price: 150000 },
-  { id: 'landrover-defender', name: 'Land Rover Defender', nameZh: '路虎卫士', brand: 'Land Rover', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', localImage: '/imgs/cars/landrover-defender.jpg', price: 700000 },
+  { id: 'jeep-wrangler', name: 'Jeep Wrangler', nameZh: '吉普牧马人', brand: 'Jeep', type: 'suv', image: '/imgs/cars/jeep-wrangler.jpg', localImage: '/imgs/cars/jeep-wrangler.jpg', price: 450000 },
+  { id: 'suzuki-jimny', name: 'Suzuki Jimny', nameZh: '铃木吉姆尼', brand: 'Suzuki', type: 'suv', image: '/imgs/cars/suzuki-jimny.jpg', localImage: '/imgs/cars/suzuki-jimny.jpg', price: 150000 },
+  { id: 'landrover-defender', name: 'Land Rover Defender', nameZh: '路虎卫士', brand: 'Land Rover', type: 'suv', image: '/imgs/cars/landrover-defender.jpg', localImage: '/imgs/cars/landrover-defender.jpg', price: 700000 },
   // Audi
-  { id: 'audi-a4', name: 'Audi A4 / S4 / RS4', nameZh: '奥迪 A4', brand: 'Audi', type: 'sedan', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', localImage: '/imgs/cars/audi-a4.jpg', price: 350000 },
-  { id: 'audi-a5', name: 'Audi A5 / S5 / RS5', nameZh: '奥迪 A5', brand: 'Audi', type: 'coupe', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', localImage: '/imgs/cars/audi-a5.jpg', price: 500000 },
+  { id: 'audi-a4', name: 'Audi A4 / S4 / RS4', nameZh: '奥迪 A4', brand: 'Audi', type: 'sedan', image: '/imgs/cars/audi-a4.jpg', localImage: '/imgs/cars/audi-a4.jpg', price: 350000 },
+  { id: 'audi-a5', name: 'Audi A5 / S5 / RS5', nameZh: '奥迪 A5', brand: 'Audi', type: 'coupe', image: '/imgs/cars/audi-a5.jpg', localImage: '/imgs/cars/audi-a5.jpg', price: 500000 },
   // Mercedes-Benz
-  { id: 'mercedes-cclass', name: 'Mercedes-Benz C-Class', nameZh: '奔驰 C 级', brand: 'Mercedes-Benz', type: 'sedan', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop', localImage: '/imgs/cars/mercedes-cclass.jpg', price: 350000 },
+  { id: 'mercedes-cclass', name: 'Mercedes-Benz C-Class', nameZh: '奔驰 C 级', brand: 'Mercedes-Benz', type: 'sedan', image: '/imgs/cars/mercedes-cclass.jpg', localImage: '/imgs/cars/mercedes-cclass.jpg', price: 350000 },
   // MINI
-  { id: 'mini-cooper', name: 'MINI Cooper', nameZh: 'MINI Cooper', brand: 'MINI', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', localImage: '/imgs/cars/mini-cooper.jpg', price: 280000 },
+  { id: 'mini-cooper', name: 'MINI Cooper', nameZh: 'MINI Cooper', brand: 'MINI', type: 'hatchback', image: '/imgs/cars/mini-cooper.jpg', localImage: '/imgs/cars/mini-cooper.jpg', price: 280000 },
   // Chevrolet / Dodge
-  { id: 'chevy-camaro', name: 'Chevrolet Camaro', nameZh: '雪佛兰科迈罗', brand: 'Chevrolet', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', localImage: '/imgs/cars/chevy-camaro.jpg', price: 400000 },
-  { id: 'dodge-challenger', name: 'Dodge Challenger', nameZh: '道奇挑战者', brand: 'Dodge', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', localImage: '/imgs/cars/dodge-challenger.jpg', price: 450000 },
+  { id: 'chevy-camaro', name: 'Chevrolet Camaro', nameZh: '雪佛兰科迈罗', brand: 'Chevrolet', type: 'coupe', image: '/imgs/cars/chevy-camaro.jpg', localImage: '/imgs/cars/chevy-camaro.jpg', price: 400000 },
+  { id: 'dodge-challenger', name: 'Dodge Challenger', nameZh: '道奇挑战者', brand: 'Dodge', type: 'coupe', image: '/imgs/cars/dodge-challenger.jpg', localImage: '/imgs/cars/dodge-challenger.jpg', price: 450000 },
   // Lexus
-  { id: 'lexus-is', name: 'Lexus IS', nameZh: '雷克萨斯 IS', brand: 'Lexus', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', localImage: '/imgs/cars/lexus-is.jpg', price: 350000 },
+  { id: 'lexus-is', name: 'Lexus IS', nameZh: '雷克萨斯 IS', brand: 'Lexus', type: 'sedan', image: '/imgs/cars/lexus-is.jpg', localImage: '/imgs/cars/lexus-is.jpg', price: 350000 },
   // Tesla
-  { id: 'tesla-model3', name: 'Tesla Model 3', nameZh: '特斯拉 Model 3', brand: 'Tesla', type: 'sedan', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=600&fit=crop', localImage: '/imgs/cars/tesla-model3.jpg', price: 280000 },
+  { id: 'tesla-model3', name: 'Tesla Model 3', nameZh: '特斯拉 Model 3', brand: 'Tesla', type: 'sedan', image: '/imgs/cars/tesla-model3.jpg', localImage: '/imgs/cars/tesla-model3.jpg', price: 280000 },
   // Infiniti
-  { id: 'infiniti-g35', name: 'Infiniti G35 / G37', nameZh: '英菲尼迪 G35', brand: 'Infiniti', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', localImage: '/imgs/cars/infiniti-g35.jpg', price: 250000 },
+  { id: 'infiniti-g35', name: 'Infiniti G35 / G37', nameZh: '英菲尼迪 G35', brand: 'Infiniti', type: 'sedan', image: '/imgs/cars/infiniti-g35.jpg', localImage: '/imgs/cars/infiniti-g35.jpg', price: 250000 },
 ];
 
 const WHEEL_STYLES = [
@@ -195,6 +195,7 @@ export default function CarModderConfigurator() {
   const [testMode, setTestMode] = useState(false);
   const [showAllCars, setShowAllCars] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
+
   const handleCustomCarSubmit = useCallback((data: CustomCarInputData) => {
     const customCar = {
       id: `custom-${Date.now()}`,
@@ -211,8 +212,6 @@ export default function CarModderConfigurator() {
     setShowCustomInput(false);
     toast.success('车型已添加，开始改装吧！');
   }, []);
-
-  const [showCustomInput, setShowCustomInput] = useState(false);
 
   const { user, isCheckSign, setIsShowSignModal, fetchUserCredits } = useAppContext();
 
@@ -536,7 +535,25 @@ export default function CarModderConfigurator() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a] text-white overflow-hidden font-[family-name:var(--font-sans)]">
+    <div className="min-h-screen bg-background text-foreground overflow-hidden font-[family-name:var(--font-sans)]">
+      <AnimatePresence>
+        {showCustomInput && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-background/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+            >
+              <CustomCarInput
+                onSubmit={handleCustomCarSubmit}
+                onCancel={() => setShowCustomInput(false)}
+              />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       <main className="pt-16 pb-32">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -549,22 +566,22 @@ export default function CarModderConfigurator() {
             >
               <div className="space-y-6">
                 <motion.div 
-                  className="bg-gradient-to-br from-[#131324] to-[#1a1a3a] rounded-2xl p-6 border border-white/10 shadow-lg"
+                  className="bg-card rounded-2xl p-6 border border-border shadow-lg"
                   whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h2 className="text-2xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">{isZh ? selectedCar.nameZh : selectedCar.name}</h2>
+                  <h2 className="text-2xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">{isZh ? selectedCar.nameZh : selectedCar.name}</h2>
                   <div className="flex items-center gap-3 mb-6">
                     <motion.span 
-                      className="px-4 py-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full text-xs font-medium shadow-[0_0_10px_rgba(99,102,241,0.4)]"
+                      className="px-4 py-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full text-xs font-medium shadow-[0_0_10px_rgba(99,102,241,0.4)] text-white"
                       whileHover={{ scale: 1.05 }}
                     >
                       AWD
                     </motion.span>
-                    <span className="text-white/60 text-sm">{selectedCar.brand} {selectedCar.type === 'sedan' ? 'sedan' : 'SUV'}</span>
+                    <span className="text-muted-foreground text-sm">{selectedCar.brand} {selectedCar.type === 'sedan' ? 'sedan' : 'SUV'}</span>
                   </div>
                   <div className="mb-4">
-                    <h3 className="text-white/60 text-sm mb-2 uppercase tracking-wider">Total Build Cost</h3>
+                    <h3 className="text-muted-foreground text-sm mb-2 uppercase tracking-wider">Total Build Cost</h3>
                     <motion.p 
                       className="text-3xl font-bold text-[#6366f1]"
                       key={totalBuildCost}
@@ -575,46 +592,46 @@ export default function CarModderConfigurator() {
                       {formatPrice(totalBuildCost)}
                     </motion.p>
                   </div>
-                  <Separator className="bg-white/10 my-4" />
+                  <Separator className="bg-border my-4" />
                   <div className="flex justify-between items-center">
-                    <span className="text-white/60 text-sm">基础价格</span>
+                    <span className="text-muted-foreground text-sm">基础价格</span>
                     <span className="text-sm font-medium">{formatPrice(selectedCar.price)}</span>
                   </div>
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-white/60 text-sm">改装成本</span>
+                    <span className="text-muted-foreground text-sm">改装成本</span>
                     <span className="text-sm font-medium text-[#6366f1]">+{formatPrice(totalBuildCost - selectedCar.price)}</span>
                   </div>
                 </motion.div>
 
-                <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
-                  <CardHeader className="pb-3 bg-[#1a1a2e] border-b border-white/10">
-                    <CardTitle className="text-sm font-medium text-white/80 uppercase tracking-wider">配置详情</CardTitle>
+                <Card className="bg-card border-border shadow-lg overflow-hidden">
+                  <CardHeader className="pb-3 bg-card border-b border-border">
+                    <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">配置详情</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 p-6">
                     <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-white/5"
+                      className="flex justify-between items-center py-3 border-b border-muted"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-white/60 text-sm">基础车型</span>
+                      <span className="text-muted-foreground text-sm">基础车型</span>
                       <span className="font-medium">{formatPrice(selectedCar.price)}</span>
                     </motion.div>
                     <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-white/5"
+                      className="flex justify-between items-center py-3 border-b border-muted"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-white/60 text-sm">轮毂</span>
+                      <span className="text-muted-foreground text-sm">轮毂</span>
                       <span className="font-medium">{formatPrice(selectedWheel.price)}</span>
                     </motion.div>
                     <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-white/5"
+                      className="flex justify-between items-center py-3 border-b border-muted"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-white/60 text-sm">漆面</span>
+                      <span className="text-muted-foreground text-sm">漆面</span>
                       <span className="font-medium">{formatPrice(selectedColor.price + selectedFinish.price)}</span>
                     </motion.div>
                     {selectedMods.length > 0 && (
-                      <div className="py-3 border-b border-white/5">
-                        <span className="text-white/60 text-sm block mb-3 uppercase tracking-wider">改装套件</span>
+                      <div className="py-3 border-b border-muted">
+                        <span className="text-muted-foreground text-sm block mb-3 uppercase tracking-wider">改装套件</span>
                         {selectedMods.map((id) => {
                           const mod = MODIFICATION_OPTIONS.find((m) => m.id === id);
                           return mod ? (
@@ -632,7 +649,7 @@ export default function CarModderConfigurator() {
                     )}
                     {Object.entries(accentOptions).some(([_, enabled]) => enabled) && (
                       <div className="py-3">
-                        <span className="text-white/60 text-sm block mb-3 uppercase tracking-wider">细节装饰</span>
+                        <span className="text-muted-foreground text-sm block mb-3 uppercase tracking-wider">细节装饰</span>
                         {Object.entries(accentOptions)
                           .filter(([_, enabled]) => enabled)
                           .map(([id]) => {
@@ -662,12 +679,12 @@ export default function CarModderConfigurator() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Card className="bg-[#131324] border-white/10 overflow-hidden shadow-xl">
+              <Card className="bg-card border-border overflow-hidden shadow-xl">
                 <CardContent className="p-0">
                   <div className="relative">
                     {generatedImages.length > 0 ? (
                       <motion.div 
-                        className="aspect-[16/9] bg-gradient-to-br from-black to-[#0a0a1a] relative rounded-xl overflow-hidden"
+                        className="aspect-[16/9] bg-background relative rounded-xl overflow-hidden"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
@@ -677,17 +694,17 @@ export default function CarModderConfigurator() {
                           alt={`${isZh ? selectedCar.nameZh : selectedCar.name} 改装效果图`}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
                           <div className="p-6 w-full">
                             <h3 className="text-xl font-bold mb-2">{isZh ? selectedCar.nameZh : selectedCar.name} 改装效果</h3>
-                            <p className="text-white/60 text-sm mb-4">{prompt}</p>
+                            <p className="text-muted-foreground text-sm mb-4">{prompt}</p>
                             <div className="flex gap-3">
                               <Button
                                 size="sm"
                                 variant="secondary"
                                 onClick={() => handleDownloadImage(generatedImages[0])}
                                 disabled={downloadingImageId === generatedImages[0].id}
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                                className="bg-muted/10 hover:bg-muted/20 backdrop-blur-sm"
                               >
                                 {downloadingImageId === generatedImages[0].id ? (
                                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -702,7 +719,7 @@ export default function CarModderConfigurator() {
                                 size="sm"
                                 variant="secondary"
                                 onClick={handleShare}
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                                className="bg-muted/10 hover:bg-muted/20 backdrop-blur-sm"
                               >
                                 <Share2 className="w-4 h-4 mr-2" />
                                 分享
@@ -713,7 +730,7 @@ export default function CarModderConfigurator() {
                       </motion.div>
                     ) : (
                       <motion.div 
-                        className="aspect-[16/9] bg-gradient-to-br from-[#1a1a2e] to-[#0a0a1a] relative flex items-center justify-center overflow-hidden"
+                        className="aspect-[16/9] bg-background relative flex items-center justify-center overflow-hidden"
                         whileHover={{ scale: 1.02 }}
                       >
                         <img
@@ -724,7 +741,7 @@ export default function CarModderConfigurator() {
                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
                           }}
                         />
-                        <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-lg">
+                        <div className="absolute bottom-4 left-4 bg-background/50 backdrop-blur-sm px-4 py-2 rounded-lg">
                           <span className="text-sm font-medium">{isZh ? selectedCar.nameZh : selectedCar.name}</span>
                         </div>
                       </motion.div>
@@ -736,16 +753,39 @@ export default function CarModderConfigurator() {
               {/* Car Selection */}
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium text-white/60 uppercase tracking-wider">选择车型</h3>
-                  <Badge variant="outline" className="text-white/60 border-white/10">
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">选择车型</h3>
+                  <Badge variant="outline" className="text-muted-foreground border-border">
                     {CHINESE_CAR_MODELS.length} 款车型
                   </Badge>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {(showAllCars ? CHINESE_CAR_MODELS : CHINESE_CAR_MODELS.slice(0, 4)).map((car) => (
+                  {/* 自定义车型按钮 */}
+                  <motion.div
+                    className="relative rounded-xl overflow-hidden cursor-pointer border-2 border-dashed border-border/60 hover:border-[#6366f1] transition-all"
+                    onClick={() => setShowCustomInput(true)}
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <div className="aspect-[4/3] bg-card flex flex-col items-center justify-center gap-2">
+                      <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center">
+                        <span className="text-2xl font-light text-muted-foreground">+</span>
+                      </div>
+                      <p className="text-xs font-medium text-muted-foreground">自定义车型</p>
+                    </div>
+                    <div className="p-3 bg-card border-t border-border">
+                      <p className="text-xs text-muted-foreground/60 mb-1">Custom</p>
+                      <p className="text-sm font-medium truncate">输入你的爱车</p>
+                      <p className="text-xs text-[#6366f1] mt-1">免费体验</p>
+                    </div>
+                  </motion.div>
+
+                  {(showAllCars ? CHINESE_CAR_MODELS : CHINESE_CAR_MODELS.slice(0, 3)).map((car) => (
                     <motion.div
                       key={car.id}
-                      className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedCar.id === car.id ? 'border-[#6366f1] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-white/20'}`}
+                      className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedCar.id === car.id ? 'border-[#6366f1] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-border/60'}`}
                       onClick={() => setSelectedCar(car)}
                       whileHover={{ scale: 1.05, y: -5 }}
                       whileTap={{ scale: 0.95 }}
@@ -753,7 +793,7 @@ export default function CarModderConfigurator() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
                     >
-                      <div className="aspect-[4/3] bg-[#1a1a2e] relative overflow-hidden">
+                      <div className="aspect-[4/3] bg-card relative overflow-hidden">
                         <motion.img
                           src={car.image}
                           alt={isZh ? car.nameZh : car.name}
@@ -774,8 +814,8 @@ export default function CarModderConfigurator() {
                           </motion.div>
                         )}
                       </div>
-                      <div className="p-3 bg-[#131324] border-t border-white/10">
-                        <p className="text-xs text-white/40 mb-1">{car.brand}</p>
+                      <div className="p-3 bg-card border-t border-border">
+                        <p className="text-xs text-muted-foreground/60 mb-1">{car.brand}</p>
                         <p className="text-sm font-medium truncate">{isZh ? car.nameZh : car.name}</p>
                         <p className="text-xs text-[#6366f1] mt-1">{formatPrice(car.price)}</p>
                       </div>
@@ -787,7 +827,7 @@ export default function CarModderConfigurator() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowAllCars(!showAllCars)}
-                    className="text-white/60 hover:text-white hover:bg-white/10"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted"
                   >
                     {showAllCars ? (
                       <>
@@ -806,7 +846,7 @@ export default function CarModderConfigurator() {
 
               {/* Generation Progress */}
               {isGenerating && (
-                <Card className="bg-[#131324] border-white/10 shadow-lg">
+                <Card className="bg-card border-border shadow-lg">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -817,7 +857,7 @@ export default function CarModderConfigurator() {
                         <span className="font-medium">生成进度</span>
                         <span className="text-[#6366f1] font-medium">{progress}%</span>
                       </div>
-                      <Progress value={progress} className="h-3 bg-white/10 rounded-full overflow-hidden">
+                      <Progress value={progress} className="h-3 bg-border rounded-full overflow-hidden">
                         <motion.div 
                           className="h-full bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full"
                           style={{ width: `${progress}%` }}
@@ -828,7 +868,7 @@ export default function CarModderConfigurator() {
                       </Progress>
                       {taskStatusLabel && (
                         <motion.p 
-                          className="text-sm text-white/60 text-center"
+                          className="text-sm text-muted-foreground text-center"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.3 }}
@@ -844,7 +884,7 @@ export default function CarModderConfigurator() {
                             resetTaskState();
                             setGeneratedImages([]);
                           }}
-                          className="text-white/60 hover:text-white"
+                          className="text-muted-foreground hover:text-foreground"
                         >
                           <RefreshCw className="w-4 h-4 mr-2" />
                           取消生成
@@ -866,7 +906,7 @@ export default function CarModderConfigurator() {
               <div className="space-y-6">
                 {/* Tab Navigation */}
                 <motion.div 
-                  className="bg-[#131324] rounded-xl p-1 flex gap-2 border border-white/10"
+                  className="bg-card rounded-xl p-1 flex gap-2 border border-border"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
@@ -874,7 +914,7 @@ export default function CarModderConfigurator() {
                   {['paint', 'wheels', 'mods', 'accents'].map((tab) => (
                     <motion.button
                       key={tab}
-                      className={`flex-1 px-4 py-3 text-sm font-medium transition-all rounded-lg ${activeTab === tab ? 'bg-[#1a1a2e] text-white shadow-lg' : 'text-white/60 hover:text-white'}`}
+                      className={`flex-1 px-4 py-3 text-sm font-medium transition-all rounded-lg ${activeTab === tab ? 'bg-card text-foreground shadow-lg border border-border' : 'text-muted-foreground hover:text-foreground'}`}
                       onClick={() => setActiveTab(tab)}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -892,25 +932,25 @@ export default function CarModderConfigurator() {
 
                 {/* Paint Options */}
                 {activeTab === 'paint' && (
-                  <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                  <Card className="bg-card border-border shadow-lg overflow-hidden">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <CardHeader className="bg-gradient-to-r from-[#1a1a2e] to-[#131324] border-b border-white/10 p-6">
-                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Paint Lab</CardTitle>
-                      <p className="text-white/60 text-sm mt-1">Select a finish and color. Premium finishes include ceramic coating.</p>
+                      <CardHeader className="bg-card border-b border-border p-6">
+                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Paint Lab</CardTitle>
+                      <p className="text-muted-foreground text-sm mt-1">Select a finish and color. Premium finishes include ceramic coating.</p>
                     </CardHeader>
                     <CardContent className="space-y-8 p-6">
                       {/* Finish Type */}
                       <div>
-                        <h3 className="text-sm font-medium text-white/60 mb-4 uppercase tracking-wider">Finish Type</h3>
+                        <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Finish Type</h3>
                         <div className="flex flex-wrap gap-3">
                           {FINISH_TYPES.map((finish) => (
                             <motion.button
                               key={finish.id}
-                              className={`px-5 py-3 rounded-xl text-sm transition-all ${selectedFinish.id === finish.id ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]' : 'bg-[#1a1a2e] text-white/60 hover:text-white border border-white/10'}`}
+                              className={`px-5 py-3 rounded-xl text-sm transition-all ${selectedFinish.id === finish.id ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]' : 'bg-card text-muted-foreground hover:text-foreground border border-border'}`}
                               onClick={() => setSelectedFinish(finish)}
                               whileHover={{ scale: 1.03, y: -2 }}
                               whileTap={{ scale: 0.97 }}
@@ -926,21 +966,21 @@ export default function CarModderConfigurator() {
 
                       {/* Manufacturer Colors */}
                       <div>
-                        <h3 className="text-sm font-medium text-white/60 mb-4 uppercase tracking-wider">Manufacturer Colors</h3>
+                        <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Manufacturer Colors</h3>
                         <div className="grid grid-cols-5 gap-4">
                           {PAINT_COLORS.map((color) => (
                             <motion.div
                               key={color.id}
-                              className={`relative cursor-pointer group ${selectedColor.id === color.id ? 'ring-2 ring-[#6366f1] ring-offset-2 ring-offset-[#131324]' : ''}`}
+                              className={`relative cursor-pointer group ${selectedColor.id === color.id ? 'ring-2 ring-[#6366f1] ring-offset-2 ring-offset-card' : ''}`}
                               onClick={() => setSelectedColor(color)}
                               whileHover={{ scale: 1.15, y: -5 }}
                               whileTap={{ scale: 0.95 }}
                             >
                               <div
-                                className="w-12 h-12 rounded-full shadow-lg border-2 border-white/20 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                                className="w-12 h-12 rounded-full shadow-lg border-2 border-border transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                                 style={{ backgroundColor: color.color }}
                               />
-                              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-[#1a1a2e] px-2 py-1 rounded-lg border border-white/10">
+                              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-card px-2 py-1 rounded-lg border border-border">
                                 {isZh ? color.nameZh : color.name}
                                 {color.price > 0 && (
                                   <span className="ml-1 text-[#6366f1]">+{formatPrice(color.price)}</span>
@@ -957,35 +997,35 @@ export default function CarModderConfigurator() {
 
                 {/* Wheel Options */}
                 {activeTab === 'wheels' && (
-                  <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                  <Card className="bg-card border-border shadow-lg overflow-hidden">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <CardHeader className="bg-gradient-to-r from-[#1a1a2e] to-[#131324] border-b border-white/10 p-6">
-                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Wheel Selector</CardTitle>
-                      <p className="text-white/60 text-sm mt-1">Choose wheel style and size for your build.</p>
+                      <CardHeader className="bg-card border-b border-border p-6">
+                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Wheel Selector</CardTitle>
+                      <p className="text-muted-foreground text-sm mt-1">Choose wheel style and size for your build.</p>
                     </CardHeader>
                     <CardContent className="space-y-4 p-6">
                       {WHEEL_STYLES.map((wheel) => (
                         <motion.div
                           key={wheel.id}
-                          className={`p-5 rounded-xl cursor-pointer transition-all border ${selectedWheel.id === wheel.id ? 'border-[#6366f1] bg-gradient-to-r from-[#1a1a2e] to-[#131324] shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-white/5 hover:border-white/10 bg-[#131324]'}`}
+                          className={`p-5 rounded-xl cursor-pointer transition-all border ${selectedWheel.id === wheel.id ? 'border-[#6366f1] bg-card shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-muted hover:border-border bg-card'}`}
                           onClick={() => setSelectedWheel(wheel)}
                           whileHover={{ scale: 1.02, y: -3 }}
                           whileTap={{ scale: 0.98 }}
                         >
                           <div className="flex items-start gap-4">
                             <motion.div 
-                              className="w-14 h-14 rounded-full bg-gradient-to-br from-[#1a1a2e] to-[#131324] flex items-center justify-center border border-white/10"
+                              className="w-14 h-14 rounded-full bg-card flex items-center justify-center border border-border"
                               whileHover={{ rotate: 10 }}
                             >
                               <span className="material-icons text-[#6366f1] text-lg">sports_motorsports</span>
                             </motion.div>
                             <div className="flex-1">
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="font-bold text-white">{isZh ? wheel.nameZh : wheel.name}</h4>
+                                <h4 className="font-bold text-foreground">{isZh ? wheel.nameZh : wheel.name}</h4>
                                 {wheel.price > 0 && (
                                   <motion.span 
                                     className="text-sm font-medium text-[#6366f1]"
@@ -995,7 +1035,7 @@ export default function CarModderConfigurator() {
                                   </motion.span>
                                 )}
                               </div>
-                              <p className="text-xs text-white/60">{isZh ? wheel.descriptionZh : wheel.description}</p>
+                              <p className="text-xs text-muted-foreground">{isZh ? wheel.descriptionZh : wheel.description}</p>
                             </div>
                           </div>
                         </motion.div>
@@ -1007,21 +1047,21 @@ export default function CarModderConfigurator() {
 
                 {/* Modification Options */}
                 {activeTab === 'mods' && (
-                  <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                  <Card className="bg-card border-border shadow-lg overflow-hidden">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <CardHeader className="bg-gradient-to-r from-[#1a1a2e] to-[#131324] border-b border-white/10 p-6">
-                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Performance & Styling</CardTitle>
-                      <p className="text-white/60 text-sm mt-1">Enhance your vehicle's appearance and performance.</p>
+                      <CardHeader className="bg-card border-b border-border p-6">
+                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Performance & Styling</CardTitle>
+                      <p className="text-muted-foreground text-sm mt-1">Enhance your vehicle's appearance and performance.</p>
                     </CardHeader>
                     <CardContent className="space-y-3 p-6">
                       {MODIFICATION_OPTIONS.map((mod) => (
                         <motion.div 
                           key={mod.id} 
-                          className="flex items-center justify-between py-4 border-b border-white/5"
+                          className="flex items-center justify-between py-4 border-b border-muted"
                           whileHover={{ x: 5 }}
                         >
                           <motion.div 
@@ -1030,7 +1070,7 @@ export default function CarModderConfigurator() {
                             whileTap={{ scale: 0.98 }}
                           >
                             <motion.div 
-                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer ${selectedMods.includes(mod.id) ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] border-[#6366f1] shadow-[0_0_10px_rgba(99,102,241,0.4)]' : 'border-white/20'}`}
+                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer ${selectedMods.includes(mod.id) ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] border-[#6366f1] shadow-[0_0_10px_rgba(99,102,241,0.4)]' : 'border-border'}`}
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
                             >
@@ -1046,8 +1086,8 @@ export default function CarModderConfigurator() {
                               )}
                             </motion.div>
                             <div>
-                              <p className="text-sm font-medium text-white">{isZh ? mod.nameZh : mod.name}</p>
-                              <p className="text-xs text-white/60">{isZh ? mod.descriptionZh : mod.description}</p>
+                              <p className="text-sm font-medium text-foreground">{isZh ? mod.nameZh : mod.name}</p>
+                              <p className="text-xs text-muted-foreground">{isZh ? mod.descriptionZh : mod.description}</p>
                             </div>
                           </motion.div>
                           <motion.span 
@@ -1065,26 +1105,26 @@ export default function CarModderConfigurator() {
 
                 {/* Accent Options */}
                 {activeTab === 'accents' && (
-                  <Card className="bg-[#131324] border-white/10 shadow-lg overflow-hidden">
+                  <Card className="bg-card border-border shadow-lg overflow-hidden">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <CardHeader className="bg-gradient-to-r from-[#1a1a2e] to-[#131324] border-b border-white/10 p-6">
-                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">Accent Details</CardTitle>
-                      <p className="text-white/60 text-sm mt-1">Add custom touches to your build.</p>
+                      <CardHeader className="bg-card border-b border-border p-6">
+                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Accent Details</CardTitle>
+                      <p className="text-muted-foreground text-sm mt-1">Add custom touches to your build.</p>
                     </CardHeader>
                     <CardContent className="space-y-4 p-6">
                       {ACCENT_OPTIONS.map((accent) => (
                         <motion.div 
                           key={accent.id} 
-                          className="flex items-center justify-between py-4 border-b border-white/5"
+                          className="flex items-center justify-between py-4 border-b border-muted"
                           whileHover={{ x: 5 }}
                         >
                           <div>
-                            <p className="text-sm font-medium text-white">{isZh ? accent.nameZh : accent.name}</p>
-                            <p className="text-xs text-white/60">{isZh ? accent.descriptionZh : accent.description}</p>
+                            <p className="text-sm font-medium text-foreground">{isZh ? accent.nameZh : accent.name}</p>
+                            <p className="text-xs text-muted-foreground">{isZh ? accent.descriptionZh : accent.description}</p>
                           </div>
                           <div className="flex items-center gap-4">
                             <motion.span 
@@ -1114,7 +1154,7 @@ export default function CarModderConfigurator() {
                     transition={{ duration: 0.5, delay: 0.2 }}
                   >
                     <Button
-                      className="w-full py-6 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] hover:from-[#4f46e5] hover:to-[#7c3aed] text-lg font-bold shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all duration-300"
+                      className="w-full py-6 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] hover:from-[#4f46e5] hover:to-[#7c3aed] text-lg font-bold shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all duration-300 text-white"
                       onClick={handleGenerate}
                       disabled={isGenerating}
                     >
@@ -1136,10 +1176,11 @@ export default function CarModderConfigurator() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
+                      className="flex-1"
                     >
                       <Button
                         variant="secondary"
-                        className="flex-1 py-4 bg-gradient-to-r from-[#1a1a2e] to-[#131324] hover:from-[#252540] hover:to-[#1a1a2e] border border-white/10 font-medium transition-all duration-300"
+                        className="w-full py-4 bg-card hover:bg-muted border border-border font-medium transition-all duration-300"
                         onClick={handleShare}
                       >
                         <Share2 className="w-4 h-4 mr-2" />
@@ -1150,10 +1191,11 @@ export default function CarModderConfigurator() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.4 }}
+                      className="flex-1"
                     >
                       <Button
                         variant="secondary"
-                        className="flex-1 py-4 bg-gradient-to-r from-[#1a1a2e] to-[#131324] hover:from-[#252540] hover:to-[#1a1a2e] border border-white/10 font-medium transition-all duration-300"
+                        className="w-full py-4 bg-card hover:bg-muted border border-border font-medium transition-all duration-300"
                       >
                         <FileText className="w-4 h-4 mr-2" />
                         Quote
@@ -1166,7 +1208,7 @@ export default function CarModderConfigurator() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
                   >
-                    <p className="text-xs text-white/40">
+                    <p className="text-xs text-muted-foreground/40">
                       生成效果图需要 {costCredits} 积分
                       {user && ` (剩余: ${remainingCredits})`}
                     </p>
@@ -1178,110 +1220,12 @@ export default function CarModderConfigurator() {
         </div>
       </main>
     </div>
+  
   );
 }
 
+/*
 // 保存方案功能
 const handleSaveBuild = async () => {
-  if (!user) {
-    toast.error('请先登录');
-    return;
-  }
-
-  try {
-    const response = await fetch('/api/builds', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        carId: selectedCar.id,
-        carName: selectedCar.name,
-        carNameZh: selectedCar.nameZh,
-        carBrand: selectedCar.brand,
-        carType: selectedCar.type,
-        carPrice: selectedCar.price,
-        carImage: selectedCar.localImage,
-        customCarInput: (selectedCar as any).customInput,
-        wheels: selectedWheel,
-        paint: selectedColor,
-        finish: selectedFinish,
-        mods: {
-          ids: selectedMods,
-          names: selectedMods.map(id => MODIFICATION_OPTIONS.find(m => m.id === id)?.name).filter(Boolean),
-          price: selectedMods.reduce((sum, id) => sum + (MODIFICATION_OPTIONS.find(m => m.id === id)?.price || 0), 0),
-        },
-        accents: {
-          ids: Object.entries(accentOptions).filter(([_, v]) => v).map(([id]) => id),
-          names: Object.entries(accentOptions).filter(([_, v]) => v).map(([id]) => ACCENT_OPTIONS.find(a => a.id === id)?.name).filter(Boolean),
-          price: Object.entries(accentOptions).filter(([_, v]) => v).reduce((sum, [id]) => sum + (ACCENT_OPTIONS.find(a => a.id === id)?.price || 0), 0),
-        },
-        generatedImages: generatedImages.map(img => img.url),
-        aiPrompt: prompt,
-        totalPrice: totalBuildCost,
-        isPublic: false,
-        title: `${selectedCar.name} 改装方案`,
-      }),
-    });
-
-    const result = await response.json();
-    
-    if (result.code === 0) {
-      toast.success('方案已保存！');
-      window.open(`/activity/builds`, '_blank');
-    } else {
-      toast.error(result.message || '保存失败');
-    }
-  } catch (error: any) {
-    console.error('Save error:', error);
-    toast.error('保存失败，请重试');
-  }
-};
-
-// 在车型选择区域添加自定义车型按钮的 JSX
-// 找到车型选择网格，在它前面添加自定义车型卡片
-/*
-<div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-  {/* 自定义车型按钮 *}/
-  <motion.div
-    className="relative rounded-xl overflow-hidden cursor-pointer border-2 border-dashed border-white/20 hover:border-[#6366f1] transition-all"
-    onClick={() => setShowCustomInput(true)}
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-  >
-    <div className="aspect-[4/3] bg-[#1a1a2e] flex items-center justify-center">
-      <span className="text-4xl">+</span>
-    </div>
-    <div className="p-3 bg-[#131324] border-t border-white/10">
-      <p className="text-sm font-medium text-center">自定义车型</p>
-    </div>
-  </motion.div>
-
-  {/* 现有车型列表 *}/
-  {(showAllCars ? CHINESE_CAR_MODELS : CHINESE_CAR_MODELS.slice(0, 4)).map((car) => (
-    // ... 现有车型代码
-  ))}
-</div>
-*/}
-
-// 在现有的 Action Buttons 区域添加保存按钮
-// 找到生成效果图按钮，在它下面添加保存按钮
-/*
-<div className="space-y-4">
-  {/* 生成效果图按钮 *}/
-  <Button className="w-full py-6 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6]"
-    onClick={handleGenerate} disabled={isGenerating}>
-    {isGenerating ? '生成中...' : '生成效果图'}
-  </Button>
-
-  {/* 保存方案按钮 - 新增 *}/
-  <Button variant="secondary" className="w-full py-4"
-    onClick={handleSaveBuild} disabled={!user || generatedImages.length === 0}>
-    💾 保存方案
-  </Button>
-
-  {/* 分享/报价按钮 *}/
-  <div className="flex gap-3">
-    <Button variant="secondary" onClick={handleShare}>Share</Button>
-    <Button variant="secondary">Quote</Button>
-  </div>
-</div>
-*/}
+...
+*/
