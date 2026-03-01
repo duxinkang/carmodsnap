@@ -23,53 +23,53 @@ const GENERATION_TIMEOUT = 180000;
 
 const CHINESE_CAR_MODELS = [
   // Honda
-  { id: 'honda-civic', name: 'Honda Civic', nameZh: '本田思域', brand: 'Honda', type: 'sedan', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', price: 150000 },
-  { id: 'honda-s2000', name: 'Honda S2000', nameZh: '本田 S2000', brand: 'Honda', type: 'roadster', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', price: 350000 },
+  { id: 'honda-civic', name: 'Honda Civic', nameZh: '本田思域', brand: 'Honda', type: 'sedan', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', localImage: '/imgs/cars/honda-civic.jpg', price: 150000 },
+  { id: 'honda-s2000', name: 'Honda S2000', nameZh: '本田 S2000', brand: 'Honda', type: 'roadster', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', localImage: '/imgs/cars/honda-s2000.jpg', price: 350000 },
   // Toyota / Subaru
-  { id: 'toyota-86-brz', name: 'Toyota 86 / Subaru BRZ', nameZh: '丰田 86/斯巴鲁 BRZ', brand: 'Toyota/Subaru', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 280000 },
-  { id: 'toyota-supra', name: 'Toyota Supra', nameZh: '丰田 Supra', brand: 'Toyota', type: 'sports', image: 'https://images.unsplash.com/photo-1590059390239-03c9e748e0eb?w=800&h=600&fit=crop', price: 600000 },
-  { id: 'toyota-ae86', name: 'Toyota AE86', nameZh: '丰田 AE86', brand: 'Toyota', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 150000 },
-  { id: 'subaru-wrx', name: 'Subaru WRX / STI', nameZh: '斯巴鲁 WRX/STI', brand: 'Subaru', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 350000 },
+  { id: 'toyota-86-brz', name: 'Toyota 86 / Subaru BRZ', nameZh: '丰田 86/斯巴鲁 BRZ', brand: 'Toyota/Subaru', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/toyota-86-brz.jpg', price: 280000 },
+  { id: 'toyota-supra', name: 'Toyota Supra', nameZh: '丰田 Supra', brand: 'Toyota', type: 'sports', image: 'https://images.unsplash.com/photo-1590059390239-03c9e748e0eb?w=800&h=600&fit=crop', localImage: '/imgs/cars/toyota-supra.jpg', price: 600000 },
+  { id: 'toyota-ae86', name: 'Toyota AE86', nameZh: '丰田 AE86', brand: 'Toyota', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/toyota-ae86.jpg', price: 150000 },
+  { id: 'subaru-wrx', name: 'Subaru WRX / STI', nameZh: '斯巴鲁 WRX/STI', brand: 'Subaru', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/subaru-wrx.jpg', price: 350000 },
   // Volkswagen
-  { id: 'vw-golf', name: 'Volkswagen Golf', nameZh: '大众高尔夫', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', price: 150000 },
-  { id: 'vw-beetle', name: 'Volkswagen Beetle', nameZh: '大众甲壳虫', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', price: 200000 },
+  { id: 'vw-golf', name: 'Volkswagen Golf', nameZh: '大众高尔夫', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', localImage: '/imgs/cars/vw-golf.jpg', price: 150000 },
+  { id: 'vw-beetle', name: 'Volkswagen Beetle', nameZh: '大众甲壳虫', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', localImage: '/imgs/cars/vw-beetle.jpg', price: 200000 },
   // Nissan
-  { id: 'nissan-gtr', name: 'Nissan Skyline GT-R', nameZh: '日产 GT-R', brand: 'Nissan', type: 'sports', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 1500000 },
-  { id: 'nissan-silvia', name: 'Nissan Silvia (S13-S15)', nameZh: '日产 Silvia', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 200000 },
-  { id: 'nissan-370z', name: 'Nissan 350Z / 370Z', nameZh: '日产 370Z', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 350000 },
+  { id: 'nissan-gtr', name: 'Nissan Skyline GT-R', nameZh: '日产 GT-R', brand: 'Nissan', type: 'sports', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/nissan-gtr.jpg', price: 1500000 },
+  { id: 'nissan-silvia', name: 'Nissan Silvia (S13-S15)', nameZh: '日产 Silvia', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/nissan-silvia.jpg', price: 200000 },
+  { id: 'nissan-370z', name: 'Nissan 350Z / 370Z', nameZh: '日产 370Z', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/nissan-370z.jpg', price: 350000 },
   // Mazda
-  { id: 'mazda-mx5', name: 'Mazda MX-5 (Miata)', nameZh: '马自达 MX-5', brand: 'Mazda', type: 'roadster', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 350000 },
-  { id: 'mazda-rx7', name: 'Mazda RX-7', nameZh: '马自达 RX-7', brand: 'Mazda', type: 'coupe', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 500000 },
+  { id: 'mazda-mx5', name: 'Mazda MX-5 (Miata)', nameZh: '马自达 MX-5', brand: 'Mazda', type: 'roadster', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', localImage: '/imgs/cars/mazda-mx5.jpg', price: 350000 },
+  { id: 'mazda-rx7', name: 'Mazda RX-7', nameZh: '马自达 RX-7', brand: 'Mazda', type: 'coupe', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', localImage: '/imgs/cars/mazda-rx7.jpg', price: 500000 },
   // BMW
-  { id: 'bmw-3series', name: 'BMW 3 Series', nameZh: '宝马 3 系', brand: 'BMW', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 300000 },
-  { id: 'bmw-m3', name: 'BMW M3 / M4', nameZh: '宝马 M3/M4', brand: 'BMW', type: 'sports', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 800000 },
+  { id: 'bmw-3series', name: 'BMW 3 Series', nameZh: '宝马 3 系', brand: 'BMW', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', localImage: '/imgs/cars/bmw-3series.jpg', price: 300000 },
+  { id: 'bmw-m3', name: 'BMW M3 / M4', nameZh: '宝马 M3/M4', brand: 'BMW', type: 'sports', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', localImage: '/imgs/cars/bmw-m3.jpg', price: 800000 },
   // Ford
-  { id: 'ford-mustang', name: 'Ford Mustang', nameZh: '福特野马', brand: 'Ford', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 400000 },
-  { id: 'ford-f150', name: 'Ford F-150 / Raptor', nameZh: '福特 F-150', brand: 'Ford', type: 'truck', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop', price: 600000 },
+  { id: 'ford-mustang', name: 'Ford Mustang', nameZh: '福特野马', brand: 'Ford', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', localImage: '/imgs/cars/ford-mustang.jpg', price: 400000 },
+  { id: 'ford-f150', name: 'Ford F-150 / Raptor', nameZh: '福特 F-150', brand: 'Ford', type: 'truck', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop', localImage: '/imgs/cars/ford-f150.jpg', price: 600000 },
   // Mitsubishi
-  { id: 'mitsubishi-evo', name: 'Mitsubishi Lancer Evolution', nameZh: '三菱 EVO', brand: 'Mitsubishi', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 450000 },
+  { id: 'mitsubishi-evo', name: 'Mitsubishi Lancer Evolution', nameZh: '三菱 EVO', brand: 'Mitsubishi', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', localImage: '/imgs/cars/mitsubishi-evo.jpg', price: 450000 },
   // Porsche
-  { id: 'porsche-911', name: 'Porsche 911', nameZh: '保时捷 911', brand: 'Porsche', type: 'sports', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 1500000 },
+  { id: 'porsche-911', name: 'Porsche 911', nameZh: '保时捷 911', brand: 'Porsche', type: 'sports', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', localImage: '/imgs/cars/porsche-911.jpg', price: 1500000 },
   // Jeep / Suzuki / Land Rover
-  { id: 'jeep-wrangler', name: 'Jeep Wrangler', nameZh: '吉普牧马人', brand: 'Jeep', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 450000 },
-  { id: 'suzuki-jimny', name: 'Suzuki Jimny', nameZh: '铃木吉姆尼', brand: 'Suzuki', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 150000 },
-  { id: 'landrover-defender', name: 'Land Rover Defender', nameZh: '路虎卫士', brand: 'Land Rover', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 700000 },
+  { id: 'jeep-wrangler', name: 'Jeep Wrangler', nameZh: '吉普牧马人', brand: 'Jeep', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', localImage: '/imgs/cars/jeep-wrangler.jpg', price: 450000 },
+  { id: 'suzuki-jimny', name: 'Suzuki Jimny', nameZh: '铃木吉姆尼', brand: 'Suzuki', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', localImage: '/imgs/cars/suzuki-jimny.jpg', price: 150000 },
+  { id: 'landrover-defender', name: 'Land Rover Defender', nameZh: '路虎卫士', brand: 'Land Rover', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', localImage: '/imgs/cars/landrover-defender.jpg', price: 700000 },
   // Audi
-  { id: 'audi-a4', name: 'Audi A4 / S4 / RS4', nameZh: '奥迪 A4', brand: 'Audi', type: 'sedan', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', price: 350000 },
-  { id: 'audi-a5', name: 'Audi A5 / S5 / RS5', nameZh: '奥迪 A5', brand: 'Audi', type: 'coupe', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', price: 500000 },
+  { id: 'audi-a4', name: 'Audi A4 / S4 / RS4', nameZh: '奥迪 A4', brand: 'Audi', type: 'sedan', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', localImage: '/imgs/cars/audi-a4.jpg', price: 350000 },
+  { id: 'audi-a5', name: 'Audi A5 / S5 / RS5', nameZh: '奥迪 A5', brand: 'Audi', type: 'coupe', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', localImage: '/imgs/cars/audi-a5.jpg', price: 500000 },
   // Mercedes-Benz
-  { id: 'mercedes-cclass', name: 'Mercedes-Benz C-Class', nameZh: '奔驰 C 级', brand: 'Mercedes-Benz', type: 'sedan', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop', price: 350000 },
+  { id: 'mercedes-cclass', name: 'Mercedes-Benz C-Class', nameZh: '奔驰 C 级', brand: 'Mercedes-Benz', type: 'sedan', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop', localImage: '/imgs/cars/mercedes-cclass.jpg', price: 350000 },
   // MINI
-  { id: 'mini-cooper', name: 'MINI Cooper', nameZh: 'MINI Cooper', brand: 'MINI', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', price: 280000 },
+  { id: 'mini-cooper', name: 'MINI Cooper', nameZh: 'MINI Cooper', brand: 'MINI', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', localImage: '/imgs/cars/mini-cooper.jpg', price: 280000 },
   // Chevrolet / Dodge
-  { id: 'chevy-camaro', name: 'Chevrolet Camaro', nameZh: '雪佛兰科迈罗', brand: 'Chevrolet', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 400000 },
-  { id: 'dodge-challenger', name: 'Dodge Challenger', nameZh: '道奇挑战者', brand: 'Dodge', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 450000 },
+  { id: 'chevy-camaro', name: 'Chevrolet Camaro', nameZh: '雪佛兰科迈罗', brand: 'Chevrolet', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', localImage: '/imgs/cars/chevy-camaro.jpg', price: 400000 },
+  { id: 'dodge-challenger', name: 'Dodge Challenger', nameZh: '道奇挑战者', brand: 'Dodge', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', localImage: '/imgs/cars/dodge-challenger.jpg', price: 450000 },
   // Lexus
-  { id: 'lexus-is', name: 'Lexus IS', nameZh: '雷克萨斯 IS', brand: 'Lexus', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 350000 },
+  { id: 'lexus-is', name: 'Lexus IS', nameZh: '雷克萨斯 IS', brand: 'Lexus', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', localImage: '/imgs/cars/lexus-is.jpg', price: 350000 },
   // Tesla
-  { id: 'tesla-model3', name: 'Tesla Model 3', nameZh: '特斯拉 Model 3', brand: 'Tesla', type: 'sedan', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=600&fit=crop', price: 280000 },
+  { id: 'tesla-model3', name: 'Tesla Model 3', nameZh: '特斯拉 Model 3', brand: 'Tesla', type: 'sedan', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=600&fit=crop', localImage: '/imgs/cars/tesla-model3.jpg', price: 280000 },
   // Infiniti
-  { id: 'infiniti-g35', name: 'Infiniti G35 / G37', nameZh: '英菲尼迪 G35', brand: 'Infiniti', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 250000 },
+  { id: 'infiniti-g35', name: 'Infiniti G35 / G37', nameZh: '英菲尼迪 G35', brand: 'Infiniti', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', localImage: '/imgs/cars/infiniti-g35.jpg', price: 250000 },
 ];
 
 const WHEEL_STYLES = [
@@ -697,7 +697,7 @@ export default function CarModderConfigurator() {
                         whileHover={{ scale: 1.02 }}
                       >
                         <img
-                          src={selectedCar.image}
+                          src={selectedCar.localImage}
                           alt={isZh ? selectedCar.nameZh : selectedCar.name}
                           className="w-full h-full object-cover opacity-70 transition-opacity duration-300 hover:opacity-90"
                           onError={(e) => {
