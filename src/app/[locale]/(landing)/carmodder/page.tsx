@@ -610,8 +610,8 @@ export default function CarModderConfigurator() {
     setAccentOptions(buildAccentMap(preset.accents));
     setWheelSpec(normalizeWheelSpec(preset.wheelSpec));
     setActivePresetId(preset.id);
-    toast.success(isZh ? `已应用预设：${preset.nameZh}` : `Preset applied: ${preset.name}`);
-  }, [isZh]);
+    toast.success(t('presetApplied', { name: isZh ? preset.nameZh : preset.name }));
+  }, [isZh, t]);
 
   const handleUndo = useCallback(() => {
     setHistoryState((prev) => {
@@ -663,8 +663,8 @@ export default function CarModderConfigurator() {
     const concavity = WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity) ?? WHEEL_CONCAVITY_OPTIONS[1];
     parts.push(
       `${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name}, ${wheelSpec.size}" ` +
-      `${isZh ? wheelColor.nameZh : wheelColor.name}, ${wheelSpec.spokeCount}${isZh ? '辐' : '-spoke'}, ` +
-      `${isZh ? concavity.nameZh : concavity.name} concavity`
+      `${isZh ? wheelColor.nameZh : wheelColor.name}, ${wheelSpec.spokeCount}${t('spokeUnit')}, ` +
+      `${isZh ? concavity.nameZh : concavity.name} ${t('concavity')}`
     );
 
     const activeMods = selectedMods
@@ -687,7 +687,7 @@ export default function CarModderConfigurator() {
     if (activePresetId) {
       const preset = PRESET_PACKS.find((item) => item.id === activePresetId);
       if (preset) {
-        parts.push(`${isZh ? '风格预设' : 'Style preset'}: ${isZh ? preset.nameZh : preset.name}`);
+        parts.push(`${t('stylePreset')}: ${isZh ? preset.nameZh : preset.name}`);
       }
     }
 
@@ -882,7 +882,7 @@ export default function CarModderConfigurator() {
               .filter(Boolean)
               .join(', ')}`
           : null,
-        activePresetId ? `${isZh ? '预设' : 'preset'}: ${activePresetId}` : null,
+        activePresetId ? `${t('preset')}: ${activePresetId}` : null,
       ]
         .filter(Boolean)
         .join(', ');
@@ -984,11 +984,11 @@ export default function CarModderConfigurator() {
       .map((item) => (isZh ? item.nameZh : item.name))
       .join(', ');
     const shareDescription = [
-      `${isZh ? '车型' : 'Car'}: ${carName}`,
-      `${isZh ? '轮毂' : 'Wheel'}: ${isZh ? selectedWheel.nameZh : selectedWheel.name} ${wheelSpec.size}"`,
-      `${isZh ? '轮毂颜色' : 'Wheel Color'}: ${isZh ? wheelColor.nameZh : wheelColor.name}`,
-      activeModsText ? `${isZh ? '改件' : 'Mods'}: ${activeModsText}` : null,
-      `${isZh ? '预算' : 'Budget'}: ${formatPrice(totalBuildCost)}`,
+      `${t('shareCar')}: ${carName}`,
+      `${t('shareWheel')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name} ${wheelSpec.size}"`,
+      `${t('shareWheelColor')}: ${isZh ? wheelColor.nameZh : wheelColor.name}`,
+      activeModsText ? `${t('shareMods')}: ${activeModsText}` : null,
+      `${t('shareBudget')}: ${formatPrice(totalBuildCost)}`,
     ]
       .filter(Boolean)
       .join('\n');
@@ -1043,7 +1043,10 @@ export default function CarModderConfigurator() {
   }, [selectedCar, selectedWheel, selectedColor, selectedFinish, selectedMods, accentOptions, wheelSpec]);
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(price);
+    const inK = price / 1000;
+    const rounded = Number.isInteger(inK) ? String(inK) : inK.toFixed(1).replace(/\.0$/, '');
+    const currencySymbol = isZh ? '¥' : '$';
+    return `${currencySymbol}${rounded}k`;
   };
 
   const selectedWheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
@@ -1056,10 +1059,15 @@ export default function CarModderConfigurator() {
   const canRedo = historyState.index >= 0 && historyState.index < historyState.entries.length - 1;
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden font-[family-name:var(--font-sans)]">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#131022] text-white font-[family-name:var(--font-sans)]">
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(71,37,244,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(71,37,244,0.05)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_40%,black_45%,transparent_100%)]" />
+        <div className="absolute -top-20 -left-16 h-[420px] w-[420px] rounded-full bg-[#4725f4]/18 blur-[110px]" />
+        <div className="absolute -bottom-24 -right-16 h-[520px] w-[520px] rounded-full bg-[#7c5cff]/16 blur-[130px]" />
+      </div>
       <AnimatePresence>
         {showCustomInput && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-background/80 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#131022]/80 p-4 backdrop-blur-sm sm:p-6">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1075,9 +1083,9 @@ export default function CarModderConfigurator() {
         )}
       </AnimatePresence>
 
-      <main className="pt-16 pb-32">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main className="relative z-10 pt-16 pb-32">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
             {/* Left Sidebar - Car Info */}
             <motion.div 
               className="lg:col-span-3 space-y-6"
@@ -1087,24 +1095,28 @@ export default function CarModderConfigurator() {
             >
               <div className="space-y-6">
                 <motion.div 
-                  className="bg-card rounded-2xl p-6 border border-border shadow-lg"
+                  className="bg-[#1c1833]/90 rounded-2xl p-6 border border-white/10 shadow-lg"
                   whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h2 className="text-2xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">{isZh ? selectedCar.nameZh : selectedCar.name}</h2>
-                  <div className="flex items-center gap-3 mb-6">
+                  <h2 className="mb-3 max-w-full break-words text-2xl font-semibold leading-tight tracking-tight text-white">
+                    {isZh ? selectedCar.nameZh : selectedCar.name}
+                  </h2>
+                  <div className="mb-6 flex items-center gap-3">
                     <motion.span 
-                      className="px-4 py-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full text-xs font-medium shadow-[0_0_10px_rgba(99,102,241,0.4)] text-white"
+                      className="px-4 py-1 bg-gradient-to-r from-[#4725f4] to-[#7c5cff] rounded-full text-xs font-medium shadow-[0_0_10px_rgba(99,102,241,0.4)] text-white"
                       whileHover={{ scale: 1.05 }}
                     >
                       {t('awd')}
                     </motion.span>
-                    <span className="text-muted-foreground text-sm">{selectedCar.brand} {selectedCar.type === 'sedan' ? t('sedan') : t('suv')}</span>
+                    <span className="min-w-0 break-words text-sm text-gray-400">
+                      {selectedCar.brand} {selectedCar.type === 'sedan' ? t('sedan') : t('suv')}
+                    </span>
                   </div>
                   <div className="mb-4">
-                    <h3 className="text-muted-foreground text-sm mb-2 uppercase tracking-wider">{t('totalBuildCost')}</h3>
+                    <h3 className="text-gray-400 text-sm mb-2 uppercase tracking-wider">{t('totalBuildCost')}</h3>
                     <motion.p 
-                      className="text-3xl font-bold text-[#6366f1]"
+                      className="text-3xl font-bold text-[#4725f4]"
                       key={totalBuildCost}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -1115,12 +1127,12 @@ export default function CarModderConfigurator() {
                   </div>
                   <Separator className="bg-border my-4" />
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">{t('basePrice')}</span>
+                    <span className="text-gray-400 text-sm">{t('basePrice')}</span>
                     <span className="text-sm font-medium">{formatPrice(selectedCar.price)}</span>
                   </div>
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-muted-foreground text-sm">{t('modCost')}</span>
-                    <span className="text-sm font-medium text-[#6366f1]">+{formatPrice(totalBuildCost - selectedCar.price)}</span>
+                    <span className="text-gray-400 text-sm">{t('modCost')}</span>
+                    <span className="text-sm font-medium text-[#4725f4]">+{formatPrice(totalBuildCost - selectedCar.price)}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mt-4">
                     <Button
@@ -1128,64 +1140,64 @@ export default function CarModderConfigurator() {
                       size="sm"
                       disabled={!canUndo}
                       onClick={handleUndo}
-                      className="bg-card border border-border"
+                      className="bg-[#1c1833]/90 border border-white/10"
                     >
                       <Undo2 className="w-4 h-4 mr-2" />
-                      {isZh ? '撤销' : 'Undo'}
+                      {t('undo')}
                     </Button>
                     <Button
                       variant="secondary"
                       size="sm"
                       disabled={!canRedo}
                       onClick={handleRedo}
-                      className="bg-card border border-border"
+                      className="bg-[#1c1833]/90 border border-white/10"
                     >
                       <Redo2 className="w-4 h-4 mr-2" />
-                      {isZh ? '重做' : 'Redo'}
+                      {t('redo')}
                     </Button>
                   </div>
                 </motion.div>
 
-                <Card className="bg-card border-border shadow-lg overflow-hidden">
-                  <CardHeader className="pb-3 bg-card border-b border-border">
-                    <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{t('configDetails')}</CardTitle>
+                <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
+                  <CardHeader className="pb-3 bg-[#1c1833]/90 border-b border-white/10">
+                    <CardTitle className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('configDetails')}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 p-6">
                     <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-muted"
+                      className="flex justify-between items-center py-3 border-b border-white/10"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-muted-foreground text-sm">{t('baseModel')}</span>
+                      <span className="text-gray-400 text-sm">{t('baseModel')}</span>
                       <span className="font-medium">{formatPrice(selectedCar.price)}</span>
                     </motion.div>
                     <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-muted"
+                      className="flex justify-between items-center py-3 border-b border-white/10"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-muted-foreground text-sm">{t('wheels')}</span>
+                      <span className="text-gray-400 text-sm">{t('wheels')}</span>
                       <span className="font-medium">{formatPrice(selectedWheel.price)}</span>
                     </motion.div>
                     <motion.div
-                      className="flex justify-between items-center py-3 border-b border-muted"
+                      className="flex justify-between items-center py-3 border-b border-white/10"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-muted-foreground text-sm">
-                        {isZh ? `规格 ${wheelSpec.size}" / ${wheelSpec.spokeCount}辐` : `Spec ${wheelSpec.size}" / ${wheelSpec.spokeCount}-spoke`}
+                      <span className="text-gray-400 text-sm">
+                        {`${t('spec')} ${wheelSpec.size}" / ${wheelSpec.spokeCount}${t('spokeUnit')}`}
                       </span>
-                      <span className="text-sm text-[#6366f1]">
+                      <span className="text-sm text-[#4725f4]">
                         +{formatPrice(wheelSpecExtraCost)}
                       </span>
                     </motion.div>
                     <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-muted"
+                      className="flex justify-between items-center py-3 border-b border-white/10"
                       whileHover={{ x: 5 }}
                     >
-                      <span className="text-muted-foreground text-sm">{t('paint')}</span>
+                      <span className="text-gray-400 text-sm">{t('paint')}</span>
                       <span className="font-medium">{formatPrice(selectedColor.price + selectedFinish.price)}</span>
                     </motion.div>
                     {selectedMods.length > 0 && (
-                      <div className="py-3 border-b border-muted">
-                        <span className="text-muted-foreground text-sm block mb-3 uppercase tracking-wider">{t('modKit')}</span>
+                      <div className="py-3 border-b border-white/10">
+                        <span className="text-gray-400 text-sm block mb-3 uppercase tracking-wider">{t('modKit')}</span>
                         {selectedMods.map((id) => {
                           const mod = MODIFICATION_OPTIONS.find((m) => m.id === id);
                           return mod ? (
@@ -1195,7 +1207,7 @@ export default function CarModderConfigurator() {
                               whileHover={{ x: 5 }}
                             >
                               <span className="text-sm">{isZh ? mod.nameZh : mod.name}</span>
-                              <span className="text-sm text-[#6366f1]">+{formatPrice(mod.price)}</span>
+                              <span className="text-sm text-[#4725f4]">+{formatPrice(mod.price)}</span>
                             </motion.div>
                           ) : null;
                         })}
@@ -1203,7 +1215,7 @@ export default function CarModderConfigurator() {
                     )}
                     {Object.entries(accentOptions).some(([_, enabled]) => enabled) && (
                       <div className="py-3">
-                        <span className="text-muted-foreground text-sm block mb-3 uppercase tracking-wider">{t('accentsDetail')}</span>
+                        <span className="text-gray-400 text-sm block mb-3 uppercase tracking-wider">{t('accentsDetail')}</span>
                         {Object.entries(accentOptions)
                           .filter(([_, enabled]) => enabled)
                           .map(([id]) => {
@@ -1215,7 +1227,7 @@ export default function CarModderConfigurator() {
                                 whileHover={{ x: 5 }}
                               >
                                 <span className="text-sm">{isZh ? accent.nameZh : accent.name}</span>
-                                <span className="text-sm text-[#6366f1]">+{formatPrice(accent.price)}</span>
+                                <span className="text-sm text-[#4725f4]">+{formatPrice(accent.price)}</span>
                               </motion.div>
                             ) : null;
                           })}
@@ -1233,12 +1245,12 @@ export default function CarModderConfigurator() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Card className="bg-card border-border overflow-hidden shadow-xl">
+              <Card className="bg-[#1c1833]/90 border-white/10 overflow-hidden shadow-xl">
                 <CardContent className="p-0">
                   <div className="relative">
                     {generatedImages.length > 0 ? (
                       <motion.div 
-                        className="aspect-[16/9] bg-background relative rounded-xl overflow-hidden"
+                        className="aspect-[16/9] bg-[#131022] relative rounded-xl overflow-hidden"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
@@ -1272,17 +1284,21 @@ export default function CarModderConfigurator() {
                             className="absolute inset-0 w-full h-full object-cover"
                           />
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:hover:opacity-100">
                           <div className="p-6 w-full">
-                            <h3 className="text-xl font-bold mb-2">{isZh ? selectedCar.nameZh : selectedCar.name} {t('modEffect')}</h3>
-                            <p className="text-muted-foreground text-sm mb-4">{prompt}</p>
-                            <div className="flex gap-3">
+                            <h3 className="mb-2 line-clamp-2 max-w-full break-words text-xl font-semibold leading-tight tracking-tight">
+                              {isZh ? selectedCar.nameZh : selectedCar.name} {t('modEffect')}
+                            </h3>
+                            <p className="mb-4 line-clamp-3 max-w-full break-words text-sm leading-relaxed text-gray-400">
+                              {prompt}
+                            </p>
+                            <div className="flex flex-wrap gap-2">
                               <Button
                                 size="sm"
                                 variant="secondary"
                                 onClick={() => handleDownloadImage(generatedImages[0])}
                                 disabled={downloadingImageId === generatedImages[0].id}
-                                className="bg-muted/10 hover:bg-muted/20 backdrop-blur-sm"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
                               >
                                 {downloadingImageId === generatedImages[0].id ? (
                                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -1297,7 +1313,7 @@ export default function CarModderConfigurator() {
                                 size="sm"
                                 variant="secondary"
                                 onClick={handleShare}
-                                className="bg-muted/10 hover:bg-muted/20 backdrop-blur-sm"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
                               >
                                 <Share2 className="w-4 h-4 mr-2" />
                                 {t('share')}
@@ -1306,17 +1322,17 @@ export default function CarModderConfigurator() {
                                 size="sm"
                                 variant="secondary"
                                 onClick={() => setCompareMode((prev) => !prev)}
-                                className="bg-muted/10 hover:bg-muted/20 backdrop-blur-sm"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
                               >
                                 {compareMode ? (
                                   <>
                                     <EyeOff className="w-4 h-4 mr-2" />
-                                    {isZh ? '关闭对比' : 'Hide Compare'}
+                                    {t('hideCompare')}
                                   </>
                                 ) : (
                                   <>
                                     <Eye className="w-4 h-4 mr-2" />
-                                    {isZh ? '前后对比' : 'Compare'}
+                                    {t('compare')}
                                   </>
                                 )}
                               </Button>
@@ -1324,10 +1340,10 @@ export default function CarModderConfigurator() {
                           </div>
                         </div>
                         {compareMode && (
-                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[75%] bg-background/70 backdrop-blur-md border border-border rounded-lg px-3 py-2">
-                            <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-                              <span>{isZh ? '原图' : 'Before'}</span>
-                              <span>{isZh ? '效果图' : 'After'}</span>
+                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[75%] bg-black/45 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
+                            <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+                              <span>{t('before')}</span>
+                              <span>{t('after')}</span>
                             </div>
                             <input
                               type="range"
@@ -1335,14 +1351,14 @@ export default function CarModderConfigurator() {
                               max={100}
                               value={comparePosition}
                               onChange={(event) => setComparePosition(Number(event.target.value))}
-                              className="w-full accent-[#6366f1]"
+                              className="w-full accent-[#4725f4]"
                             />
                           </div>
                         )}
                       </motion.div>
                     ) : (
                       <motion.div 
-                        className="aspect-[16/9] bg-background relative flex items-center justify-center overflow-hidden"
+                        className="aspect-[16/9] bg-[#131022] relative flex items-center justify-center overflow-hidden"
                         whileHover={{ scale: 1.02 }}
                       >
                         <img
@@ -1353,8 +1369,10 @@ export default function CarModderConfigurator() {
                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
                           }}
                         />
-                        <div className="absolute bottom-4 left-4 bg-background/50 backdrop-blur-sm px-4 py-2 rounded-lg">
-                          <span className="text-sm font-medium">{isZh ? selectedCar.nameZh : selectedCar.name}</span>
+                        <div className="absolute bottom-4 left-4 max-w-[85%] rounded-lg bg-black/45 px-4 py-2 backdrop-blur-sm">
+                          <span className="line-clamp-2 break-words text-sm font-medium leading-snug">
+                            {isZh ? selectedCar.nameZh : selectedCar.name}
+                          </span>
                         </div>
                       </motion.div>
                     )}
@@ -1362,21 +1380,17 @@ export default function CarModderConfigurator() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border shadow-lg overflow-hidden">
-                <CardHeader className="bg-card border-b border-border p-5">
-                  <CardTitle className="text-lg font-bold">
-                    {isZh ? '一键风格包' : 'Preset Packs'}
+              <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
+                <CardHeader className="bg-[#1c1833]/90 border-b border-white/10 p-5">
+                  <CardTitle className="text-lg font-semibold tracking-tight">
+                    {t('presetPacksTitle')}
                   </CardTitle>
-                  <p className="text-muted-foreground text-sm mt-1">
-                    {isZh
-                      ? '根据车型推荐，先选一个预设再做微调更快。'
-                      : 'Pick a recommended pack first, then fine-tune your build.'}
-                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('presetPacksDesc')}</p>
                 </CardHeader>
                 <CardContent className="p-5 space-y-4">
                   <div className="space-y-2">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                      {isZh ? '推荐给你' : 'Recommended for this car'}
+                    <p className="text-xs uppercase tracking-wider text-gray-400">
+                      {t('recommendedForThisCar')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       {recommendedPresets.map((preset) => (
@@ -1385,22 +1399,24 @@ export default function CarModderConfigurator() {
                           variant={activePresetId === preset.id ? 'default' : 'secondary'}
                           className={`justify-start h-auto py-3 px-3 ${
                             activePresetId === preset.id
-                              ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white'
-                              : 'bg-card border border-border'
+                              ? 'bg-gradient-to-r from-[#4725f4] to-[#7c5cff] text-white'
+                              : 'bg-[#1c1833]/90 border border-white/10'
                           }`}
                           onClick={() => applyPreset(preset)}
                         >
-                          <div className="text-left">
-                            <div className="text-sm font-semibold">{isZh ? preset.nameZh : preset.name}</div>
-                            <div className="text-xs opacity-80">{isZh ? preset.descriptionZh : preset.description}</div>
+                          <div className="min-w-0 text-left">
+                            <div className="line-clamp-1 break-words text-sm font-semibold">{isZh ? preset.nameZh : preset.name}</div>
+                            <div className="line-clamp-2 break-words text-xs leading-relaxed opacity-80">
+                              {isZh ? preset.descriptionZh : preset.description}
+                            </div>
                           </div>
                         </Button>
                       ))}
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                      {isZh ? '全部预设' : 'All packs'}
+                    <p className="text-xs uppercase tracking-wider text-gray-400">
+                      {t('allPacks')}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {PRESET_PACKS.map((preset) => (
@@ -1408,7 +1424,7 @@ export default function CarModderConfigurator() {
                           key={preset.id}
                           size="sm"
                           variant={activePresetId === preset.id ? 'default' : 'outline'}
-                          className={activePresetId === preset.id ? 'bg-[#6366f1] text-white' : ''}
+                          className={activePresetId === preset.id ? 'bg-[#4725f4] text-white' : ''}
                           onClick={() => applyPreset(preset)}
                         >
                           <WandSparkles className="w-3.5 h-3.5 mr-1.5" />
@@ -1423,15 +1439,15 @@ export default function CarModderConfigurator() {
               {/* Car Selection */}
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{t('selectCarModel')}</h3>
-                  <Badge variant="outline" className="text-muted-foreground border-border">
+                  <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('selectCarModel')}</h3>
+                  <Badge variant="outline" className="text-gray-400 border-white/10">
                     {CHINESE_CAR_MODELS.length} {t('carModelsCount')}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   {/* 自定义车型按钮 */}
                   <motion.div
-                    className="relative rounded-xl overflow-hidden cursor-pointer border-2 border-dashed border-border/60 hover:border-[#6366f1] transition-all"
+                    className="relative rounded-xl overflow-hidden cursor-pointer border-2 border-dashed border-white/10/60 hover:border-[#4725f4] transition-all"
                     onClick={() => setShowCustomInput(true)}
                     whileHover={{ scale: 1.05, y: -5 }}
                     whileTap={{ scale: 0.95 }}
@@ -1439,23 +1455,23 @@ export default function CarModderConfigurator() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                   >
-                    <div className="aspect-[4/3] bg-card flex flex-col items-center justify-center gap-2">
-                      <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center">
-                        <span className="text-2xl font-light text-muted-foreground">+</span>
+                    <div className="aspect-[4/3] bg-[#1c1833]/90 flex flex-col items-center justify-center gap-2">
+                      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                        <span className="text-2xl font-light text-gray-400">+</span>
                       </div>
-                      <p className="text-xs font-medium text-muted-foreground">{t('customCar')}</p>
+                      <p className="text-xs font-medium text-gray-400">{t('customCar')}</p>
                     </div>
-                    <div className="p-3 bg-card border-t border-border">
-                      <p className="text-xs text-muted-foreground/60 mb-1">Custom</p>
-                      <p className="text-sm font-medium truncate">{t('inputYourCar')}</p>
-                      <p className="text-xs text-[#6366f1] mt-1">{t('freeTrial')}</p>
+                    <div className="border-t border-white/10 bg-[#1c1833]/90 p-3">
+                      <p className="text-xs text-gray-500 mb-1">{t('custom')}</p>
+                      <p className="line-clamp-2 break-words text-sm font-medium leading-snug">{t('inputYourCar')}</p>
+                      <p className="mt-1 line-clamp-1 text-xs text-[#4725f4]">{t('freeTrial')}</p>
                     </div>
                   </motion.div>
 
                   {(showAllCars ? CHINESE_CAR_MODELS : CHINESE_CAR_MODELS.slice(0, 3)).map((car) => (
                     <motion.div
                       key={car.id}
-                      className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedCar.id === car.id ? 'border-[#6366f1] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-border/60'}`}
+                      className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedCar.id === car.id ? 'border-[#4725f4] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-white/10/60'}`}
                       onClick={() => {
                         setActivePresetId(null);
                         setSelectedCar(car);
@@ -1466,7 +1482,7 @@ export default function CarModderConfigurator() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
                     >
-                      <div className="aspect-[4/3] bg-card relative overflow-hidden">
+                      <div className="aspect-[4/3] bg-[#1c1833]/90 relative overflow-hidden">
                         <motion.img
                           src={car.image}
                           alt={isZh ? car.nameZh : car.name}
@@ -1478,19 +1494,19 @@ export default function CarModderConfigurator() {
                         />
                         {selectedCar.id === car.id && (
                           <motion.div 
-                            className="absolute inset-0 bg-[#6366f1]/20 backdrop-blur-sm flex items-center justify-center"
+                            className="absolute inset-0 bg-[#4725f4]/20 backdrop-blur-sm flex items-center justify-center"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <CircleCheckBig className="h-7 w-7 text-[#6366f1]" />
+                            <CircleCheckBig className="h-7 w-7 text-[#4725f4]" />
                           </motion.div>
                         )}
                       </div>
-                      <div className="p-3 bg-card border-t border-border">
-                        <p className="text-xs text-muted-foreground/60 mb-1">{car.brand}</p>
-                        <p className="text-sm font-medium truncate">{isZh ? car.nameZh : car.name}</p>
-                        <p className="text-xs text-[#6366f1] mt-1">{formatPrice(car.price)}</p>
+                      <div className="border-t border-white/10 bg-[#1c1833]/90 p-3">
+                        <p className="text-xs text-gray-500 mb-1">{car.brand}</p>
+                        <p className="line-clamp-2 break-words text-sm font-medium leading-snug">{isZh ? car.nameZh : car.name}</p>
+                        <p className="mt-1 text-xs text-[#4725f4]">{formatPrice(car.price)}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -1500,7 +1516,7 @@ export default function CarModderConfigurator() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowAllCars(!showAllCars)}
-                    className="text-muted-foreground hover:text-foreground hover:bg-muted"
+                    className="min-h-11 max-w-full break-words text-center text-gray-400 hover:bg-white/10 hover:text-white"
                   >
                     {showAllCars ? (
                       <>
@@ -1519,7 +1535,7 @@ export default function CarModderConfigurator() {
 
               {/* Generation Progress */}
               {isGenerating && (
-                <Card className="bg-card border-border shadow-lg">
+                <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -1528,11 +1544,11 @@ export default function CarModderConfigurator() {
                     <CardContent className="space-y-4 p-6">
                       <div className="flex items-center justify-between text-sm">
                         <span className="font-medium">{t('generationProgress')}</span>
-                        <span className="text-[#6366f1] font-medium">{progress}%</span>
+                        <span className="text-[#4725f4] font-medium">{progress}%</span>
                       </div>
                       <Progress value={progress} className="h-3 bg-border rounded-full overflow-hidden">
                         <motion.div 
-                          className="h-full bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full"
+                          className="h-full bg-gradient-to-r from-[#4725f4] to-[#7c5cff] rounded-full"
                           style={{ width: `${progress}%` }}
                           initial={{ width: 0 }}
                           animate={{ width: `${progress}%` }}
@@ -1541,7 +1557,7 @@ export default function CarModderConfigurator() {
                       </Progress>
                       {taskStatusLabel && (
                         <motion.p 
-                          className="text-sm text-muted-foreground text-center"
+                          className="text-sm text-gray-400 text-center"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.3 }}
@@ -1557,7 +1573,7 @@ export default function CarModderConfigurator() {
                             resetTaskState();
                             setGeneratedImages([]);
                           }}
-                          className="text-muted-foreground hover:text-foreground"
+                          className="text-gray-400 hover:text-white"
                         >
                           <RefreshCw className="w-4 h-4 mr-2" />
                           {t('cancelGenerate')}
@@ -1579,7 +1595,7 @@ export default function CarModderConfigurator() {
               <div className="space-y-6">
                 {/* Tab Navigation */}
                 <motion.div 
-                  className="bg-card rounded-xl p-1 flex gap-2 border border-border"
+                  className="flex gap-2 overflow-x-auto rounded-xl border border-white/10 bg-[#1c1833]/90 p-1"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
@@ -1587,7 +1603,7 @@ export default function CarModderConfigurator() {
                   {['paint', 'wheels', 'mods', 'accents'].map((tab) => (
                     <motion.button
                       key={tab}
-                      className={`flex-1 px-4 py-3 text-sm font-medium transition-all rounded-lg ${activeTab === tab ? 'bg-card text-foreground shadow-lg border border-border' : 'text-muted-foreground hover:text-foreground'}`}
+                      className={`min-h-11 min-w-[88px] flex-1 rounded-lg px-3 py-2 text-center text-xs font-semibold tracking-wide transition-all sm:px-4 sm:py-3 sm:text-sm ${activeTab === tab ? 'border border-white/10 bg-[#1c1833]/90 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
                       onClick={() => setActiveTab(tab)}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -1595,35 +1611,35 @@ export default function CarModderConfigurator() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      {tab === 'paint' && 'PAINT'}
-                      {tab === 'wheels' && 'WHEELS'}
-                      {tab === 'mods' && 'MODS'}
-                      {tab === 'accents' && 'ACCENTS'}
+                      {tab === 'paint' && t('paint')}
+                      {tab === 'wheels' && t('wheels')}
+                      {tab === 'mods' && t('modifications_')}
+                      {tab === 'accents' && t('accentsDetail')}
                     </motion.button>
                   ))}
                 </motion.div>
 
                 {/* Paint Options */}
                 {activeTab === 'paint' && (
-                  <Card className="bg-card border-border shadow-lg overflow-hidden">
+                  <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <CardHeader className="bg-card border-b border-border p-6">
-                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Paint Lab</CardTitle>
-                      <p className="text-muted-foreground text-sm mt-1">Select a finish and color. Premium finishes include ceramic coating.</p>
+                      <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-6">
+                      <CardTitle className="text-lg font-semibold tracking-tight text-white">{t('paintLabTitle')}</CardTitle>
+                      <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('paintLabDesc')}</p>
                     </CardHeader>
                     <CardContent className="space-y-8 p-6">
                       {/* Finish Type */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Finish Type</h3>
+                        <h3 className="text-sm font-medium text-gray-400 mb-4 uppercase tracking-wider">{t('finishType')}</h3>
                         <div className="flex flex-wrap gap-3">
                           {FINISH_TYPES.map((finish) => (
                             <motion.button
                               key={finish.id}
-                              className={`px-5 py-3 rounded-xl text-sm transition-all ${selectedFinish.id === finish.id ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]' : 'bg-card text-muted-foreground hover:text-foreground border border-border'}`}
+                              className={`min-h-11 rounded-xl border px-4 py-2 text-sm transition-all ${selectedFinish.id === finish.id ? 'border-transparent bg-gradient-to-r from-[#4725f4] to-[#7c5cff] text-white shadow-[0_0_15px_rgba(99,102,241,0.35)]' : 'border-white/10 bg-[#1c1833]/90 text-white hover:border-[#4725f4]/40'}`}
                               onClick={() => {
                                 setActivePresetId(null);
                                 setSelectedFinish(finish);
@@ -1642,12 +1658,12 @@ export default function CarModderConfigurator() {
 
                       {/* Manufacturer Colors */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Manufacturer Colors</h3>
-                        <div className="grid grid-cols-5 gap-4">
+                        <h3 className="text-sm font-medium text-gray-400 mb-4 uppercase tracking-wider">{t('manufacturerColors')}</h3>
+                        <div className="grid grid-cols-4 gap-4 sm:grid-cols-5">
                           {PAINT_COLORS.map((color) => (
                             <motion.div
                               key={color.id}
-                              className={`relative cursor-pointer group ${selectedColor.id === color.id ? 'ring-2 ring-[#6366f1] ring-offset-2 ring-offset-card' : ''}`}
+                              className={`relative cursor-pointer group ${selectedColor.id === color.id ? 'ring-2 ring-[#4725f4] ring-offset-2 ring-offset-card' : ''}`}
                               onClick={() => {
                                 setActivePresetId(null);
                                 setSelectedColor(color);
@@ -1656,13 +1672,13 @@ export default function CarModderConfigurator() {
                               whileTap={{ scale: 0.95 }}
                             >
                               <div
-                                className="w-12 h-12 rounded-full shadow-lg border-2 border-border transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                                className="w-12 h-12 rounded-full shadow-lg border-2 border-white/10 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                                 style={{ backgroundColor: color.color }}
                               />
-                              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-card px-2 py-1 rounded-lg border border-border">
+                              <div className="absolute -bottom-12 left-1/2 max-w-[94px] -translate-x-1/2 rounded-lg border border-white/10 bg-[#1c1833]/90 px-2 py-1 text-center text-[10px] leading-tight opacity-0 transition-opacity group-hover:opacity-100">
                                 {isZh ? color.nameZh : color.name}
                                 {color.price > 0 && (
-                                  <span className="ml-1 text-[#6366f1]">+{formatPrice(color.price)}</span>
+                                  <span className="ml-1 text-[#4725f4]">+{formatPrice(color.price)}</span>
                                 )}
                               </div>
                             </motion.div>
@@ -1676,49 +1692,49 @@ export default function CarModderConfigurator() {
 
                 {/* Wheel Options */}
                 {activeTab === 'wheels' && (
-                  <Card className="bg-card border-border shadow-lg overflow-hidden">
+                  <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <CardHeader className="bg-card border-b border-border p-6">
-                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Wheel Selector</CardTitle>
-                      <p className="text-muted-foreground text-sm mt-1">Choose wheel style and size for your build.</p>
+                      <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-6">
+                      <CardTitle className="text-lg font-semibold tracking-tight text-white">{t('wheelSelectorTitle')}</CardTitle>
+                      <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('wheelSelectorDesc')}</p>
                     </CardHeader>
                     <CardContent className="space-y-5 p-6">
                       <div className="grid grid-cols-1 gap-3 max-h-[360px] overflow-y-auto pr-1">
                         {WHEEL_STYLES.map((wheel) => (
                           <motion.div
                             key={wheel.id}
-                            className={`p-4 rounded-xl cursor-pointer transition-all border ${selectedWheel.id === wheel.id ? 'border-[#6366f1] bg-card shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-muted hover:border-border bg-card'}`}
+                            className={`p-4 rounded-xl cursor-pointer transition-all border ${selectedWheel.id === wheel.id ? 'border-[#4725f4] bg-[#1c1833]/90 shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-white/10 hover:border-white/10 bg-[#1c1833]/90'}`}
                             onClick={() => handleWheelStyleSelect(wheel)}
                             whileHover={{ scale: 1.02, y: -2 }}
                             whileTap={{ scale: 0.98 }}
                           >
                             <div className="flex items-start gap-4">
                               <motion.div 
-                                className="w-12 h-12 rounded-full bg-card flex items-center justify-center border border-border shrink-0"
+                                className="w-12 h-12 rounded-full bg-[#1c1833]/90 flex items-center justify-center border border-white/10 shrink-0"
                                 whileHover={{ rotate: 10 }}
                               >
-                                <CircleDashed className="h-4 w-4 text-[#6366f1]" />
+                                <CircleDashed className="h-4 w-4 text-[#4725f4]" />
                               </motion.div>
                               <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-center mb-1 gap-2">
-                                  <h4 className="font-semibold text-foreground text-sm truncate">{isZh ? wheel.nameZh : wheel.name}</h4>
+                                <div className="mb-1 flex items-center justify-between gap-2">
+                                  <h4 className="line-clamp-1 min-w-0 break-words text-sm font-semibold text-white">{isZh ? wheel.nameZh : wheel.name}</h4>
                                   {wheel.price > 0 && (
                                     <motion.span 
-                                      className="text-xs font-medium text-[#6366f1] shrink-0"
+                                      className="text-xs font-medium text-[#4725f4] shrink-0"
                                       whileHover={{ scale: 1.1 }}
                                     >
                                       +{formatPrice(wheel.price)}
                                     </motion.span>
                                   )}
                                 </div>
-                                <p className="text-xs text-muted-foreground">{isZh ? wheel.descriptionZh : wheel.description}</p>
+                                <p className="line-clamp-2 break-words text-xs leading-relaxed text-gray-400">{isZh ? wheel.descriptionZh : wheel.description}</p>
                                 <div className="flex flex-wrap gap-1 mt-2">
                                   {wheel.tags.slice(0, 3).map((tag) => (
-                                    <Badge key={tag} variant="outline" className="text-[10px] border-border text-muted-foreground">
+                                    <Badge key={tag} variant="outline" className="text-[10px] border-white/10 text-gray-400">
                                       {tag}
                                     </Badge>
                                   ))}
@@ -1729,65 +1745,65 @@ export default function CarModderConfigurator() {
                         ))}
                       </div>
 
-                      <div className="pt-2 border-t border-border">
+                      <div className="pt-2 border-t border-white/10">
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setShowAdvancedWheels((prev) => !prev)}
-                          className="w-full justify-between"
+                          className="min-h-11 w-full justify-between"
                         >
-                          <span>{isZh ? '更多轮毂参数' : 'Advanced Wheel Spec'}</span>
+                          <span className="pr-2 text-left text-sm leading-snug">{t('advancedWheelSpec')}</span>
                           {showAdvancedWheels ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                         </Button>
                         {showAdvancedWheels && (
                           <div className="mt-3 space-y-3">
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                               <div className="space-y-1">
-                                <p className="text-xs text-muted-foreground">{isZh ? '尺寸' : 'Size'}</p>
+                                <p className="text-xs text-gray-400">{t('wheelSize')}</p>
                                 <Select
                                   value={String(wheelSpec.size)}
                                   onValueChange={(value) => updateWheelSpec({ size: Number(value) })}
                                 >
                                   <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={isZh ? '选择尺寸' : 'Size'} />
+                                    <SelectValue placeholder={t('selectSize')} />
                                   </SelectTrigger>
                                   <SelectContent>
                                     {WHEEL_SIZES.map((size) => (
                                       <SelectItem key={size} value={String(size)}>
-                                        {size}" ({WHEEL_SIZE_EXTRA_COST[size] > 0 ? `+${formatPrice(WHEEL_SIZE_EXTRA_COST[size])}` : isZh ? '基础' : 'Base'})
+                                        {size}" ({WHEEL_SIZE_EXTRA_COST[size] > 0 ? `+${formatPrice(WHEEL_SIZE_EXTRA_COST[size])}` : t('base')})
                                       </SelectItem>
                                     ))}
                                   </SelectContent>
                                 </Select>
                               </div>
                               <div className="space-y-1">
-                                <p className="text-xs text-muted-foreground">{isZh ? '轮辐数' : 'Spokes'}</p>
+                                <p className="text-xs text-gray-400">{t('wheelSpokes')}</p>
                                 <Select
                                   value={String(wheelSpec.spokeCount)}
                                   onValueChange={(value) => updateWheelSpec({ spokeCount: Number(value) })}
                                 >
                                   <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={isZh ? '选择轮辐数' : 'Spokes'} />
+                                    <SelectValue placeholder={t('selectSpokes')} />
                                   </SelectTrigger>
                                   <SelectContent>
                                     {SPOKE_COUNTS.map((count) => (
                                       <SelectItem key={count} value={String(count)}>
-                                        {count} {isZh ? '辐' : 'spokes'}
+                                        {count} {t('spokeUnit')}
                                       </SelectItem>
                                     ))}
                                   </SelectContent>
                                 </Select>
                               </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                               <div className="space-y-1">
-                                <p className="text-xs text-muted-foreground">{isZh ? '轮毂颜色' : 'Wheel Color'}</p>
+                                <p className="text-xs text-gray-400">{t('wheelColor')}</p>
                                 <Select
                                   value={wheelSpec.colorId}
                                   onValueChange={(value) => updateWheelSpec({ colorId: value })}
                                 >
                                   <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={isZh ? '选择颜色' : 'Color'} />
+                                    <SelectValue placeholder={t('selectColor')} />
                                   </SelectTrigger>
                                   <SelectContent>
                                     {WHEEL_COLORS.map((color) => (
@@ -1799,13 +1815,13 @@ export default function CarModderConfigurator() {
                                 </Select>
                               </div>
                               <div className="space-y-1">
-                                <p className="text-xs text-muted-foreground">{isZh ? '凹度' : 'Concavity'}</p>
+                                <p className="text-xs text-gray-400">{t('wheelConcavity')}</p>
                                 <Select
                                   value={wheelSpec.concavity}
                                   onValueChange={(value) => updateWheelSpec({ concavity: value as WheelConcavity })}
                                 >
                                   <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={isZh ? '选择凹度' : 'Concavity'} />
+                                    <SelectValue placeholder={t('selectConcavity')} />
                                   </SelectTrigger>
                                   <SelectContent>
                                     {WHEEL_CONCAVITY_OPTIONS.map((item) => (
@@ -1827,30 +1843,30 @@ export default function CarModderConfigurator() {
 
                 {/* Modification Options */}
                 {activeTab === 'mods' && (
-                  <Card className="bg-card border-border shadow-lg overflow-hidden">
+                  <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <CardHeader className="bg-card border-b border-border p-6">
-                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Performance & Styling</CardTitle>
-                      <p className="text-muted-foreground text-sm mt-1">Enhance your vehicle's appearance and performance.</p>
+                      <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-6">
+                      <CardTitle className="text-lg font-semibold tracking-tight text-white">{t('performanceStylingTitle')}</CardTitle>
+                      <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('performanceStylingDesc')}</p>
                     </CardHeader>
                     <CardContent className="space-y-3 p-6">
                       {MODIFICATION_OPTIONS.map((mod) => (
                         <motion.div 
                           key={mod.id} 
-                          className="flex items-center justify-between py-4 border-b border-muted"
+                          className="flex items-start justify-between gap-3 border-b border-white/10 py-4"
                           whileHover={{ x: 5 }}
                         >
                           <motion.div 
-                            className="flex items-center gap-4"
+                            className="flex min-w-0 items-start gap-4"
                             onClick={() => toggleMod(mod.id)}
                             whileTap={{ scale: 0.98 }}
                           >
                             <motion.div 
-                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer ${selectedMods.includes(mod.id) ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] border-[#6366f1] shadow-[0_0_10px_rgba(99,102,241,0.4)]' : 'border-border'}`}
+                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer ${selectedMods.includes(mod.id) ? 'bg-gradient-to-r from-[#4725f4] to-[#7c5cff] border-[#4725f4] shadow-[0_0_10px_rgba(99,102,241,0.4)]' : 'border-white/10'}`}
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
                             >
@@ -1864,13 +1880,13 @@ export default function CarModderConfigurator() {
                                 </motion.div>
                               )}
                             </motion.div>
-                            <div>
-                              <p className="text-sm font-medium text-foreground">{isZh ? mod.nameZh : mod.name}</p>
-                              <p className="text-xs text-muted-foreground">{isZh ? mod.descriptionZh : mod.description}</p>
+                            <div className="min-w-0">
+                              <p className="break-words text-sm font-medium leading-snug text-white">{isZh ? mod.nameZh : mod.name}</p>
+                              <p className="mt-1 break-words text-xs leading-relaxed text-gray-400">{isZh ? mod.descriptionZh : mod.description}</p>
                             </div>
                           </motion.div>
                           <motion.span 
-                            className="text-sm font-medium text-[#6366f1]"
+                            className="shrink-0 pt-0.5 text-sm font-medium text-[#4725f4]"
                             whileHover={{ scale: 1.1 }}
                           >
                             +{formatPrice(mod.price)}
@@ -1884,30 +1900,30 @@ export default function CarModderConfigurator() {
 
                 {/* Accent Options */}
                 {activeTab === 'accents' && (
-                  <Card className="bg-card border-border shadow-lg overflow-hidden">
+                  <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <CardHeader className="bg-card border-b border-border p-6">
-                      <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Accent Details</CardTitle>
-                      <p className="text-muted-foreground text-sm mt-1">Add custom touches to your build.</p>
+                      <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-6">
+                      <CardTitle className="text-lg font-semibold tracking-tight text-white">{t('accentDetailsTitle')}</CardTitle>
+                      <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('accentDetailsDesc')}</p>
                     </CardHeader>
                     <CardContent className="space-y-4 p-6">
                       {ACCENT_OPTIONS.map((accent) => (
                         <motion.div 
                           key={accent.id} 
-                          className="flex items-center justify-between py-4 border-b border-muted"
+                          className="flex items-start justify-between gap-3 border-b border-white/10 py-4"
                           whileHover={{ x: 5 }}
                         >
-                          <div>
-                            <p className="text-sm font-medium text-foreground">{isZh ? accent.nameZh : accent.name}</p>
-                            <p className="text-xs text-muted-foreground">{isZh ? accent.descriptionZh : accent.description}</p>
+                          <div className="min-w-0">
+                            <p className="break-words text-sm font-medium leading-snug text-white">{isZh ? accent.nameZh : accent.name}</p>
+                            <p className="mt-1 break-words text-xs leading-relaxed text-gray-400">{isZh ? accent.descriptionZh : accent.description}</p>
                           </div>
-                          <div className="flex items-center gap-4">
+                          <div className="flex shrink-0 items-center gap-3">
                             <motion.span 
-                              className="text-sm font-medium text-[#6366f1]"
+                              className="text-sm font-medium text-[#4725f4]"
                               whileHover={{ scale: 1.1 }}
                             >
                               +{formatPrice(accent.price)}
@@ -1915,7 +1931,7 @@ export default function CarModderConfigurator() {
                             <Switch
                               checked={accentOptions[accent.id]}
                               onCheckedChange={() => toggleAccent(accent.id)}
-                              className="data-[state=checked]:bg-[#6366f1]"
+                              className="data-[state=checked]:bg-[#4725f4]"
                             />
                           </div>
                         </motion.div>
@@ -1925,13 +1941,13 @@ export default function CarModderConfigurator() {
                 </Card>
                 )}
 
-                <Card className="bg-card border-border shadow-lg overflow-hidden">
-                  <CardHeader className="bg-card border-b border-border p-5">
+                <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
+                  <CardHeader className="bg-[#1c1833]/90 border-b border-white/10 p-5">
                     <CardTitle className="text-base font-semibold">
-                      {isZh ? '最近配置' : 'Recent Configs'}
+                      {t('recentConfigsTitle')}
                     </CardTitle>
-                    <p className="text-xs text-muted-foreground">
-                      {isZh ? '自动保存最近 10 次配置，可随时恢复。' : 'Last 10 configs are auto-saved and restorable.'}
+                    <p className="text-xs leading-relaxed text-gray-400">
+                      {t('recentConfigsDesc')}
                     </p>
                   </CardHeader>
                   <CardContent className="p-5 space-y-2">
@@ -1946,12 +1962,12 @@ export default function CarModderConfigurator() {
                       }}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={isZh ? '选择历史记录' : 'Choose a snapshot'} />
+                        <SelectValue placeholder={t('chooseSnapshot')} />
                       </SelectTrigger>
                       <SelectContent>
                         {historyState.entries.map((entry, idx) => (
                           <SelectItem key={`${entry.selectedCar.id}-${idx}`} value={String(idx)}>
-                            {isZh ? entry.selectedCar.nameZh : entry.selectedCar.name} · {entry.wheelSpec.size}" · {idx === historyState.index ? (isZh ? '当前' : 'Current') : `${isZh ? '步骤' : 'Step'} ${idx + 1}`}
+                            {isZh ? entry.selectedCar.nameZh : entry.selectedCar.name} · {entry.wheelSpec.size}" · {idx === historyState.index ? t('current') : `${t('step')} ${idx + 1}`}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -1967,7 +1983,7 @@ export default function CarModderConfigurator() {
                     transition={{ duration: 0.5, delay: 0.2 }}
                   >
                     <Button
-                      className="w-full py-6 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] hover:from-[#4f46e5] hover:to-[#7c3aed] text-lg font-bold shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all duration-300 text-white"
+                      className="min-h-12 w-full bg-gradient-to-r from-[#4725f4] to-[#7c5cff] py-5 text-base font-bold text-white shadow-[0_0_20px_rgba(99,102,241,0.35)] transition-all duration-300 hover:from-[#361bb8] hover:to-[#5b2de1]"
                       onClick={handleGenerate}
                       disabled={isGenerating}
                     >
@@ -1984,7 +2000,7 @@ export default function CarModderConfigurator() {
                       )}
                     </Button>
                   </motion.div>
-                  <div className="flex gap-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1993,7 +2009,7 @@ export default function CarModderConfigurator() {
                     >
                       <Button
                         variant="secondary"
-                        className="w-full py-4 bg-card hover:bg-muted border border-border font-medium transition-all duration-300"
+                        className="min-h-11 w-full break-words border border-white/10 bg-[#1c1833]/90 py-3 text-center font-medium transition-all duration-300 hover:bg-white/10"
                         onClick={handleShare}
                       >
                         <Share2 className="w-4 h-4 mr-2" />
@@ -2008,7 +2024,7 @@ export default function CarModderConfigurator() {
                     >
                       <Button
                         variant="secondary"
-                        className="w-full py-4 bg-card hover:bg-muted border border-border font-medium transition-all duration-300"
+                        className="min-h-11 w-full break-words border border-white/10 bg-[#1c1833]/90 py-3 text-center font-medium transition-all duration-300 hover:bg-white/10"
                       >
                         <FileText className="w-4 h-4 mr-2" />
                         {t('quote')}
@@ -2021,7 +2037,7 @@ export default function CarModderConfigurator() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
                   >
-                    <p className="text-xs text-muted-foreground/40">
+                    <p className="mx-auto max-w-[260px] text-xs leading-relaxed text-gray-500 sm:max-w-none">
                       {t('creditsRequired', { credits: costCredits })}
                       {user && ` ${t('remaining', { credits: remainingCredits })}`}
                     </p>
