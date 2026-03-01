@@ -5,7 +5,11 @@ import { getTranslations } from 'next-intl/server';
 
 import { Empty, LazyImage } from '@/shared/blocks/common';
 import { Button } from '@/shared/components/ui/button';
-import { getUserBuilds, getUserBuildsCount } from '@/shared/models/car_build';
+import {
+  getUserBuilds,
+  getUserBuildsCount,
+  type CarBuild,
+} from '@/shared/models/car_build';
 import { getUserInfo } from '@/shared/models/user';
 import { Link } from '@/core/i18n/navigation';
 
@@ -65,7 +69,7 @@ export default async function BuildsPage({
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {builds.map((build) => (
+          {builds.map((build: CarBuild) => (
             <div
               key={build.id}
               className="bg-[#131324] border border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition-all"
@@ -108,7 +112,7 @@ export default async function BuildsPage({
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-white/60">{t('totalPrice')}</span>
                   <span className="font-medium text-[#6366f1]">
-                    ¥{(build.totalPrice / 100).toFixed(2)}
+                    ¥{((build.totalPrice || 0) / 100).toFixed(2)}
                   </span>
                 </div>
 

@@ -4,7 +4,7 @@
  * 保存到 public/imgs/cars 目录
  */
 
-import { writeFileSync, mkdirSync, existsSync, rmSync } from 'fs';
+import { writeFileSync, mkdirSync, existsSync, rmSync, readdirSync } from 'fs';
 import { join } from 'path';
 
 // 31 款车型数据
@@ -68,8 +68,8 @@ if (!existsSync(OUTPUT_DIR)) {
 
 // 清空旧图片
 console.log('🧹 清理旧图片...');
-const oldFiles = require('fs').readdirSync(OUTPUT_DIR);
-oldFiles.forEach(f => {
+const oldFiles: string[] = readdirSync(OUTPUT_DIR);
+oldFiles.forEach((f: string) => {
   if (f.endsWith('.jpg') || f.endsWith('.png')) {
     rmSync(join(OUTPUT_DIR, f));
   }
@@ -166,6 +166,7 @@ async function pollTaskStatus(taskId: string): Promise<string | null> {
       }
       
       if (task.status === 'failed') {
+        const taskInfo = JSON.parse(task.taskInfo || '{}');
         throw new Error(taskInfo?.errorMessage || '生成失败');
       }
       
