@@ -312,10 +312,10 @@ function getDemoShops(latitude: number, longitude: number) {
     longitude: String(longitude + shop.longitude),
     phone: shop.phone,
     website: shop.website,
-    rating: Math.round(shop.rating * 20),
-    reviewCount: Math.floor(Math.random() * 200) + 50,
-    certified: index < 2,
-    featured: index === 0,
+    rating: 0,
+    reviewCount: 0,
+    certified: false,
+    featured: false,
     source: 'demo',
   }));
 }

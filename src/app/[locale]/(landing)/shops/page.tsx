@@ -329,7 +329,11 @@ export default function ShopsSearchPage() {
                       <div className="absolute bottom-3 right-3">
                         <span className="px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm text-white text-xs font-medium flex items-center gap-1">
                           <span className="material-icons text-xs">public</span>
-                          {shop.source === 'google' ? 'Google' : 'OSM'}
+                          {shop.source === 'google'
+                            ? 'Google'
+                            : shop.source === 'demo'
+                              ? 'Demo Data'
+                              : 'OSM'}
                         </span>
                       </div>
                     )}
@@ -346,7 +350,9 @@ export default function ShopsSearchPage() {
                       </div>
                       <div className="flex items-center gap-1 ml-2">
                         <span className="material-icons text-yellow-500 text-sm">star</span>
-                        <span className="text-sm font-bold text-white">{formatRating(shop.rating)}</span>
+                        <span className="text-sm font-bold text-white">
+                          {shop.source === 'demo' ? 'N/A' : formatRating(shop.rating)}
+                        </span>
                       </div>
                     </div>
 
@@ -356,7 +362,9 @@ export default function ShopsSearchPage() {
 
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-xs text-gray-500">
-                        {shop.reviewCount} {t('shopReviews')}
+                        {shop.source === 'demo'
+                          ? (t('demoDataNotice') || 'Demo data')
+                          : `${shop.reviewCount} ${t('shopReviews')}`}
                       </span>
                       <span className="text-xs text-gray-600">•</span>
                       <span className="text-xs text-gray-500">

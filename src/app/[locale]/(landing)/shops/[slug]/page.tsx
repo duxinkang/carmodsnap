@@ -28,6 +28,7 @@ interface Shop {
   serviceCount: number;
   certified: boolean;
   featured: boolean;
+  source?: string;
   services?: any[];
   reviews?: any[];
 }
@@ -242,6 +243,12 @@ export default function ShopDetailPage() {
                         Featured
                       </span>
                     )}
+                    {shop.source === 'demo' && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-700 text-white text-xs font-bold">
+                        <span className="material-icons text-xs">info</span>
+                        Demo Data
+                      </span>
+                    )}
                   </div>
                   <p className="text-gray-400 flex items-center gap-2">
                     <span className="material-icons text-sm">location_on</span>
@@ -251,9 +258,15 @@ export default function ShopDetailPage() {
                 <div className="text-right">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="material-icons text-yellow-500">star</span>
-                    <span className="text-2xl font-bold text-white">{formatRating(shop.rating)}</span>
+                    <span className="text-2xl font-bold text-white">
+                      {shop.source === 'demo' ? 'N/A' : formatRating(shop.rating)}
+                    </span>
                   </div>
-                  <p className="text-sm text-gray-400">{shop.reviewCount} {t('shopReviews')}</p>
+                  <p className="text-sm text-gray-400">
+                    {shop.source === 'demo'
+                      ? (t('demoDataNotice') || 'Demo data')
+                      : `${shop.reviewCount} ${t('shopReviews')}`}
+                  </p>
                 </div>
               </div>
 

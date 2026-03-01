@@ -12,24 +12,18 @@ export default function CarModderLanding() {
   const featuredConfigs = [
     {
       id: 1,
-      name: 'Stealth Bomber',
-      creator: '@turbo_king',
+      name: 'Concept Alpha',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBwFUIkDnnZFtjiE_Az2t2eZMLbdlxQrl5X3sv5TNIDWTCz6Fk6VagQYgu9ZXDZL-eexnEWR_N8ZUgvD_fO9IhWXey9NZQT3W4HfulSMuySYECdEQkHCh6NluWMCOtmudPsKzhXLZUzzjHBRFnMA-_5eQHaOAICHXw6qpZhiIvvB71IPHvqAD6Gy8ORicIH6wQWQDZ7lFkX_gNExsXpnQGL5_9A_jNcy_AiU35NqLtLy0HruH5iI0QLUr3-v19ydlJJzGJaH1jVpZud',
-      likes: 1245
     },
     {
       id: 2,
-      name: 'Cyber Runner',
-      creator: '@neon_drift',
+      name: 'Concept Beta',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAZJvt63WYUuL2rBEN0penNHC-MVt8r0vCXfTJLc0RlHIwk7aSEZmkXDBw-CQ52X5kyevCFsNb8q466y6VwgPW7e233OM9c9D3Nn1YkvGFjlal2xxH7yFUBKGbeAagvIjPvNzo6RY4OCtdipEHNRFJmV-kGooKQMTFkHRwbvTQRkfzef0enbxCwtOJpn2lRhcXK0LEQpruslRI7TTzMHLFt5fYuvHv3ZFr6TJlXVNIjnHEUHLviyoaZyyws1x0XrJNBBBlgMRgT7hgp',
-      likes: 2356
     },
     {
       id: 3,
-      name: 'Matte Edition',
-      creator: '@clean_builds',
+      name: 'Concept Gamma',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCzbp2MbIqzBn3pXHxon0WsA6vmwUohT2KrYHcpRu6raupupn4_5EEnKwfDu3cajBpSOcNyXJULCs70ji5DBX5Fr_u6IH_1bq_hMJ7jnN4szTaqU1x6FuRQer1nD-ipFnixr4C4oDVzenzUh4hpisLPL61cmtDyRvpWGUoPKcFZfutO3pg-6sr_f5Wo8h5_Byz3CA-TjSkbtyRLUTNJKrUZimWlAGLU14wTESDsCXKzoo_ZcVnWjdRNuyzHwkDPVCG7SGxs97--j7l5',
-      likes: 987
     }
   ];
 
@@ -134,20 +128,17 @@ export default function CarModderLanding() {
               className="mt-12 pt-8 border-t border-white/5 flex items-center justify-center lg:justify-start gap-8"
             >
               <div>
-                <div className="text-2xl font-bold text-white">10k+</div>
+                <div className="text-2xl font-bold text-white">Beta</div>
                 <div className="text-xs text-gray-500 uppercase tracking-widest">{t('buildsCreated')}</div>
               </div>
               <div className="h-8 w-px bg-white/10"></div>
               <div>
-                <div className="text-2xl font-bold text-white">4K</div>
+                <div className="text-2xl font-bold text-white">Demo</div>
                 <div className="text-xs text-gray-500 uppercase tracking-widest">{t('textures')}</div>
               </div>
               <div className="h-8 w-px bg-white/10"></div>
-              <div className="flex -space-x-3">
-                <img className="w-10 h-10 rounded-full border-2 border-[#050505]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB82HYL3w_q0yAgIZEIfEyzqP0IgoLndj5W8tbSZ0AS3AiUV95xQule9pf7xV0S9ujwyX1jpQ9KLNihWchndd1RiQloPSIihHkjOTKORNIJ6vFq3YzekPmNMSJcggv0HQIKw7VDUprBoUyvztDaBdOgMkjnw9jjoAOulZ2XsAR50MvtrZNc0634MrCzeW9pb65mdVyhwHlKytEyOTZOvjLm7rBMk2ZW1s04xbUc4i7vryhvmExWPFt5yoRW703gG2LpIXQGkh2JRBaB" alt="User avatar 1" />
-                <img className="w-10 h-10 rounded-full border-2 border-[#050505]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTsRu_-0B2lNvkLEI43M5iRFPgduk921qW9GnzNc31vIJzpQwUx97hDBknFb12PJMDliG0H_nsitNs_h1u5WjAOe65Q-Jh_I1lrQHpGi5vpDkX9wLAifPoBapHMXvBLnpx_4CseGUvd8BmyTe5wmEBSf1eFKWnZUfwFMx7mobhN6efCCXcGJVagfE9R0itcb_FYTymbps8BUOT69-lj7ZE2W5NI_gzqFMXxnRgbbH8Fgc69wLzGSp97hpKCe5am8hR8dnWlh7OP5QT" alt="User avatar 2" />
-                <img className="w-10 h-10 rounded-full border-2 border-[#050505]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVmEaUxtI2civAkcZBhGYBDFV9YXH5CJpq7_maEbU6IZGnqbThME6TrffTmxXKKXzMYoCAX0m175xkIYkuQfnRN9qP_MWzbO-2npniUCvZDIwcG93fFxFVUGngOng7OyGcTDX4yYkeXsSzN8hl2TdwqzI6KLiXjkn60HyOSZCwJ5sW1j8uj-K_2YQvDivkOV-RPW_4aNrm-zBM0erNU0_fj9BM2sj_BNHGgRAyXXFy3JfeFUADMgO5N6g___BUJj1-3ONi6oql5WPB" alt="User avatar 3" />
-                <div className="w-10 h-10 rounded-full border-2 border-[#050505] bg-white/10 flex items-center justify-center text-xs text-white font-medium">+2k</div>
+              <div className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-300">
+                {t('demoDataNotice')}
               </div>
             </motion.div>
           </div>
@@ -248,6 +239,7 @@ export default function CarModderLanding() {
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">{t('communityBuilds')}</h2>
               <p className="text-gray-400">{t('trendingConfigs')}</p>
+              <p className="text-xs text-gray-500 mt-2">{t('demoDataNotice')}</p>
             </div>
             <a className="hidden md:flex items-center gap-2 text-[#4725f4] hover:text-white transition-colors" href="#">
               {t('viewGallery')} <span className="material-icons text-sm">arrow_forward</span>
@@ -276,7 +268,7 @@ export default function CarModderLanding() {
                   <div className="flex justify-between items-end">
                     <div>
                       <h3 className="text-xl font-bold text-white mb-1">{config.name}</h3>
-                      <p className="text-sm text-gray-400">by {config.creator}</p>
+                      <p className="text-sm text-gray-400">{t('sampleConcept')}</p>
                     </div>
                     <motion.button
                       className="w-10 h-10 rounded-full bg-[#4725f4]/20 text-[#4725f4] flex items-center justify-center hover:bg-[#4725f4] hover:text-white transition-colors"

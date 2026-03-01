@@ -94,7 +94,7 @@
   },
   "hero": {
     "title": "Visualize Your Dream Build",
-    "description": "ModSnap is an AI-powered car modification platform. Use advanced 3D technology and AI models to preview your ideas in real-time before spending a dime.",
+    "description": "ModSnap is an AI-powered car modification platform. Start with free core visualization tools and unlock advanced AI generation features via paid plans.",
     "buttons": [
       {
         "title": "Start Modding",
@@ -185,22 +185,17 @@
           ]
         },
         {
-          "title": "Friends",
+          "title": "Contact",
           "children": [
             {
-              "title": "ModSnap",
-              "url": "#",
-              "target": "_blank"
+              "title": "Support Email",
+              "url": "mailto:support@modsnap.tech",
+              "target": "_self"
             },
             {
-              "title": "CarModeView",
-              "url": "#",
-              "target": "_blank"
-            },
-            {
-              "title": "AutoMod",
-              "url": "#",
-              "target": "_blank"
+              "title": "Data & Claims Policy",
+              "url": "/data-and-claims-policy",
+              "target": "_self"
             }
           ]
         }
@@ -211,7 +206,7 @@
         {
           "title": "Email",
           "icon": "Mail",
-          "url": "mailto:contact@startpointagency.com",
+          "url": "mailto:support@modsnap.tech",
           "target": "_self"
         }
       ]
@@ -225,6 +220,10 @@
         {
           "title": "Terms of Service",
           "url": "/terms-of-service"
+        },
+        {
+          "title": "Data & Claims Policy",
+          "url": "/data-and-claims-policy"
         }
       ]
     },

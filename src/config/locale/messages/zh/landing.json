@@ -94,7 +94,7 @@
   },
   "hero": {
     "title": "可视化您的梦想座驾",
-    "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台。使用先进的 3D 技术和 AI 模型，在花费一分钱之前，实时预览您的改装想法。",
+    "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台。基础可视化功能可免费使用，高级 AI 生成功能通过付费方案解锁。",
     "buttons": [
       {
         "title": "开始改装",
@@ -185,22 +185,17 @@
           ]
         },
         {
-          "title": "合作伙伴",
+          "title": "联系与合规",
           "children": [
             {
-              "title": "ModSnap",
-              "url": "#",
-              "target": "_blank"
+              "title": "支持邮箱",
+              "url": "mailto:support@modsnap.tech",
+              "target": "_self"
             },
             {
-              "title": "CarModeView",
-              "url": "#",
-              "target": "_blank"
-            },
-            {
-              "title": "AutoMod",
-              "url": "#",
-              "target": "_blank"
+              "title": "数据与声明政策",
+              "url": "/data-and-claims-policy",
+              "target": "_self"
             }
           ]
         }
@@ -211,7 +206,7 @@
         {
           "title": "邮箱",
           "icon": "Mail",
-          "url": "mailto:contact@startpointagency.com",
+          "url": "mailto:support@modsnap.tech",
           "target": "_self"
         }
       ]
@@ -225,6 +220,10 @@
         {
           "title": "服务条款",
           "url": "/terms-of-service"
+        },
+        {
+          "title": "数据与声明政策",
+          "url": "/data-and-claims-policy"
         }
       ]
     },
