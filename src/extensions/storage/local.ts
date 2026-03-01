@@ -91,8 +91,9 @@ export class LocalStorageProvider implements StorageProvider {
   }
 
   async exists(options: { key: string; bucket?: string }): Promise<boolean> {
-    // In local storage, we always return true for simplicity
-    return true;
+    // Local provider does not persist files to disk in this project.
+    // Returning false avoids dedupe paths that may produce non-public URLs.
+    return false;
   }
 
   getPublicUrl(options: { key: string; bucket?: string }): string {

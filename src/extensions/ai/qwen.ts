@@ -67,19 +67,41 @@ export class QwenProvider implements AIProvider {
       throw new Error('prompt is required');
     }
 
+    // Qwen image edit docs limit text to <= 800 chars.
+    const normalizedPrompt =
+      prompt.length > 800 ? `${prompt.slice(0, 800)}...` : prompt;
+
+    const referenceImage = options?.ref_image as string | undefined;
+    const isImageEditModel = model.includes('image-edit');
+    const isValidRefImage = (value?: string) =>
+      !!value &&
+      (value.startsWith('http://') ||
+        value.startsWith('https://') ||
+        value.startsWith('data:image/'));
+
+    if (referenceImage && !isImageEditModel) {
+      throw new Error(
+        'Qwen image-to-image requires an image-edit model (e.g. qwen-image-edit-max)'
+      );
+    }
+
+    if (referenceImage && !isValidRefImage(referenceImage)) {
+      throw new Error(
+        'Invalid ref_image: must be a public URL (http/https) or data:image/...;base64,...'
+      );
+    }
+
     const requestBody: any = {
       model,
       input: {
         messages: [
           {
             role: 'user',
-            content: [
-              {
-                text: prompt
-              }
-            ]
-          }
-        ]
+            content: isImageEditModel && referenceImage
+              ? [{ image: referenceImage }, { text: normalizedPrompt }]
+              : [{ text: normalizedPrompt }],
+          },
+        ],
       },
       parameters: {
         style: options?.style || 'auto',
@@ -90,27 +112,25 @@ export class QwenProvider implements AIProvider {
       },
     };
 
-    if (options?.ref_image) {
-      requestBody.input.messages[0].content.push({
-        image: options.ref_image
+    const execute = async (body: any): Promise<QwenImageResponse> => {
+      const response = await fetch(this.baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.configs.apiKey}`,
+        },
+        body: JSON.stringify(body),
       });
-    }
 
-    const response = await fetch(this.baseUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.configs.apiKey}`,
-      },
-      body: JSON.stringify(requestBody),
-    });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Qwen API error: ${response.status} - ${errorText}`);
+      }
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Qwen API error: ${response.status} - ${errorText}`);
-    }
+      return response.json();
+    };
 
-    const data: QwenImageResponse = await response.json();
+    const data = await execute(requestBody);
 
     if (data.code) {
       throw new Error(`Qwen API error: ${data.code} - ${data.message}`);

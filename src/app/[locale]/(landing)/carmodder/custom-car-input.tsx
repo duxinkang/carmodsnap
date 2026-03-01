@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Upload, X } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
+import { toast } from 'sonner';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
@@ -27,6 +28,7 @@ export interface CustomCarInputData {
   year: number;
   type: string;
   imageUrl?: string;
+  imageDataUrl?: string;
   description?: string;
 }
 
@@ -69,16 +71,55 @@ export function CustomCarInput({
     onSubmit(formData);
   };
 
+  const toDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(new Error('read file failed'));
+      reader.readAsDataURL(file);
+    });
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error(isZh ? '请上传图片文件' : 'Please upload an image file');
+      return;
+    }
+
     setIsUploading(true);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setFormData(prev => ({ ...prev, imageUrl: event.target?.result as string }));
+    try {
+      const imageDataUrl = await toDataUrl(file);
+      const form = new FormData();
+      form.append('files', file);
+
+      const resp = await fetch('/api/storage/upload-image', {
+        method: 'POST',
+        body: form,
+      });
+
+      if (!resp.ok) {
+        throw new Error(`Upload failed: ${resp.status}`);
+      }
+
+      const result = await resp.json();
+      const uploadedUrl = result?.data?.urls?.[0];
+      if (result?.code !== 0 || !uploadedUrl) {
+        throw new Error(result?.message || 'Upload failed');
+      }
+
+      setFormData((prev) => ({ ...prev, imageUrl: uploadedUrl, imageDataUrl }));
+      toast.success(isZh ? '图片上传成功' : 'Image uploaded');
+    } catch (error: any) {
+      toast.error(
+        isZh
+          ? `图片上传失败：${error?.message || ''}`
+          : `Upload failed: ${error?.message || ''}`
+      );
+    } finally {
       setIsUploading(false);
-    };
-    reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -169,7 +210,9 @@ export function CustomCarInput({
             ) : (
               <label className="flex flex-col items-center cursor-pointer">
                 <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">{t('customInput.clickToUpload')}</span>
+                <span className="text-sm text-muted-foreground">
+                  {isUploading ? (isZh ? '上传中...' : 'Uploading...') : t('customInput.clickToUpload')}
+                </span>
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
               </label>
             )}
@@ -180,11 +223,10 @@ export function CustomCarInput({
       <div className="flex gap-3 pt-4">
         <Button variant="secondary" className="flex-1" onClick={onCancel}>{t('customInput.cancel')}</Button>
         <Button className="flex-1 bg-primary text-primary-foreground hover:opacity-90"
-          onClick={handleSubmit} disabled={!formData.brand || !formData.model}>
+          onClick={handleSubmit} disabled={!formData.brand || !formData.model || isUploading}>
           {t('customInput.startModding')}
         </Button>
       </div>
     </motion.div>
   );
 }
-

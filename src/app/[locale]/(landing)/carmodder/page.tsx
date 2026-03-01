@@ -5,7 +5,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { toast } from 'sonner';
-import { Loader2, Sparkles, Download, Image as ImageIcon, Share2, FileText, RefreshCw, Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Loader2,
+  Sparkles,
+  Download,
+  Image as ImageIcon,
+  Share2,
+  FileText,
+  RefreshCw,
+  Eye,
+  EyeOff,
+  ChevronDown,
+  ChevronUp,
+  Check,
+  CircleCheckBig,
+  CircleDashed,
+} from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
 import { AIMediaType, AITaskStatus } from '@/extensions/ai/types';
@@ -22,7 +37,19 @@ import { CustomCarInput, type CustomCarInputData } from './custom-car-input';
 const POLL_INTERVAL = 5000;
 const GENERATION_TIMEOUT = 180000;
 
-const CHINESE_CAR_MODELS = [
+interface CarModel {
+  id: string;
+  name: string;
+  nameZh: string;
+  brand: string;
+  type: string;
+  image: string;
+  localImage: string;
+  price: number;
+  customInput?: CustomCarInputData;
+}
+
+const CHINESE_CAR_MODELS: CarModel[] = [
   // Honda
   { id: 'honda-civic', name: 'Honda Civic', nameZh: '本田思域', brand: 'Honda', type: 'sedan', image: '/imgs/cars/honda-civic.jpg', localImage: '/imgs/cars/honda-civic.jpg', price: 150000 },
   { id: 'honda-s2000', name: 'Honda S2000', nameZh: '本田 S2000', brand: 'Honda', type: 'roadster', image: '/imgs/cars/honda-s2000.jpg', localImage: '/imgs/cars/honda-s2000.jpg', price: 350000 },
@@ -171,7 +198,7 @@ export default function CarModderConfigurator() {
   const locale = useLocale();
   const isZh = locale === 'zh';
 
-  const [selectedCar, setSelectedCar] = useState(CHINESE_CAR_MODELS[0]);
+  const [selectedCar, setSelectedCar] = useState<CarModel>(CHINESE_CAR_MODELS[0]);
   const [selectedWheel, setSelectedWheel] = useState(WHEEL_STYLES[0]);
   const [selectedColor, setSelectedColor] = useState(PAINT_COLORS[0]);
   const [selectedFinish, setSelectedFinish] = useState(FINISH_TYPES[0]);
@@ -406,18 +433,73 @@ export default function CarModderConfigurator() {
     setGenerationStartTime(Date.now());
 
     try {
+      const urlRef = selectedCar.customInput?.imageUrl;
+      const dataUrlRef = selectedCar.customInput?.imageDataUrl;
+
+      const isValidQwenRef = (value?: string) =>
+        !!value &&
+        (value.startsWith('http://') ||
+          value.startsWith('https://') ||
+          value.startsWith('data:image/'));
+
+      const referenceImage = isValidQwenRef(urlRef)
+        ? urlRef
+        : isValidQwenRef(dataUrlRef)
+          ? dataUrlRef
+          : undefined;
+      const canUseReferenceImage = !!referenceImage;
+
+      const scene =
+        canUseReferenceImage
+          ? 'image-to-image'
+          : 'text-to-image';
+      const model =
+        scene === 'image-to-image' ? 'qwen-image-edit-max' : 'qwen-image-max';
+
+      if (!canUseReferenceImage && selectedCar.customInput?.imageUrl) {
+        toast.error(
+          isZh
+            ? '参考图格式无效，已切换为文生图。请使用公网图片链接或重新上传。'
+            : 'Invalid reference image format. Switched to text-to-image.'
+        );
+      }
+
+      // Qwen image-to-image is sensitive to long content; keep prompt compact.
+      const compactPrompt = [
+        `${isZh ? selectedCar.nameZh : selectedCar.name}`,
+        `${t('paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name}`,
+        `${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name}`,
+        selectedMods.length > 0
+          ? `${t('modifications_')}: ${selectedMods
+              .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id))
+              .map((m) => (isZh ? m?.nameZh : m?.name))
+              .filter(Boolean)
+              .join(', ')}`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(', ');
+
+      const finalPrompt =
+        scene === 'image-to-image'
+          ? `${compactPrompt}. Keep same car identity from reference image; apply selected modifications only.`
+          : prompt;
+
       const resp = await fetch('/api/ai/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mediaType: AIMediaType.IMAGE,
-          scene: 'text-to-image',
+          scene,
           provider: 'qwen',
-          model: 'qwen-image-max',
-          prompt,
+          model,
+          prompt: finalPrompt,
           options: {
             size: '1024*1024',
             n: 1,
+            ...(scene === 'image-to-image' && referenceImage
+              ? { ref_image: referenceImage }
+              : {}),
           },
         }),
       });
@@ -813,7 +895,7 @@ export default function CarModderConfigurator() {
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <span className="material-icons text-[#6366f1] text-2xl">check_circle</span>
+                            <CircleCheckBig className="h-7 w-7 text-[#6366f1]" />
                           </motion.div>
                         )}
                       </div>
@@ -1024,7 +1106,7 @@ export default function CarModderConfigurator() {
                               className="w-14 h-14 rounded-full bg-card flex items-center justify-center border border-border"
                               whileHover={{ rotate: 10 }}
                             >
-                              <span className="material-icons text-[#6366f1] text-lg">sports_motorsports</span>
+                              <CircleDashed className="h-5 w-5 text-[#6366f1]" />
                             </motion.div>
                             <div className="flex-1">
                               <div className="flex justify-between items-center mb-2">
@@ -1078,14 +1160,13 @@ export default function CarModderConfigurator() {
                               whileTap={{ scale: 0.9 }}
                             >
                               {selectedMods.includes(mod.id) && (
-                                <motion.span 
-                                  className="material-icons text-white text-xs"
+                                <motion.div
                                   initial={{ scale: 0 }}
                                   animate={{ scale: 1 }}
                                   transition={{ duration: 0.2 }}
                                 >
-                                  check
-                                </motion.span>
+                                  <Check className="h-3 w-3 text-white" />
+                                </motion.div>
                               )}
                             </motion.div>
                             <div>
