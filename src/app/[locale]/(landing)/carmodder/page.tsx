@@ -39,7 +39,6 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { useAppContext } from '@/shared/contexts/app';
-import { LazyImage } from '@/shared/blocks/common';
 import { Separator } from '@/shared/components/ui/separator';
 import { Badge } from '@/shared/components/ui/badge';
 import { CustomCarInput, type CustomCarInputData } from './custom-car-input';
@@ -1255,21 +1254,29 @@ export default function CarModderConfigurator() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
                       >
-                        <LazyImage
+                        <img
                           src={selectedCar.localImage}
                           alt={`${isZh ? selectedCar.nameZh : selectedCar.name} before`}
-                          className="w-full h-full object-cover"
+                          className="absolute inset-0 w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1280&h=720&fit=crop';
+                          }}
                         />
                         {compareMode ? (
                           <>
                             <div
                               className="absolute inset-0 overflow-hidden"
-                              style={{ clipPath: `inset(0 ${100 - comparePosition}% 0 0)` }}
+                              style={{ clipPath: `inset(0 0 0 ${comparePosition}%)` }}
                             >
-                              <LazyImage
+                              <img
+                                key={generatedImages[0].url}
                                 src={generatedImages[0].url}
                                 alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
-                                className="w-full h-full object-cover"
+                                className="absolute inset-0 h-full w-full object-cover"
+                                onError={(e) => {
+                                  // If generated image fails to load, keep the preview usable.
+                                  (e.currentTarget as HTMLImageElement).src = selectedCar.localImage;
+                                }}
                               />
                             </div>
                             <div
@@ -1278,10 +1285,14 @@ export default function CarModderConfigurator() {
                             />
                           </>
                         ) : (
-                          <LazyImage
+                          <img
+                            key={generatedImages[0].url}
                             src={generatedImages[0].url}
                             alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
-                            className="absolute inset-0 w-full h-full object-cover"
+                            className="absolute inset-0 h-full w-full object-cover"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = selectedCar.localImage;
+                            }}
                           />
                         )}
                         <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:hover:opacity-100">
@@ -1349,8 +1360,11 @@ export default function CarModderConfigurator() {
                               type="range"
                               min={0}
                               max={100}
-                              value={comparePosition}
-                              onChange={(event) => setComparePosition(Number(event.target.value))}
+                              value={100 - comparePosition}
+                              onChange={(event) => {
+                                const afterValue = Number(event.target.value);
+                                setComparePosition(100 - afterValue);
+                              }}
                               className="w-full accent-[#4725f4]"
                             />
                           </div>
