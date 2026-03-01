@@ -1,15 +1,15 @@
 {
   "metadata": {
-    "title": "AI Image Generator",
-    "description": "Generate images with AI models, support text-to-image and image-to-image."
+    "title": "AI Car Mod Image Generator",
+    "description": "Generate car modification images with AI models, support text-to-image and image-to-image."
   },
   "page": {
-    "title": "AI Image Generator",
-    "description": "Generate images with AI models, support text-to-image and image-to-image."
+    "title": "AI Car Mod Image Generator",
+    "description": "Generate car modification images with AI models, support text-to-image and image-to-image."
   },
   "generator": {
-    "title": "Image Generator",
-    "description": "Generate images with AI models, support text-to-image and image-to-image.",
+    "title": "Car Mod Image Generator",
+    "description": "Generate car modification images with AI models, support text-to-image and image-to-image.",
     "tabs": {
       "text-to-image": "Text to Image",
       "image-to-image": "Image to Image"

@@ -89,8 +89,45 @@
       ]
     },
     "show_sign": true,
-    "show_theme": false,
-    "show_locale": false
+    "show_theme": true,
+    "show_locale": true
+  },
+  "hero": {
+    "title": "Visualize Your Dream Build",
+    "description": "ModSnap is an AI-powered car modification platform. Use advanced 3D technology and AI models to preview your ideas in real-time before spending a dime.",
+    "buttons": [
+      {
+        "title": "Start Modding",
+        "url": "/carmodder",
+        "variant": "primary"
+      },
+      {
+        "title": "View Showcases",
+        "url": "/showcases",
+        "variant": "outline"
+      }
+    ]
+  },
+  "features": {
+    "title": "Powerful Features",
+    "description": "Professional tools built for modification enthusiasts",
+    "items": [
+      {
+        "title": "360° Real-time Preview",
+        "description": "View modification effects from all angles with various lighting environments.",
+        "icon": "Box"
+      },
+      {
+        "title": "AI Smart Recommendation",
+        "description": "AI recommends the most suitable modification plans based on your car and preferences.",
+        "icon": "Sparkles"
+      },
+      {
+        "title": "Realistic Material Simulation",
+        "description": "Accurately simulate metallic paint, matte wrap, carbon fiber, and more.",
+        "icon": "Layers"
+      }
+    ]
   },
   "footer": {
     "id": "footer",
