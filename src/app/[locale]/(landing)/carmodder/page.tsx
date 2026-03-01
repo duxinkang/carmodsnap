@@ -17,6 +17,7 @@ import { useAppContext } from '@/shared/contexts/app';
 import { LazyImage } from '@/shared/blocks/common';
 import { Separator } from '@/shared/components/ui/separator';
 import { Badge } from '@/shared/components/ui/badge';
+import { CustomCarInput, type CustomCarInputData } from './custom-car-input';
 
 const POLL_INTERVAL = 5000;
 const GENERATION_TIMEOUT = 180000;
@@ -193,6 +194,25 @@ export default function CarModderConfigurator() {
   const [isMounted, setIsMounted] = useState(false);
   const [testMode, setTestMode] = useState(false);
   const [showAllCars, setShowAllCars] = useState(false);
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const handleCustomCarSubmit = useCallback((data: CustomCarInputData) => {
+    const customCar = {
+      id: `custom-${Date.now()}`,
+      name: `${data.brand} ${data.model}`,
+      nameZh: `${data.brand} ${data.model}`,
+      brand: data.brand,
+      type: data.type,
+      image: data.imageUrl || 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop',
+      localImage: data.imageUrl || '/imgs/cars/honda-civic.jpg',
+      price: 300000,
+      customInput: data,
+    };
+    setSelectedCar(customCar);
+    setShowCustomInput(false);
+    toast.success('车型已添加，开始改装吧！');
+  }, []);
+
+  const [showCustomInput, setShowCustomInput] = useState(false);
 
   const { user, isCheckSign, setIsShowSignModal, fetchUserCredits } = useAppContext();
 
@@ -1160,3 +1180,108 @@ export default function CarModderConfigurator() {
     </div>
   );
 }
+
+// 保存方案功能
+const handleSaveBuild = async () => {
+  if (!user) {
+    toast.error('请先登录');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/builds', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        carId: selectedCar.id,
+        carName: selectedCar.name,
+        carNameZh: selectedCar.nameZh,
+        carBrand: selectedCar.brand,
+        carType: selectedCar.type,
+        carPrice: selectedCar.price,
+        carImage: selectedCar.localImage,
+        customCarInput: (selectedCar as any).customInput,
+        wheels: selectedWheel,
+        paint: selectedColor,
+        finish: selectedFinish,
+        mods: {
+          ids: selectedMods,
+          names: selectedMods.map(id => MODIFICATION_OPTIONS.find(m => m.id === id)?.name).filter(Boolean),
+          price: selectedMods.reduce((sum, id) => sum + (MODIFICATION_OPTIONS.find(m => m.id === id)?.price || 0), 0),
+        },
+        accents: {
+          ids: Object.entries(accentOptions).filter(([_, v]) => v).map(([id]) => id),
+          names: Object.entries(accentOptions).filter(([_, v]) => v).map(([id]) => ACCENT_OPTIONS.find(a => a.id === id)?.name).filter(Boolean),
+          price: Object.entries(accentOptions).filter(([_, v]) => v).reduce((sum, [id]) => sum + (ACCENT_OPTIONS.find(a => a.id === id)?.price || 0), 0),
+        },
+        generatedImages: generatedImages.map(img => img.url),
+        aiPrompt: prompt,
+        totalPrice: totalBuildCost,
+        isPublic: false,
+        title: `${selectedCar.name} 改装方案`,
+      }),
+    });
+
+    const result = await response.json();
+    
+    if (result.code === 0) {
+      toast.success('方案已保存！');
+      window.open(`/activity/builds`, '_blank');
+    } else {
+      toast.error(result.message || '保存失败');
+    }
+  } catch (error: any) {
+    console.error('Save error:', error);
+    toast.error('保存失败，请重试');
+  }
+};
+
+// 在车型选择区域添加自定义车型按钮的 JSX
+// 找到车型选择网格，在它前面添加自定义车型卡片
+/*
+<div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+  {/* 自定义车型按钮 *}/
+  <motion.div
+    className="relative rounded-xl overflow-hidden cursor-pointer border-2 border-dashed border-white/20 hover:border-[#6366f1] transition-all"
+    onClick={() => setShowCustomInput(true)}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+  >
+    <div className="aspect-[4/3] bg-[#1a1a2e] flex items-center justify-center">
+      <span className="text-4xl">+</span>
+    </div>
+    <div className="p-3 bg-[#131324] border-t border-white/10">
+      <p className="text-sm font-medium text-center">自定义车型</p>
+    </div>
+  </motion.div>
+
+  {/* 现有车型列表 *}/
+  {(showAllCars ? CHINESE_CAR_MODELS : CHINESE_CAR_MODELS.slice(0, 4)).map((car) => (
+    // ... 现有车型代码
+  ))}
+</div>
+*/}
+
+// 在现有的 Action Buttons 区域添加保存按钮
+// 找到生成效果图按钮，在它下面添加保存按钮
+/*
+<div className="space-y-4">
+  {/* 生成效果图按钮 *}/
+  <Button className="w-full py-6 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6]"
+    onClick={handleGenerate} disabled={isGenerating}>
+    {isGenerating ? '生成中...' : '生成效果图'}
+  </Button>
+
+  {/* 保存方案按钮 - 新增 *}/
+  <Button variant="secondary" className="w-full py-4"
+    onClick={handleSaveBuild} disabled={!user || generatedImages.length === 0}>
+    💾 保存方案
+  </Button>
+
+  {/* 分享/报价按钮 *}/
+  <div className="flex gap-3">
+    <Button variant="secondary" onClick={handleShare}>Share</Button>
+    <Button variant="secondary">Quote</Button>
+  </div>
+</div>
+*/}
