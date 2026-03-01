@@ -600,3 +600,86 @@ export const chatMessage = table(
     index('idx_chat_message_user_id').on(table.userId, table.status),
   ]
 );
+
+// 用户改装方案保存
+export const carBuild = sqliteTable(
+  'car_build',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    shareId: text('share_id').unique().notNull(),
+    
+    // 车辆信息
+    carId: text('car_id').notNull(),
+    carName: text('car_name').notNull(),
+    carNameZh: text('car_name_zh'),
+    carBrand: text('car_brand'),
+    carType: text('car_type'),
+    carPrice: integer('car_price').default(0),
+    carImage: text('car_image'),
+    
+    // 自定义车型输入（可选）
+    customCarInput: text('custom_car_input'), // JSON
+    
+    // 改装配置
+    wheelsId: text('wheels_id'),
+    wheelsName: text('wheels_name'),
+    wheelsSize: integer('wheels_size'),
+    wheelsColor: text('wheels_color'),
+    wheelsPrice: integer('wheels_price').default(0),
+    
+    paintId: text('paint_id'),
+    paintName: text('paint_name'),
+    paintColor: text('paint_color'),
+    paintPrice: integer('paint_price').default(0),
+    
+    finishId: text('finish_id'),
+    finishName: text('finish_name'),
+    finishPrice: integer('finish_price').default(0),
+    
+    modsIds: text('mods_ids'), // JSON array
+    modsNames: text('mods_names'), // JSON array
+    modsPrice: integer('mods_price').default(0),
+    
+    accentsIds: text('accents_ids'), // JSON array
+    accentsNames: text('accents_names'), // JSON array
+    accentsPrice: integer('accents_price').default(0),
+    
+    suspensionId: text('suspension_id'),
+    suspensionName: text('suspension_name'),
+    suspensionPrice: integer('suspension_price').default(0),
+    
+    brakesId: text('brakes_id'),
+    brakesName: text('brakes_name'),
+    brakesPrice: integer('brakes_price').default(0),
+    
+    // 生成的图片
+    generatedImages: text('generated_images'), // JSON array
+    
+    // 总价
+    totalPrice: integer('total_price').default(0),
+    
+    // AI 生成 prompt
+    aiPrompt: text('ai_prompt'),
+    
+    // 公开设置
+    isPublic: integer('is_public', { mode: 'boolean' }).default(false).notNull(),
+    title: text('title'),
+    description: text('description'),
+    
+    // 统计数据
+    likes: integer('likes').default(0).notNull(),
+    views: integer('views').default(0).notNull(),
+    
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (table) => [
+    index('idx_car_build_user_id').on(table.userId),
+    index('idx_car_build_share_id').on(table.shareId),
+    index('idx_car_build_car_id').on(table.carId),
+    index('idx_car_build_is_public').on(table.isPublic),
+  ]
+);

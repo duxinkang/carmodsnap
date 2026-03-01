@@ -11,6 +11,11 @@
         "title": "AI 对话",
         "url": "/activity/chats",
         "icon": "RiChat2Line"
+      },
+      {
+        "title": "改装方案",
+        "url": "/activity/builds",
+        "icon": "RiCarLine"
       }
     ]
   },

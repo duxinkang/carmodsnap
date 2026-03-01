@@ -11,6 +11,11 @@
         "title": "AI Chats",
         "url": "/activity/chats",
         "icon": "RiChat2Line"
+      },
+      {
+        "title": "My Builds",
+        "url": "/activity/builds",
+        "icon": "RiCarLine"
       }
     ]
   },
