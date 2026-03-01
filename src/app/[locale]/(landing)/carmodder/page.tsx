@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { toast } from 'sonner';
 import { Loader2, Sparkles, Download, Image as ImageIcon, Share2, FileText, RefreshCw, Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -21,81 +22,99 @@ const POLL_INTERVAL = 5000;
 const GENERATION_TIMEOUT = 180000;
 
 const CHINESE_CAR_MODELS = [
-  { id: 'honda-civic', name: 'Honda Civic (思域)', brand: 'Honda', type: 'sedan', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', price: 150000 },
-  { id: 'toyota-86-brz', name: 'Toyota 86 / Subaru BRZ', brand: 'Toyota/Subaru', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 280000 },
-  { id: 'vw-golf', name: 'Volkswagen Golf (高尔夫)', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', price: 150000 },
-  { id: 'nissan-gtr', name: 'Nissan Skyline GT-R (R32-R35)', brand: 'Nissan', type: 'sports', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 1500000 },
-  { id: 'mazda-mx5', name: 'Mazda MX-5 (Miata)', brand: 'Mazda', type: 'roadster', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 350000 },
-  { id: 'bmw-3series', name: 'BMW 3 Series (3系)', brand: 'BMW', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 300000 },
-  { id: 'ford-mustang', name: 'Ford Mustang (野马)', brand: 'Ford', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 400000 },
-  { id: 'nissan-silvia', name: 'Nissan Silvia (S13-S15)', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 200000 },
-  { id: 'toyota-supra', name: 'Toyota Supra', brand: 'Toyota', type: 'sports', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', price: 600000 },
-  { id: 'subaru-wrx', name: 'Subaru WRX / STI', brand: 'Subaru', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 350000 },
-  { id: 'mitsubishi-evo', name: 'Mitsubishi Lancer Evolution (EVO)', brand: 'Mitsubishi', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 450000 },
-  { id: 'porsche-911', name: 'Porsche 911', brand: 'Porsche', type: 'sports', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 1500000 },
-  { id: 'jeep-wrangler', name: 'Jeep Wrangler (牧马人)', brand: 'Jeep', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 450000 },
-  { id: 'suzuki-jimny', name: 'Suzuki Jimny (吉姆尼)', brand: 'Suzuki', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 150000 },
-  { id: 'nissan-370z', name: 'Nissan 350Z / 370Z', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 350000 },
-  { id: 'audi-a4', name: 'Audi A4 / S4 / RS4', brand: 'Audi', type: 'sedan', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', price: 350000 },
-  { id: 'mercedes-cclass', name: 'Mercedes-Benz C-Class (C级)', brand: 'Mercedes-Benz', type: 'sedan', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop', price: 350000 },
-  { id: 'mini-cooper', name: 'MINI Cooper', brand: 'MINI', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', price: 280000 },
-  { id: 'mazda-rx7', name: 'Mazda RX-7', brand: 'Mazda', type: 'coupe', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 500000 },
-  { id: 'vw-beetle', name: 'Volkswagen Beetle (甲壳虫)', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', price: 200000 },
-  { id: 'chevy-camaro', name: 'Chevrolet Camaro (大黄蜂)', brand: 'Chevrolet', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 400000 },
-  { id: 'dodge-challenger', name: 'Dodge Challenger (挑战者)', brand: 'Dodge', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 450000 },
-  { id: 'lexus-is', name: 'Lexus IS', brand: 'Lexus', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 350000 },
-  { id: 'tesla-model3', name: 'Tesla Model 3', brand: 'Tesla', type: 'sedan', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=600&fit=crop', price: 280000 },
-  { id: 'infiniti-g35', name: 'Infiniti G35 / G37', brand: 'Infiniti', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 250000 },
-  { id: 'ford-f150', name: 'Ford F-150 / Raptor', brand: 'Ford', type: 'truck', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop', price: 600000 },
-  { id: 'audi-a5', name: 'Audi A5 / S5 / RS5', brand: 'Audi', type: 'coupe', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', price: 500000 },
-  { id: 'bmw-m3', name: 'BMW M3 / M4', brand: 'BMW', type: 'sports', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 800000 },
-  { id: 'toyota-ae86', name: 'Toyota AE86', brand: 'Toyota', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 150000 },
-  { id: 'landrover-defender', name: 'Land Rover Defender (卫士)', brand: 'Land Rover', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 700000 },
+  // Honda
+  { id: 'honda-civic', name: 'Honda Civic', nameZh: '本田思域', brand: 'Honda', type: 'sedan', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', price: 150000 },
+  { id: 'honda-s2000', name: 'Honda S2000', nameZh: '本田 S2000', brand: 'Honda', type: 'roadster', image: 'https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=800&h=600&fit=crop', price: 350000 },
+  // Toyota / Subaru
+  { id: 'toyota-86-brz', name: 'Toyota 86 / Subaru BRZ', nameZh: '丰田 86/斯巴鲁 BRZ', brand: 'Toyota/Subaru', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 280000 },
+  { id: 'toyota-supra', name: 'Toyota Supra', nameZh: '丰田 Supra', brand: 'Toyota', type: 'sports', image: 'https://images.unsplash.com/photo-1590059390239-03c9e748e0eb?w=800&h=600&fit=crop', price: 600000 },
+  { id: 'toyota-ae86', name: 'Toyota AE86', nameZh: '丰田 AE86', brand: 'Toyota', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 150000 },
+  { id: 'subaru-wrx', name: 'Subaru WRX / STI', nameZh: '斯巴鲁 WRX/STI', brand: 'Subaru', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 350000 },
+  // Volkswagen
+  { id: 'vw-golf', name: 'Volkswagen Golf', nameZh: '大众高尔夫', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&h=600&fit=crop', price: 150000 },
+  { id: 'vw-beetle', name: 'Volkswagen Beetle', nameZh: '大众甲壳虫', brand: 'Volkswagen', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', price: 200000 },
+  // Nissan
+  { id: 'nissan-gtr', name: 'Nissan Skyline GT-R', nameZh: '日产 GT-R', brand: 'Nissan', type: 'sports', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 1500000 },
+  { id: 'nissan-silvia', name: 'Nissan Silvia (S13-S15)', nameZh: '日产 Silvia', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 200000 },
+  { id: 'nissan-370z', name: 'Nissan 350Z / 370Z', nameZh: '日产 370Z', brand: 'Nissan', type: 'coupe', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 350000 },
+  // Mazda
+  { id: 'mazda-mx5', name: 'Mazda MX-5 (Miata)', nameZh: '马自达 MX-5', brand: 'Mazda', type: 'roadster', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 350000 },
+  { id: 'mazda-rx7', name: 'Mazda RX-7', nameZh: '马自达 RX-7', brand: 'Mazda', type: 'coupe', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 500000 },
+  // BMW
+  { id: 'bmw-3series', name: 'BMW 3 Series', nameZh: '宝马 3 系', brand: 'BMW', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 300000 },
+  { id: 'bmw-m3', name: 'BMW M3 / M4', nameZh: '宝马 M3/M4', brand: 'BMW', type: 'sports', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 800000 },
+  // Ford
+  { id: 'ford-mustang', name: 'Ford Mustang', nameZh: '福特野马', brand: 'Ford', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 400000 },
+  { id: 'ford-f150', name: 'Ford F-150 / Raptor', nameZh: '福特 F-150', brand: 'Ford', type: 'truck', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop', price: 600000 },
+  // Mitsubishi
+  { id: 'mitsubishi-evo', name: 'Mitsubishi Lancer Evolution', nameZh: '三菱 EVO', brand: 'Mitsubishi', type: 'sedan', image: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop', price: 450000 },
+  // Porsche
+  { id: 'porsche-911', name: 'Porsche 911', nameZh: '保时捷 911', brand: 'Porsche', type: 'sports', image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop', price: 1500000 },
+  // Jeep / Suzuki / Land Rover
+  { id: 'jeep-wrangler', name: 'Jeep Wrangler', nameZh: '吉普牧马人', brand: 'Jeep', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 450000 },
+  { id: 'suzuki-jimny', name: 'Suzuki Jimny', nameZh: '铃木吉姆尼', brand: 'Suzuki', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 150000 },
+  { id: 'landrover-defender', name: 'Land Rover Defender', nameZh: '路虎卫士', brand: 'Land Rover', type: 'suv', image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=600&fit=crop', price: 700000 },
+  // Audi
+  { id: 'audi-a4', name: 'Audi A4 / S4 / RS4', nameZh: '奥迪 A4', brand: 'Audi', type: 'sedan', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', price: 350000 },
+  { id: 'audi-a5', name: 'Audi A5 / S5 / RS5', nameZh: '奥迪 A5', brand: 'Audi', type: 'coupe', image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop', price: 500000 },
+  // Mercedes-Benz
+  { id: 'mercedes-cclass', name: 'Mercedes-Benz C-Class', nameZh: '奔驰 C 级', brand: 'Mercedes-Benz', type: 'sedan', image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop', price: 350000 },
+  // MINI
+  { id: 'mini-cooper', name: 'MINI Cooper', nameZh: 'MINI Cooper', brand: 'MINI', type: 'hatchback', image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=800&h=600&fit=crop', price: 280000 },
+  // Chevrolet / Dodge
+  { id: 'chevy-camaro', name: 'Chevrolet Camaro', nameZh: '雪佛兰科迈罗', brand: 'Chevrolet', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 400000 },
+  { id: 'dodge-challenger', name: 'Dodge Challenger', nameZh: '道奇挑战者', brand: 'Dodge', type: 'coupe', image: 'https://images.unsplash.com/photo-1584345604476-8ec5f82d718c?w=800&h=600&fit=crop', price: 450000 },
+  // Lexus
+  { id: 'lexus-is', name: 'Lexus IS', nameZh: '雷克萨斯 IS', brand: 'Lexus', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 350000 },
+  // Tesla
+  { id: 'tesla-model3', name: 'Tesla Model 3', nameZh: '特斯拉 Model 3', brand: 'Tesla', type: 'sedan', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&h=600&fit=crop', price: 280000 },
+  // Infiniti
+  { id: 'infiniti-g35', name: 'Infiniti G35 / G37', nameZh: '英菲尼迪 G35', brand: 'Infiniti', type: 'sedan', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop', price: 250000 },
 ];
 
 const WHEEL_STYLES = [
-  { id: 'stock', name: '原厂轮毂', description: '保持原厂轮毂样式', price: 0 },
-  { id: 'sport', name: '运动轮毂', description: '多辐条运动风格', price: 8000 },
-  { id: 'luxury', name: '豪华轮毂', description: '大尺寸豪华风格', price: 12000 },
-  { id: 'forged', name: '锻造轮毂', description: '轻量化锻造工艺', price: 18000 },
-  { id: 'racing', name: '赛道轮毂', description: '专业赛道风格', price: 22000 },
+  { id: 'stock', name: 'Stock Wheels', nameZh: '原厂轮毂', description: 'Keep original factory wheels', descriptionZh: '保持原厂轮毂样式', price: 0 },
+  { id: 'sport', name: 'Sport Wheels', nameZh: '运动轮毂', description: 'Multi-spoke sport style', descriptionZh: '多辐条运动风格', price: 8000 },
+  { id: 'luxury', name: 'Luxury Wheels', nameZh: '豪华轮毂', description: 'Large size luxury style', descriptionZh: '大尺寸豪华风格', price: 12000 },
+  { id: 'forged', name: 'Forged Wheels', nameZh: '锻造轮毂', description: 'Lightweight forged construction', descriptionZh: '轻量化锻造工艺', price: 18000 },
+  { id: 'racing', name: 'Racing Wheels', nameZh: '赛道轮毂', description: 'Professional track style', descriptionZh: '专业赛道风格', price: 22000 },
 ];
 
 const PAINT_COLORS = [
-  { id: 'midnight-black', name: '午夜黑', color: '#0a0a0a', description: '深邃神秘的黑色', price: 0 },
-  { id: 'pearl-white', name: '珍珠白', color: '#f5f5f5', description: '优雅纯净的白色', price: 0 },
-  { id: 'racing-red', name: '赛道红', color: '#c41e3a', description: '激情澎湃的红色', price: 0 },
-  { id: 'ocean-blue', name: '海洋蓝', color: '#0066cc', description: '深邃宁静的蓝色', price: 0 },
-  { id: 'forest-green', name: '森林绿', color: '#228b22', description: '自然清新的绿色', price: 0 },
-  { id: 'sunset-orange', name: '日落橙', color: '#ff6b35', description: '活力四射的橙色', price: 3000 },
-  { id: 'royal-purple', name: '皇家紫', color: '#6b3fa0', description: '高贵典雅的紫色', price: 3000 },
-  { id: 'titanium-gray', name: '钛金灰', color: '#4a5568', description: '科技感十足的灰色', price: 0 },
-  { id: 'champagne-gold', name: '香槟金', color: '#d4af37', description: '奢华大气的金色', price: 5000 },
-  { id: 'matte-black', name: '哑光黑', color: '#1a1a1a', description: '低调内敛的哑光黑', price: 4000 },
+  { id: 'midnight-black', name: 'Midnight Black', nameZh: '午夜黑', color: '#0a0a0a', description: 'Deep mysterious black', descriptionZh: '深邃神秘的黑色', price: 0 },
+  { id: 'pearl-white', name: 'Pearl White', nameZh: '珍珠白', color: '#f5f5f5', description: 'Elegant pure white', descriptionZh: '优雅纯净的白色', price: 0 },
+  { id: 'racing-red', name: 'Racing Red', nameZh: '赛道红', color: '#c41e3a', description: 'Passionate vibrant red', descriptionZh: '激情澎湃的红色', price: 0 },
+  { id: 'ocean-blue', name: 'Ocean Blue', nameZh: '海洋蓝', color: '#0066cc', description: 'Deep tranquil blue', descriptionZh: '深邃宁静的蓝色', price: 0 },
+  { id: 'forest-green', name: 'Forest Green', nameZh: '森林绿', color: '#228b22', description: 'Natural fresh green', descriptionZh: '自然清新的绿色', price: 0 },
+  { id: 'sunset-orange', name: 'Sunset Orange', nameZh: '日落橙', color: '#ff6b35', description: 'Energetic vibrant orange', descriptionZh: '活力四射的橙色', price: 3000 },
+  { id: 'royal-purple', name: 'Royal Purple', nameZh: '皇家紫', color: '#6b3fa0', description: 'Noble elegant purple', descriptionZh: '高贵典雅的紫色', price: 3000 },
+  { id: 'titanium-gray', name: 'Titanium Gray', nameZh: '钛金灰', color: '#4a5568', description: 'Tech-inspired gray', descriptionZh: '科技感十足的灰色', price: 0 },
+  { id: 'champagne-gold', name: 'Champagne Gold', nameZh: '香槟金', color: '#d4af37', description: 'Luxurious atmospheric gold', descriptionZh: '奢华大气的金色', price: 5000 },
+  { id: 'matte-black', name: 'Matte Black', nameZh: '哑光黑', color: '#1a1a1a', description: 'Low-key understated matte black', descriptionZh: '低调内敛的哑光黑', price: 4000 },
 ];
 
 const FINISH_TYPES = [
-  { id: 'gloss', name: 'Gloss Metallic', description: '高光泽度金属漆', price: 0 },
-  { id: 'matte', name: 'Matte Wrap', description: '哑光车身膜', price: 8000 },
-  { id: 'satin', name: 'Satin Pearl', description: '缎面珍珠漆', price: 6000 },
-  { id: 'chrome', name: 'Chrome', description: '镀铬效果', price: 15000 },
-  { id: 'carbon', name: 'Carbon Fiber', description: '碳纤维纹理', price: 20000 },
+  { id: 'gloss', name: 'Gloss Metallic', nameZh: '金属亮光', description: 'High-gloss metallic paint', descriptionZh: '高光泽度金属漆', price: 0 },
+  { id: 'matte', name: 'Matte Wrap', nameZh: '哑光贴膜', description: 'Matte body wrap film', descriptionZh: '哑光车身膜', price: 8000 },
+  { id: 'satin', name: 'Satin Pearl', nameZh: '缎面珍珠', description: 'Satin pearl paint', descriptionZh: '缎面珍珠漆', price: 6000 },
+  { id: 'chrome', name: 'Chrome', nameZh: '镀铬', description: 'Chrome effect', descriptionZh: '镀铬效果', price: 15000 },
+  { id: 'carbon', name: 'Carbon Fiber', nameZh: '碳纤维', description: 'Carbon fiber texture', descriptionZh: '碳纤维纹理', price: 20000 },
 ];
 
 const MODIFICATION_OPTIONS = [
-  { id: 'lowered', name: '降低车身', description: '运动姿态，降低重心', price: 5000 },
-  { id: 'widebody', name: '宽体套件', description: '更宽的轮距，更激进的外观', price: 15000 },
-  { id: 'spoiler', name: '尾翼', description: '增加下压力，运动风格', price: 3000 },
-  { id: 'diffuser', name: '扩散器', description: '优化空气动力学', price: 4000 },
-  { id: 'side-skirts', name: '侧裙', description: '降低视觉重心', price: 2500 },
-  { id: 'front-lip', name: '前唇', description: '增强前部运动感', price: 2000 },
+  { id: 'lowered', name: 'Lowered Suspension', nameZh: '降低车身', description: 'Sport stance, lower center of gravity', descriptionZh: '运动姿态，降低重心', price: 5000 },
+  { id: 'widebody', name: 'Widebody Kit', nameZh: '宽体套件', description: 'Wider track, aggressive look', descriptionZh: '更宽的轮距，更激进的外观', price: 15000 },
+  { id: 'spoiler', name: 'Rear Spoiler', nameZh: '尾翼', description: 'Add downforce, sport style', descriptionZh: '增加下压力，运动风格', price: 3000 },
+  { id: 'diffuser', name: 'Rear Diffuser', nameZh: '扩散器', description: 'Optimize aerodynamics', descriptionZh: '优化空气动力学', price: 4000 },
+  { id: 'side-skirts', name: 'Side Skirts', nameZh: '侧裙', description: 'Lower visual center of gravity', descriptionZh: '降低视觉重心', price: 2500 },
+  { id: 'front-lip', name: 'Front Lip', nameZh: '前唇', description: 'Enhance front sportiness', descriptionZh: '增强前部运动感', price: 2000 },
 ];
 
 const ACCENT_OPTIONS = [
-  { id: 'chrome-delete', name: 'Chrome Delete', description: '去除镀铬装饰', price: 1500 },
-  { id: 'carbon-roof', name: 'Carbon Roof', description: '碳纤维车顶', price: 8000 },
-  { id: 'racing-stripes', name: 'Racing Stripes', description: '赛车条纹', price: 2000 },
-  { id: 'custom-badge', name: 'Custom Badge', description: '定制徽章', price: 1000 },
+  { id: 'chrome-delete', name: 'Chrome Delete', nameZh: '镀铬删除', description: 'Remove chrome trim', descriptionZh: '去除镀铬装饰', price: 1500 },
+  { id: 'carbon-roof', name: 'Carbon Roof', nameZh: '碳纤维车顶', description: 'Carbon fiber roof', descriptionZh: '碳纤维车顶', price: 8000 },
+  { id: 'racing-stripes', name: 'Racing Stripes', nameZh: '赛车条纹', description: 'Racing stripe decals', descriptionZh: '赛车条纹', price: 2000 },
+  { id: 'custom-badge', name: 'Custom Badge', nameZh: '定制徽章', description: 'Custom emblem', descriptionZh: '定制徽章', price: 1000 },
 ];
 
 interface GeneratedImage {
@@ -148,6 +167,8 @@ function extractImageUrls(result: any): string[] {
 
 export default function CarModderConfigurator() {
   const t = useTranslations('pages.carmodder');
+  const locale = useLocale();
+  const isZh = locale === 'zh';
 
   const [selectedCar, setSelectedCar] = useState(CHINESE_CAR_MODELS[0]);
   const [selectedWheel, setSelectedWheel] = useState(WHEEL_STYLES[0]);
@@ -198,9 +219,9 @@ export default function CarModderConfigurator() {
   const buildPrompt = useCallback(() => {
     const parts: string[] = [];
 
-    parts.push(`${selectedCar.name} (${selectedCar.brand}) 完整车身全身照`);
-    parts.push(`车身颜色: ${selectedColor.name} (${selectedFinish.name}漆面)`);
-    parts.push(`轮毂: ${selectedWheel.name}`);
+    parts.push(`${isZh ? selectedCar.nameZh : selectedCar.name} (${selectedCar.brand}) 完整车身全身照`);
+    parts.push(`车身颜色: ${isZh ? selectedColor.nameZh : selectedColor.name} (${isZh ? selectedFinish.nameZh : selectedFinish.name}漆面)`);
+    parts.push(`轮毂: ${isZh ? selectedWheel.nameZh : selectedWheel.name}`);
 
     const activeMods = selectedMods
       .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id)?.name)
@@ -219,7 +240,7 @@ export default function CarModderConfigurator() {
 
     parts.push('高质量汽车摄影，专业打光，4K分辨率，细节丰富，深色背景，完整展示整车，侧面45度角，车身完整可见，无裁剪');
 
-    return parts.join('，');
+    return parts.join(', ');
   }, [selectedCar, selectedColor, selectedFinish, selectedWheel, selectedMods, accentOptions]);
 
   const prompt = useMemo(() => buildPrompt(), [buildPrompt]);
@@ -282,7 +303,7 @@ export default function CarModderConfigurator() {
 
         if (currentStatus === AITaskStatus.SUCCESS) {
           if (imageUrls.length === 0) {
-            toast.error('生成失败，请重试');
+            toast.error(toast.error(t('generationFailed')));
           } else {
             setGeneratedImages(
               imageUrls.map((url, index) => ({
@@ -291,7 +312,7 @@ export default function CarModderConfigurator() {
                 prompt: task.prompt ?? undefined,
               }))
             );
-            toast.success('图片生成成功');
+            toast.success(toast.success(t('generationComplete')));
           }
           setProgress(100);
           resetTaskState();
@@ -299,7 +320,7 @@ export default function CarModderConfigurator() {
         }
 
         if (currentStatus === AITaskStatus.FAILED) {
-          const errorMessage = parsedResult?.errorMessage || '生成失败';
+          const errorMessage = parsedResult?.errorMessage || t('generationFailed');
           toast.error(errorMessage);
           resetTaskState();
           fetchUserCredits();
@@ -353,7 +374,7 @@ export default function CarModderConfigurator() {
     }
 
     if (remainingCredits < costCredits && !testMode) {
-      toast.error('积分不足，请充值后继续');
+      toast.error(t('insufficientCredits'));
       return;
     }
 
@@ -401,7 +422,7 @@ export default function CarModderConfigurator() {
               prompt,
             }))
           );
-          toast.success('图片生成成功');
+          toast.success(toast.success(t('generationComplete')));
           setProgress(100);
           resetTaskState();
           await fetchUserCredits();
@@ -434,10 +455,10 @@ export default function CarModderConfigurator() {
       link.click();
       document.body.removeChild(link);
       setTimeout(() => URL.revokeObjectURL(blobUrl), 200);
-      toast.success('图片已下载');
+      toast.success(toast.success(t('downloadSuccess') || 'Image downloaded'));
     } catch (error) {
       console.error('下载图片失败:', error);
-      toast.error('下载失败');
+      toast.error(toast.error(t('downloadFailed') || 'Download failed'));
     } finally {
       setDownloadingImageId(null);
     }
@@ -446,8 +467,8 @@ export default function CarModderConfigurator() {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: `${selectedCar.name} 改装方案`,
-        text: `查看我的 ${selectedCar.name} 改装方案`,
+        title: `${isZh ? selectedCar.nameZh : selectedCar.name} 改装方案`,
+        text: `查看我的 ${isZh ? selectedCar.nameZh : selectedCar.name} 改装方案`,
         url: window.location.href,
       });
     } else {
@@ -464,9 +485,9 @@ export default function CarModderConfigurator() {
       case AITaskStatus.PROCESSING:
         return '正在生成图片...';
       case AITaskStatus.SUCCESS:
-        return '生成完成';
+        return t('generationComplete');
       case AITaskStatus.FAILED:
-        return '生成失败';
+        return t('generationFailed');
       default:
         return '';
     }
@@ -512,7 +533,7 @@ export default function CarModderConfigurator() {
                   whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h2 className="text-2xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">{selectedCar.name}</h2>
+                  <h2 className="text-2xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80">{isZh ? selectedCar.nameZh : selectedCar.name}</h2>
                   <div className="flex items-center gap-3 mb-6">
                     <motion.span 
                       className="px-4 py-1 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-full text-xs font-medium shadow-[0_0_10px_rgba(99,102,241,0.4)]"
@@ -520,7 +541,7 @@ export default function CarModderConfigurator() {
                     >
                       AWD
                     </motion.span>
-                    <span className="text-white/60 text-sm">{selectedCar.brand} {selectedCar.type === 'sedan' ? '轿车' : 'SUV'}</span>
+                    <span className="text-white/60 text-sm">{selectedCar.brand} {selectedCar.type === 'sedan' ? 'sedan' : 'SUV'}</span>
                   </div>
                   <div className="mb-4">
                     <h3 className="text-white/60 text-sm mb-2 uppercase tracking-wider">Total Build Cost</h3>
@@ -582,7 +603,7 @@ export default function CarModderConfigurator() {
                               className="flex justify-between items-center py-2"
                               whileHover={{ x: 5 }}
                             >
-                              <span className="text-sm">{mod.name}</span>
+                              <span className="text-sm">{isZh ? mod.nameZh : mod.name}</span>
                               <span className="text-sm text-[#6366f1]">+{formatPrice(mod.price)}</span>
                             </motion.div>
                           ) : null;
@@ -602,7 +623,7 @@ export default function CarModderConfigurator() {
                                 className="flex justify-between items-center py-2"
                                 whileHover={{ x: 5 }}
                               >
-                                <span className="text-sm">{accent.name}</span>
+                                <span className="text-sm">{isZh ? accent.nameZh : accent.name}</span>
                                 <span className="text-sm text-[#6366f1]">+{formatPrice(accent.price)}</span>
                               </motion.div>
                             ) : null;
@@ -633,12 +654,12 @@ export default function CarModderConfigurator() {
                       >
                         <LazyImage
                           src={generatedImages[0].url}
-                          alt={`${selectedCar.name} 改装效果图`}
+                          alt={`${isZh ? selectedCar.nameZh : selectedCar.name} 改装效果图`}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
                           <div className="p-6 w-full">
-                            <h3 className="text-xl font-bold mb-2">{selectedCar.name} 改装效果</h3>
+                            <h3 className="text-xl font-bold mb-2">{isZh ? selectedCar.nameZh : selectedCar.name} 改装效果</h3>
                             <p className="text-white/60 text-sm mb-4">{prompt}</p>
                             <div className="flex gap-3">
                               <Button
@@ -677,14 +698,14 @@ export default function CarModderConfigurator() {
                       >
                         <img
                           src={selectedCar.image}
-                          alt={selectedCar.name}
+                          alt={isZh ? selectedCar.nameZh : selectedCar.name}
                           className="w-full h-full object-cover opacity-70 transition-opacity duration-300 hover:opacity-90"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
                           }}
                         />
                         <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-lg">
-                          <span className="text-sm font-medium">{selectedCar.name}</span>
+                          <span className="text-sm font-medium">{isZh ? selectedCar.nameZh : selectedCar.name}</span>
                         </div>
                       </motion.div>
                     )}
@@ -715,7 +736,7 @@ export default function CarModderConfigurator() {
                       <div className="aspect-[4/3] bg-[#1a1a2e] relative overflow-hidden">
                         <motion.img
                           src={car.image}
-                          alt={car.name}
+                          alt={isZh ? car.nameZh : car.name}
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&h=150&fit=crop';
@@ -735,7 +756,7 @@ export default function CarModderConfigurator() {
                       </div>
                       <div className="p-3 bg-[#131324] border-t border-white/10">
                         <p className="text-xs text-white/40 mb-1">{car.brand}</p>
-                        <p className="text-sm font-medium truncate">{car.name}</p>
+                        <p className="text-sm font-medium truncate">{isZh ? car.nameZh : car.name}</p>
                         <p className="text-xs text-[#6366f1] mt-1">{formatPrice(car.price)}</p>
                       </div>
                     </motion.div>
@@ -874,7 +895,7 @@ export default function CarModderConfigurator() {
                               whileHover={{ scale: 1.03, y: -2 }}
                               whileTap={{ scale: 0.97 }}
                             >
-                              {finish.name}
+                              {isZh ? finish.nameZh : finish.name}
                               {finish.price > 0 && (
                                 <span className="ml-2 text-xs font-medium">+{formatPrice(finish.price)}</span>
                               )}
@@ -900,7 +921,7 @@ export default function CarModderConfigurator() {
                                 style={{ backgroundColor: color.color }}
                               />
                               <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity bg-[#1a1a2e] px-2 py-1 rounded-lg border border-white/10">
-                                {color.name}
+                                {isZh ? color.nameZh : color.name}
                                 {color.price > 0 && (
                                   <span className="ml-1 text-[#6366f1]">+{formatPrice(color.price)}</span>
                                 )}
@@ -944,7 +965,7 @@ export default function CarModderConfigurator() {
                             </motion.div>
                             <div className="flex-1">
                               <div className="flex justify-between items-center mb-2">
-                                <h4 className="font-bold text-white">{wheel.name}</h4>
+                                <h4 className="font-bold text-white">{isZh ? wheel.nameZh : wheel.name}</h4>
                                 {wheel.price > 0 && (
                                   <motion.span 
                                     className="text-sm font-medium text-[#6366f1]"
@@ -954,7 +975,7 @@ export default function CarModderConfigurator() {
                                   </motion.span>
                                 )}
                               </div>
-                              <p className="text-xs text-white/60">{wheel.description}</p>
+                              <p className="text-xs text-white/60">{isZh ? wheel.descriptionZh : wheel.description}</p>
                             </div>
                           </div>
                         </motion.div>
@@ -1005,8 +1026,8 @@ export default function CarModderConfigurator() {
                               )}
                             </motion.div>
                             <div>
-                              <p className="text-sm font-medium text-white">{mod.name}</p>
-                              <p className="text-xs text-white/60">{mod.description}</p>
+                              <p className="text-sm font-medium text-white">{isZh ? mod.nameZh : mod.name}</p>
+                              <p className="text-xs text-white/60">{isZh ? mod.descriptionZh : mod.description}</p>
                             </div>
                           </motion.div>
                           <motion.span 
@@ -1042,8 +1063,8 @@ export default function CarModderConfigurator() {
                           whileHover={{ x: 5 }}
                         >
                           <div>
-                            <p className="text-sm font-medium text-white">{accent.name}</p>
-                            <p className="text-xs text-white/60">{accent.description}</p>
+                            <p className="text-sm font-medium text-white">{isZh ? accent.nameZh : accent.name}</p>
+                            <p className="text-xs text-white/60">{isZh ? accent.descriptionZh : accent.description}</p>
                           </div>
                           <div className="flex items-center gap-4">
                             <motion.span 
