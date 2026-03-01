@@ -71,7 +71,7 @@ if (!existsSync(OUTPUT_DIR)) {
 // 清空旧图片
 console.log('🧹 清理旧图片...');
 const oldFiles = require('fs').readdirSync(OUTPUT_DIR);
-oldFiles.forEach(f => {
+oldFiles.forEach((f: string) => {
   if (f.endsWith('.jpg') || f.endsWith('.png')) {
     rmSync(join(OUTPUT_DIR, f));
   }
@@ -83,11 +83,12 @@ async function generateWithQwen(prompt: string): Promise<string> {
     throw new Error('缺少 DASHSCOPE_API_KEY 或 QWEN_API_KEY 环境变量');
   }
   
-  const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
+  const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${QWEN_API_KEY}`,
       'Content-Type': 'application/json',
+      'X-DashScope-Async': 'enable'
     },
     body: JSON.stringify({
       model: 'wanx2.1-t2i-turbo',
@@ -96,21 +97,52 @@ async function generateWithQwen(prompt: string): Promise<string> {
       },
       parameters: {
         size: '1024*1024',
-        n: 1,
-        style: '<photography>',
+        n: 1
       },
     }),
   });
   
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Qwen API 失败：${response.status} - ${error}`);
+    throw new Error(`Qwen API 提交任务失败：${response.status} - ${error}`);
   }
   
-  const result = await response.json();
+  const initialResult = await response.json();
+  const taskId = initialResult.output?.task_id;
   
-  // 提取图片 URL
-  const imageUrl = result.output?.results?.[0]?.url;
+  if (!taskId) {
+    throw new Error('未获取到任务 ID');
+  }
+
+  console.log(`  任务已提交，ID: ${taskId}，等待生成...`);
+
+  // 轮询任务状态
+  let imageUrl = '';
+  while (true) {
+    const statusResponse = await fetch(`https://dashscope.aliyuncs.com/api/v1/tasks/${taskId}`, {
+      headers: {
+        'Authorization': `Bearer ${QWEN_API_KEY}`,
+      },
+    });
+
+    if (!statusResponse.ok) {
+      throw new Error(`获取任务状态失败：${statusResponse.status}`);
+    }
+
+    const statusResult = await statusResponse.json();
+    const taskStatus = statusResult.output?.task_status;
+
+    if (taskStatus === 'SUCCEEDED') {
+      imageUrl = statusResult.output?.results?.[0]?.url;
+      break;
+    } else if (taskStatus === 'FAILED') {
+      throw new Error(`图片生成失败: ${statusResult.output?.message || '未知错误'}`);
+    } else {
+      // 继续等待
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
+  
   if (!imageUrl) {
     throw new Error('未找到图片 URL');
   }
