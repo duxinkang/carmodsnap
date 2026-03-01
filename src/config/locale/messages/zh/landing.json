@@ -92,6 +92,43 @@
     "show_theme": true,
     "show_locale": true
   },
+  "hero": {
+    "title": "可视化您的梦想座驾",
+    "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台。使用先进的 3D 技术和 AI 模型，在花费一分钱之前，实时预览您的改装想法。",
+    "buttons": [
+      {
+        "title": "开始改装",
+        "url": "/carmodder",
+        "variant": "primary"
+      },
+      {
+        "title": "查看案例",
+        "url": "/showcases",
+        "variant": "outline"
+      }
+    ]
+  },
+  "features": {
+    "title": "强大功能",
+    "description": "专为改装爱好者打造的专业工具",
+    "items": [
+      {
+        "title": "360° 实时预览",
+        "description": "全方位无死角查看改装效果，支持多种环境光效。",
+        "icon": "Box"
+      },
+      {
+        "title": "AI 智能推荐",
+        "description": "基于您的车型和偏好，AI 为您推荐最合适的改装方案。",
+        "icon": "Sparkles"
+      },
+      {
+        "title": "真实材质模拟",
+        "description": "精确模拟金属漆、哑光膜、碳纤维等多种真实材质效果。",
+        "icon": "Layers"
+      }
+    ]
+  },
   "footer": {
     "id": "footer",
     "brand": {

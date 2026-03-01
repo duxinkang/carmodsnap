@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "ShipAny 模板二",
-    "description": "ShipAny 是用于构建 AI SaaS 创业项目的 NextJS 脚手架。提供丰富模板和组件，助您快速上线产品。",
-    "keywords": "shipany, shipany-boilerplate, shipany-template-two-demo"
+    "title": "ModSnap",
+    "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台。使用先进的 3D 技术可视化和定制您的爱车。",
+    "keywords": "汽车改装, AI改装, 3D配置器, ModSnap, 汽车定制"
   },
   "sign": {
     "sign_in_title": "登录",
@@ -19,8 +19,8 @@
     "no_account": "还没有账户？",
     "already_have_account": "已经有一个账户？",
     "email_sign_in": "使用邮箱登录",
-    "google_sign_in_title": "使用 Google 登录",
-    "github_sign_in_title": "使用 GitHub 登录",
+    "google_sign_in_title": "Google",
+    "github_sign_in_title": "GitHub",
     "close_title": "关闭",
     "cancel_title": "取消",
     "sign_out_title": "登出",

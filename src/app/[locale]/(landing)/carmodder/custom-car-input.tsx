@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Upload, X } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
@@ -51,6 +52,10 @@ export function CustomCarInput({
   onSubmit, 
   onCancel
 }: CustomCarInputProps) {
+  const t = useTranslations('pages.carmodder');
+  const locale = useLocale();
+  const isZh = locale === 'zh';
+
   const [formData, setFormData] = useState<CustomCarInputData>({
     brand: '',
     model: '',
@@ -83,7 +88,7 @@ export function CustomCarInput({
       className="space-y-6 p-6 rounded-2xl bg-card text-foreground border border-border shadow-xl"
     >
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold">自定义车型</h2>
+        <h2 className="text-xl font-bold">{t('customInput.title')}</h2>
         <Button variant="ghost" size="sm" onClick={onCancel}>
           <X className="w-4 h-4" />
         </Button>
@@ -91,25 +96,25 @@ export function CustomCarInput({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>品牌 Brand</Label>
+          <Label>{t('customInput.brand')}</Label>
           <Input
-            placeholder="例如：Honda"
+            placeholder={t('customInput.brandPlaceholder')}
             value={formData.brand}
             onChange={(e) => setFormData(prev => ({ ...prev, brand: e.target.value }))}
             className="bg-background border-border text-foreground"
           />
         </div>
         <div className="space-y-2">
-          <Label>型号 Model</Label>
+          <Label>{t('customInput.model')}</Label>
           <Input
-            placeholder="例如：Civic Type R"
+            placeholder={t('customInput.modelPlaceholder')}
             value={formData.model}
             onChange={(e) => setFormData(prev => ({ ...prev, model: e.target.value }))}
             className="bg-background border-border text-foreground"
           />
         </div>
         <div className="space-y-2">
-          <Label>年份 Year</Label>
+          <Label>{t('customInput.year')}</Label>
           <Select
             value={String(formData.year)}
             onValueChange={(value) => setFormData(prev => ({ ...prev, year: Number(value) }))}
@@ -123,7 +128,7 @@ export function CustomCarInput({
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>车型类型 Type</Label>
+          <Label>{t('customInput.type')}</Label>
           <Select
             value={formData.type}
             onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
@@ -131,7 +136,7 @@ export function CustomCarInput({
             <SelectTrigger className="bg-background border-border text-foreground"><SelectValue /></SelectTrigger>
             <SelectContent>
               {CAR_TYPES.map(type => (
-                <SelectItem key={type.id} value={type.id}>{type.nameZh}</SelectItem>
+                <SelectItem key={type.id} value={type.id}>{isZh ? type.nameZh : type.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -139,9 +144,9 @@ export function CustomCarInput({
       </div>
 
       <div className="space-y-2">
-        <Label>车辆描述 Description</Label>
+        <Label>{t('customInput.description')}</Label>
         <Textarea
-          placeholder="描述你的车，帮助 AI 更好地生成效果..."
+          placeholder={t('customInput.descriptionPlaceholder')}
           value={formData.description || ''}
           onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
           rows={3}
@@ -150,7 +155,7 @@ export function CustomCarInput({
       </div>
 
       <div className="space-y-2">
-        <Label>上传车辆照片（可选）</Label>
+        <Label>{t('customInput.uploadImage')}</Label>
         <Card className="border-dashed bg-background/50 border-border">
           <CardContent className="p-6">
             {formData.imageUrl ? (
@@ -164,7 +169,7 @@ export function CustomCarInput({
             ) : (
               <label className="flex flex-col items-center cursor-pointer">
                 <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">点击上传图片</span>
+                <span className="text-sm text-muted-foreground">{t('customInput.clickToUpload')}</span>
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
               </label>
             )}
@@ -173,10 +178,10 @@ export function CustomCarInput({
       </div>
 
       <div className="flex gap-3 pt-4">
-        <Button variant="secondary" className="flex-1" onClick={onCancel}>取消</Button>
+        <Button variant="secondary" className="flex-1" onClick={onCancel}>{t('customInput.cancel')}</Button>
         <Button className="flex-1 bg-primary text-primary-foreground hover:opacity-90"
           onClick={handleSubmit} disabled={!formData.brand || !formData.model}>
-          开始改装
+          {t('customInput.startModding')}
         </Button>
       </div>
     </motion.div>

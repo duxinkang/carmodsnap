@@ -25,28 +25,20 @@
   "manufacturerColors": "厂商颜色",
   "accents": {
     "chrome-delete": {
-      "name": "Chrome Delete",
-      "nameZh": "镀铬删除",
-      "description": "Remove chrome trim",
-      "descriptionZh": "去除镀铬装饰"
+      "name": "镀铬删除",
+      "description": "去除镀铬装饰"
     },
     "carbon-roof": {
-      "name": "Carbon Roof",
-      "nameZh": "碳纤维车顶",
-      "description": "Carbon fiber roof",
-      "descriptionZh": "碳纤维车顶"
+      "name": "碳纤维车顶",
+      "description": "碳纤维车顶"
     },
     "racing-stripes": {
-      "name": "Racing Stripes",
-      "nameZh": "赛车条纹",
-      "description": "Racing stripe decals",
-      "descriptionZh": "赛车条纹"
+      "name": "赛车条纹",
+      "description": "赛车条纹"
     },
     "custom-badge": {
-      "name": "Custom Badge",
-      "nameZh": "定制徽章",
-      "description": "Custom emblem",
-      "descriptionZh": "定制徽章"
+      "name": "定制徽章",
+      "description": "定制徽章"
     }
   },
   "chromeDelete": "镀铬删除",
@@ -69,17 +61,17 @@
   "community": "社区",
   "login": "登录",
   "startBuilding": "开始制作",
-  "newKitAvailable": "新增：小米SU7改装套件",
+  "newKitAvailable": "新增：小米 SU7 改装套件",
   "visualizeYourDreamBuild": "可视化您的",
   "dreamBuild": "梦想座驾",
-  "ultimateConfiguratorDescription": "终极实时3D配置器。为小米SU7定制轮毂、空力套件和贴膜，并与世界分享您的愿景。",
+  "ultimateConfiguratorDescription": "终极实时 3D 配置器。为小米 SU7 定制轮毂、空力套件和贴膜，并与世界分享您的愿景。",
   "startModding": "开始改装",
   "watchDemo": "观看演示",
   "buildsCreated": "作品创建",
   "textures": "材质",
   "customForgedRims": "定制锻造轮毂",
   "aeroSideSkirts": "空气动力学侧裙",
-  "threeSixtyVisualization": "360°可视化",
+  "threeSixtyVisualization": "360° 可视化",
   "realTimeRendering": "实时渲染",
   "instantSharing": "即时分享",
   "oneClickOrdering": "一键订购",
@@ -102,7 +94,7 @@
   "euroCars": "欧系（宝马、奥迪、保时捷）",
   "muscleCars": "美式肌肉车（野马、科迈罗、道奇）",
   "exoticCars": "超级跑车（兰博基尼、法拉利）",
-  "truckSuv": "皮卡/SUV",
+  "truckSuv": "皮卡 / SUV",
   "serviceLabel": "服务",
   "modificationType": "改装类型",
   "fullColorChange": "全车改色贴膜",
@@ -115,11 +107,11 @@
   "faqTitle": "常见问题",
   "faqDescription": "关于可视化工具和找店的所有信息。",
   "faq1Question": "可视化工具的颜色准确吗？",
-  "faq1Answer": "我们的数字色卡经过校准，与3M、Avery Dennison和KPMF等主要制造商的行业标准乙烯基代码相匹配。但是，显示器设置差异很大。我们强烈建议您在做出最终决定之前，亲自前往认证店铺查看实物色卡。",
+  "faq1Answer": "我们的数字色卡经过校准，与 3M、Avery Dennison 和 KPMF 等主要制造商的行业标准乙烯基代码相匹配。但是，显示器设置差异很大。我们强烈建议您在做出最终决定之前，亲自前往认证店铺查看实物色卡。",
   "faq2Question": "你们支持哪些车型？",
-  "faq2Answer": "我们的数据库包含超过450款热门改装车型，从JDM经典车型到现代肌肉车，再到欧洲豪华车和超级跑车。我们每周根据社区投票添加新车型。如果您的爱车不在列表中，可以通过申请表提交请求。",
+  "faq2Answer": "我们的数据库包含超过 450 款热门改装车型，从 JDM 经典车型到现代肌肉车，再到欧洲豪华车和超级跑车。我们每周根据社区投票添加新车型。如果您的爱车不在列表中，可以通过申请表提交请求。",
   "faq3Question": "如何与店铺分享我的设计？",
-  "faq3Answer": "在配置器中完成设计后，点击\"分享\"按钮生成唯一的项目链接或高分辨率PDF规格表。该规格表包含所有颜色代码和改装详情，您可以直接通过电子邮件发送给我们的任何合作店铺以获取准确报价。",
+  "faq3Answer": "在配置器中完成设计后，点击“分享”按钮生成唯一的项目链接或高分辨率 PDF 规格表。该规格表包含所有颜色代码和改装详情，您可以直接通过电子邮件发送给我们的任何合作店铺以获取准确报价。",
   "faq4Question": "使用该服务需要付费吗？",
   "faq4Answer": "可视化工具和店铺定位器对车主完全免费。我们由认证店铺和乙烯基制造商网络支持。",
   "saveWallpaper": "保存壁纸",
@@ -129,12 +121,12 @@
   "communityBuildsSeason": "社区作品 • 第四季",
   "trending": "热门",
   "latest": "最新",
-  "jdmLegends": "JDM传奇",
+  "jdmLegends": "JDM 传奇",
   "euroLuxury": "欧系豪华",
   "wrapOfTheMonth": "月度贴膜",
   "joinTheChallenge": "参与挑战",
   "submitBuild": "提交作品",
-  "submitYourWrap": "在周五之前提交您最好的\"夜城\"贴膜设计。",
+  "submitYourWrap": "在周五之前提交您最好的“夜城”贴膜设计。",
   "shopsPageTitle": "寻找本地改装店",
   "shopsPageDescription": "从认证的贴膜店获取报价，让您的改装梦想变为现实。",
   "searchResults": "搜索结果",
@@ -187,232 +179,181 @@
   "fromBrowser": "根据浏览器定位",
   "wheels": {
     "stock": {
-      "name": "Stock Wheels",
-      "nameZh": "原厂轮毂",
-      "description": "Keep original factory wheels",
-      "descriptionZh": "保持原厂轮毂样式"
+      "name": "原厂轮毂",
+      "description": "保持原厂轮毂样式"
     },
     "sport": {
-      "name": "Sport Wheels",
-      "nameZh": "运动轮毂",
-      "description": "Multi-spoke sport style",
-      "descriptionZh": "多辐条运动风格"
+      "name": "运动轮毂",
+      "description": "多辐条运动风格"
     },
     "luxury": {
-      "name": "Luxury Wheels",
-      "nameZh": "豪华轮毂",
-      "description": "Large size luxury style",
-      "descriptionZh": "大尺寸豪华风格"
+      "name": "豪华轮毂",
+      "description": "大尺寸豪华风格"
     },
     "forged": {
-      "name": "Forged Wheels",
-      "nameZh": "锻造轮毂",
-      "description": "Lightweight forged construction",
-      "descriptionZh": "轻量化锻造工艺"
+      "name": "锻造轮毂",
+      "description": "轻量化锻造工艺"
     },
     "racing": {
-      "name": "Racing Wheels",
-      "nameZh": "赛道轮毂",
-      "description": "Professional track style",
-      "descriptionZh": "专业赛道风格"
+      "name": "赛道轮毂",
+      "description": "专业赛道风格"
     }
   },
   "paintColors": {
     "midnight-black": {
-      "name": "Midnight Black",
-      "nameZh": "午夜黑",
-      "description": "Deep mysterious black",
-      "descriptionZh": "深邃神秘的黑色"
+      "name": "午夜黑",
+      "description": "深邃神秘的黑色"
     },
     "pearl-white": {
-      "name": "Pearl White",
-      "nameZh": "珍珠白",
-      "description": "Elegant pure white",
-      "descriptionZh": "优雅纯净的白色"
+      "name": "珍珠白",
+      "description": "优雅纯净的白色"
     },
     "racing-red": {
-      "name": "Racing Red",
-      "nameZh": "赛道红",
-      "description": "Passionate vibrant red",
-      "descriptionZh": "激情澎湃的红色"
+      "name": "赛道红",
+      "description": "激情澎湃的红色"
     },
     "ocean-blue": {
-      "name": "Ocean Blue",
-      "nameZh": "海洋蓝",
-      "description": "Deep tranquil blue",
-      "descriptionZh": "深邃宁静的蓝色"
+      "name": "海洋蓝",
+      "description": "深邃宁静的蓝色"
     },
     "forest-green": {
-      "name": "Forest Green",
-      "nameZh": "森林绿",
-      "description": "Natural fresh green",
-      "descriptionZh": "自然清新的绿色"
+      "name": "森林绿",
+      "description": "自然清新的绿色"
     },
     "sunset-orange": {
-      "name": "Sunset Orange",
-      "nameZh": "日落橙",
-      "description": "Energetic vibrant orange",
-      "descriptionZh": "活力四射的橙色"
+      "name": "日落橙",
+      "description": "活力四射的橙色"
     },
     "royal-purple": {
-      "name": "Royal Purple",
-      "nameZh": "皇家紫",
-      "description": "Noble elegant purple",
-      "descriptionZh": "高贵典雅的紫色"
+      "name": "皇家紫",
+      "description": "高贵典雅的紫色"
     },
     "titanium-gray": {
-      "name": "Titanium Gray",
-      "nameZh": "钛金灰",
-      "description": "Tech-inspired gray",
-      "descriptionZh": "科技感十足的灰色"
+      "name": "钛金灰",
+      "description": "科技感十足的灰色"
     },
     "champagne-gold": {
-      "name": "Champagne Gold",
-      "nameZh": "香槟金",
-      "description": "Luxurious atmospheric gold",
-      "descriptionZh": "奢华大气的金色"
+      "name": "香槟金",
+      "description": "奢华大气的金色"
     },
     "matte-black": {
-      "name": "Matte Black",
-      "nameZh": "哑光黑",
-      "description": "Low-key understated matte black",
-      "descriptionZh": "低调内敛的哑光黑"
+      "name": "哑光黑",
+      "description": "低调内敛的哑光黑"
     }
   },
   "finishTypes": {
     "gloss": {
-      "name": "Gloss Metallic",
-      "nameZh": "金属亮光",
-      "description": "High-gloss metallic paint",
-      "descriptionZh": "高光泽度金属漆"
+      "name": "金属亮光",
+      "description": "高光泽度金属漆"
     },
     "matte": {
-      "name": "Matte Wrap",
-      "nameZh": "哑光贴膜",
-      "description": "Matte body wrap film",
-      "descriptionZh": "哑光车身膜"
+      "name": "哑光贴膜",
+      "description": "哑光车身膜"
     },
     "satin": {
-      "name": "Satin Pearl",
-      "nameZh": "缎面珍珠",
-      "description": "Satin pearl paint",
-      "descriptionZh": "缎面珍珠漆"
+      "name": "缎面珍珠",
+      "description": "缎面珍珠漆"
     },
     "chrome": {
-      "name": "Chrome",
-      "nameZh": "镀铬",
-      "description": "Chrome effect",
-      "descriptionZh": "镀铬效果"
+      "name": "镀铬",
+      "description": "镀铬效果"
     },
     "carbon": {
-      "name": "Carbon Fiber",
-      "nameZh": "碳纤维",
-      "description": "Carbon fiber texture",
-      "descriptionZh": "碳纤维纹理"
+      "name": "碳纤维",
+      "description": "碳纤维纹理"
     }
   },
   "modifications": {
     "lowered": {
-      "name": "Lowered Suspension",
-      "nameZh": "降低车身",
-      "description": "Sport stance, lower center of gravity",
-      "descriptionZh": "运动姿态，降低重心"
+      "name": "降低车身",
+      "description": "运动姿态，降低重心"
     },
     "widebody": {
-      "name": "Widebody Kit",
-      "nameZh": "宽体套件",
-      "description": "Wider track, aggressive look",
-      "descriptionZh": "更宽的轮距，更激进的外观"
+      "name": "宽体套件",
+      "description": "更宽的轮距，更激进的外观"
     },
     "spoiler": {
-      "name": "Rear Spoiler",
-      "nameZh": "尾翼",
-      "description": "Add downforce, sport style",
-      "descriptionZh": "增加下压力，运动风格"
+      "name": "尾翼",
+      "description": "增加下压力，运动风格"
     },
     "diffuser": {
-      "name": "Rear Diffuser",
-      "nameZh": "扩散器",
-      "description": "Optimize aerodynamics",
-      "descriptionZh": "优化空气动力学"
+      "name": "扩散器",
+      "description": "优化空气动力学"
     },
     "side-skirts": {
-      "name": "Side Skirts",
-      "nameZh": "侧裙",
-      "description": "Lower visual center of gravity",
-      "descriptionZh": "降低视觉重心"
+      "name": "侧裙",
+      "description": "降低视觉重心"
     },
     "front-lip": {
-      "name": "Front Lip",
-      "nameZh": "前唇",
-      "description": "Enhance front sportiness",
-      "descriptionZh": "增强前部运动感"
+      "name": "前唇",
+      "description": "增强前部运动感"
     }
   },
   "ui": {
-    "selectCarModel": "Select Car Model",
-    "selectCarModelZh": "选择车型",
-    "carModelsCount": "car models",
-    "carModelsCountZh": "款车型",
-    "viewAll": "View All",
-    "viewAllZh": "查看全部",
-    "collapse": "Collapse",
-    "collapseZh": "收起",
-    "basePrice": "Base Price",
-    "basePriceZh": "基础价格",
-    "modCost": "Mod Cost",
-    "modCostZh": "改装成本",
-    "configDetails": "Configuration Details",
-    "configDetailsZh": "配置详情",
-    "baseModel": "Base Model",
-    "baseModelZh": "基础车型",
-    "wheels": "Wheels",
-    "wheelsZh": "轮毂",
-    "paint": "Paint",
-    "paintZh": "漆面",
-    "modKit": "Mod Kit",
-    "modKitZh": "改装套件",
-    "accentsDetail": "Accent Details",
-    "accentsDetailZh": "细节装饰",
-    "generateImage": "Generate Image",
-    "generateImageZh": "生成效果图",
-    "generating": "Generating...",
-    "generatingZh": "生成中...",
-    "creditsRequired": "credits required",
-    "creditsRequiredZh": "积分",
-    "remaining": "Remaining",
-    "remainingZh": "剩余",
-    "generationProgress": "Generation Progress",
-    "generationProgressZh": "生成进度",
-    "cancelGenerate": "Cancel",
-    "cancelGenerateZh": "取消生成",
-    "waitingModel": "Waiting for model...",
-    "waitingModelZh": "等待模型启动...",
-    "generatingImage": "Generating image...",
-    "generatingImageZh": "正在生成图片...",
-    "generationComplete": "Generation complete",
-    "generationCompleteZh": "生成完成",
-    "generationFailed": "Generation failed",
-    "generationFailedZh": "生成失败",
-    "insufficientCredits": "Insufficient credits, please recharge",
-    "insufficientCreditsZh": "积分不足，请充值后继续",
-    "download": "Download",
-    "downloadZh": "下载",
-    "share": "Share",
-    "shareZh": "分享",
-    "quote": "Quote",
-    "quoteZh": "报价",
-    "saveBuild": "Save Build",
-    "saveBuildZh": "保存配置",
-    "interiorView": "Interior View",
-    "interiorViewZh": "内饰视图",
-    "exteriorView": "Exterior View",
-    "exteriorViewZh": "外观视图",
-    "nightMode": "Night Mode",
-    "nightModeZh": "夜间模式",
-    "totalBuildCost": "Total Build Cost",
-    "totalBuildCostZh": "总建造成本",
-    "modEffect": "Modification Effect",
-    "modEffectZh": "改装效果"
+    "selectCarModel": "选择车型",
+    "carModelsCount": "款车型",
+    "viewAll": "查看全部",
+    "collapse": "收起",
+    "basePrice": "基础价格",
+    "modCost": "改装成本",
+    "configDetails": "配置详情",
+    "baseModel": "基础车型",
+    "wheels": "轮毂",
+    "paint": "漆面",
+    "modKit": "改装套件",
+    "accentsDetail": "细节装饰",
+    "generateImage": "生成效果图",
+    "generating": "生成中...",
+    "creditsRequired": "生成效果图需要 {credits} 积分",
+    "remaining": "(剩余: {credits})",
+    "generationProgress": "生成进度",
+    "cancelGenerate": "取消生成",
+    "waitingModel": "等待模型启动...",
+    "generatingImage": "正在生成图片...",
+    "generationComplete": "生成完成",
+    "generationFailed": "生成失败",
+    "insufficientCredits": "积分不足，请充值后继续",
+    "download": "下载",
+    "share": "分享",
+    "quote": "报价",
+    "saveBuild": "保存配置",
+    "interiorView": "内饰视图",
+    "exteriorView": "外观视图",
+    "nightMode": "夜间模式",
+    "totalBuildCost": "总建造成本",
+    "modEffect": "改装效果",
+    "customCar": "自定义车型",
+    "inputYourCar": "输入你的爱车",
+    "freeTrial": "免费体验",
+    "carAdded": "车型已添加，开始改装吧！",
+    "generationTimeout": "生成超时，请重试",
+    "requestFailed": "请求失败",
+    "queryTaskFailed": "查询任务失败",
+    "queryFailed": "查询失败",
+    "linkCopied": "链接已复制到剪贴板",
+    "paintFinish": "漆面",
+    "modifications": "改装",
+    "details": "细节",
+    "promptSuffix": "高质量汽车摄影，专业打光，4K分辨率，细节丰富，深色背景，完整展示整车，侧面45度角，车身完整可见，无裁剪",
+    "awd": "全时四驱",
+    "sedan": "轿车",
+    "suv": "SUV",
+    "shareTitle": "{car} 改装方案",
+    "shareText": "查看我的 {car} 改装方案",
+    "customInput": {
+      "title": "自定义车型",
+      "brand": "品牌",
+      "brandPlaceholder": "例如：Honda",
+      "model": "型号",
+      "modelPlaceholder": "例如：Civic Type R",
+      "year": "年份",
+      "type": "车型类型",
+      "description": "车辆描述",
+      "descriptionPlaceholder": "描述你的车，帮助 AI 更好地生成效果...",
+      "uploadImage": "上传车辆照片（可选）",
+      "clickToUpload": "点击上传图片",
+      "cancel": "取消",
+      "startModding": "开始改装"
+    }
   }
 }

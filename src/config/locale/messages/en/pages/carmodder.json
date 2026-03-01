@@ -26,27 +26,19 @@
   "accents": {
     "chrome-delete": {
       "name": "Chrome Delete",
-      "nameZh": "镀铬删除",
-      "description": "Remove chrome trim",
-      "descriptionZh": "去除镀铬装饰"
+      "description": "Remove chrome trim"
     },
     "carbon-roof": {
       "name": "Carbon Roof",
-      "nameZh": "碳纤维车顶",
-      "description": "Carbon fiber roof",
-      "descriptionZh": "碳纤维车顶"
+      "description": "Carbon fiber roof"
     },
     "racing-stripes": {
       "name": "Racing Stripes",
-      "nameZh": "赛车条纹",
-      "description": "Racing stripe decals",
-      "descriptionZh": "赛车条纹"
+      "description": "Racing stripe decals"
     },
     "custom-badge": {
       "name": "Custom Badge",
-      "nameZh": "定制徽章",
-      "description": "Custom emblem",
-      "descriptionZh": "定制徽章"
+      "description": "Custom emblem"
     }
   },
   "chromeDelete": "Chrome Delete",
@@ -188,231 +180,180 @@
   "wheels": {
     "stock": {
       "name": "Stock Wheels",
-      "nameZh": "原厂轮毂",
-      "description": "Keep original factory wheels",
-      "descriptionZh": "保持原厂轮毂样式"
+      "description": "Keep original factory wheels"
     },
     "sport": {
       "name": "Sport Wheels",
-      "nameZh": "运动轮毂",
-      "description": "Multi-spoke sport style",
-      "descriptionZh": "多辐条运动风格"
+      "description": "Multi-spoke sport style"
     },
     "luxury": {
       "name": "Luxury Wheels",
-      "nameZh": "豪华轮毂",
-      "description": "Large size luxury style",
-      "descriptionZh": "大尺寸豪华风格"
+      "description": "Large size luxury style"
     },
     "forged": {
       "name": "Forged Wheels",
-      "nameZh": "锻造轮毂",
-      "description": "Lightweight forged construction",
-      "descriptionZh": "轻量化锻造工艺"
+      "description": "Lightweight forged construction"
     },
     "racing": {
       "name": "Racing Wheels",
-      "nameZh": "赛道轮毂",
-      "description": "Professional track style",
-      "descriptionZh": "专业赛道风格"
+      "description": "Professional track style"
     }
   },
   "paintColors": {
     "midnight-black": {
       "name": "Midnight Black",
-      "nameZh": "午夜黑",
-      "description": "Deep mysterious black",
-      "descriptionZh": "深邃神秘的黑色"
+      "description": "Deep mysterious black"
     },
     "pearl-white": {
       "name": "Pearl White",
-      "nameZh": "珍珠白",
-      "description": "Elegant pure white",
-      "descriptionZh": "优雅纯净的白色"
+      "description": "Elegant pure white"
     },
     "racing-red": {
       "name": "Racing Red",
-      "nameZh": "赛道红",
-      "description": "Passionate vibrant red",
-      "descriptionZh": "激情澎湃的红色"
+      "description": "Passionate vibrant red"
     },
     "ocean-blue": {
       "name": "Ocean Blue",
-      "nameZh": "海洋蓝",
-      "description": "Deep tranquil blue",
-      "descriptionZh": "深邃宁静的蓝色"
+      "description": "Deep tranquil blue"
     },
     "forest-green": {
       "name": "Forest Green",
-      "nameZh": "森林绿",
-      "description": "Natural fresh green",
-      "descriptionZh": "自然清新的绿色"
+      "description": "Natural fresh green"
     },
     "sunset-orange": {
       "name": "Sunset Orange",
-      "nameZh": "日落橙",
-      "description": "Energetic vibrant orange",
-      "descriptionZh": "活力四射的橙色"
+      "description": "Energetic vibrant orange"
     },
     "royal-purple": {
       "name": "Royal Purple",
-      "nameZh": "皇家紫",
-      "description": "Noble elegant purple",
-      "descriptionZh": "高贵典雅的紫色"
+      "description": "Noble elegant purple"
     },
     "titanium-gray": {
       "name": "Titanium Gray",
-      "nameZh": "钛金灰",
-      "description": "Tech-inspired gray",
-      "descriptionZh": "科技感十足的灰色"
+      "description": "Tech-inspired gray"
     },
     "champagne-gold": {
       "name": "Champagne Gold",
-      "nameZh": "香槟金",
-      "description": "Luxurious atmospheric gold",
-      "descriptionZh": "奢华大气的金色"
+      "description": "Luxurious atmospheric gold"
     },
     "matte-black": {
       "name": "Matte Black",
-      "nameZh": "哑光黑",
-      "description": "Low-key understated matte black",
-      "descriptionZh": "低调内敛的哑光黑"
+      "description": "Low-key understated matte black"
     }
   },
   "finishTypes": {
     "gloss": {
       "name": "Gloss Metallic",
-      "nameZh": "金属亮光",
-      "description": "High-gloss metallic paint",
-      "descriptionZh": "高光泽度金属漆"
+      "description": "High-gloss metallic paint"
     },
     "matte": {
       "name": "Matte Wrap",
-      "nameZh": "哑光贴膜",
-      "description": "Matte body wrap film",
-      "descriptionZh": "哑光车身膜"
+      "description": "Matte body wrap film"
     },
     "satin": {
       "name": "Satin Pearl",
-      "nameZh": "缎面珍珠",
-      "description": "Satin pearl paint",
-      "descriptionZh": "缎面珍珠漆"
+      "description": "Satin pearl paint"
     },
     "chrome": {
       "name": "Chrome",
-      "nameZh": "镀铬",
-      "description": "Chrome effect",
-      "descriptionZh": "镀铬效果"
+      "description": "Chrome effect"
     },
     "carbon": {
       "name": "Carbon Fiber",
-      "nameZh": "碳纤维",
-      "description": "Carbon fiber texture",
-      "descriptionZh": "碳纤维纹理"
+      "description": "Carbon fiber texture"
     }
   },
   "modifications": {
     "lowered": {
       "name": "Lowered Suspension",
-      "nameZh": "降低车身",
-      "description": "Sport stance, lower center of gravity",
-      "descriptionZh": "运动姿态，降低重心"
+      "description": "Sport stance, lower center of gravity"
     },
     "widebody": {
       "name": "Widebody Kit",
-      "nameZh": "宽体套件",
-      "description": "Wider track, aggressive look",
-      "descriptionZh": "更宽的轮距，更激进的外观"
+      "description": "Wider track, aggressive look"
     },
     "spoiler": {
       "name": "Rear Spoiler",
-      "nameZh": "尾翼",
-      "description": "Add downforce, sport style",
-      "descriptionZh": "增加下压力，运动风格"
+      "description": "Add downforce, sport style"
     },
     "diffuser": {
       "name": "Rear Diffuser",
-      "nameZh": "扩散器",
-      "description": "Optimize aerodynamics",
-      "descriptionZh": "优化空气动力学"
+      "description": "Optimize aerodynamics"
     },
     "side-skirts": {
       "name": "Side Skirts",
-      "nameZh": "侧裙",
-      "description": "Lower visual center of gravity",
-      "descriptionZh": "降低视觉重心"
+      "description": "Lower visual center of gravity"
     },
     "front-lip": {
       "name": "Front Lip",
-      "nameZh": "前唇",
-      "description": "Enhance front sportiness",
-      "descriptionZh": "增强前部运动感"
+      "description": "Enhance front sportiness"
     }
   },
   "ui": {
     "selectCarModel": "Select Car Model",
-    "selectCarModelZh": "选择车型",
     "carModelsCount": "car models",
-    "carModelsCountZh": "款车型",
     "viewAll": "View All",
-    "viewAllZh": "查看全部",
     "collapse": "Collapse",
-    "collapseZh": "收起",
     "basePrice": "Base Price",
-    "basePriceZh": "基础价格",
     "modCost": "Mod Cost",
-    "modCostZh": "改装成本",
     "configDetails": "Configuration Details",
-    "configDetailsZh": "配置详情",
     "baseModel": "Base Model",
-    "baseModelZh": "基础车型",
     "wheels": "Wheels",
-    "wheelsZh": "轮毂",
     "paint": "Paint",
-    "paintZh": "漆面",
     "modKit": "Mod Kit",
-    "modKitZh": "改装套件",
     "accentsDetail": "Accent Details",
-    "accentsDetailZh": "细节装饰",
     "generateImage": "Generate Image",
-    "generateImageZh": "生成效果图",
     "generating": "Generating...",
-    "generatingZh": "生成中...",
-    "creditsRequired": "credits required",
-    "creditsRequiredZh": "积分",
-    "remaining": "Remaining",
-    "remainingZh": "剩余",
+    "creditsRequired": "Generating image requires {credits} credits",
+    "remaining": "(Remaining: {credits})",
     "generationProgress": "Generation Progress",
-    "generationProgressZh": "生成进度",
     "cancelGenerate": "Cancel",
-    "cancelGenerateZh": "取消生成",
     "waitingModel": "Waiting for model...",
-    "waitingModelZh": "等待模型启动...",
     "generatingImage": "Generating image...",
-    "generatingImageZh": "正在生成图片...",
     "generationComplete": "Generation complete",
-    "generationCompleteZh": "生成完成",
     "generationFailed": "Generation failed",
-    "generationFailedZh": "生成失败",
     "insufficientCredits": "Insufficient credits, please recharge",
-    "insufficientCreditsZh": "积分不足，请充值后继续",
     "download": "Download",
-    "downloadZh": "下载",
     "share": "Share",
-    "shareZh": "分享",
     "quote": "Quote",
-    "quoteZh": "报价",
     "saveBuild": "Save Build",
-    "saveBuildZh": "保存配置",
     "interiorView": "Interior View",
-    "interiorViewZh": "内饰视图",
     "exteriorView": "Exterior View",
-    "exteriorViewZh": "外观视图",
     "nightMode": "Night Mode",
-    "nightModeZh": "夜间模式",
     "totalBuildCost": "Total Build Cost",
-    "totalBuildCostZh": "总建造成本",
     "modEffect": "Modification Effect",
-    "modEffectZh": "改装效果"
+    "customCar": "Custom Car",
+    "inputYourCar": "Input Your Car",
+    "freeTrial": "Free Trial",
+    "carAdded": "Car added, start modding!",
+    "generationTimeout": "Generation timeout, please try again",
+    "requestFailed": "Request failed",
+    "queryTaskFailed": "Query task failed",
+    "queryFailed": "Query failed",
+    "linkCopied": "Link copied to clipboard",
+    "paintFinish": "paint finish",
+    "modifications": "Modifications",
+    "details": "Details",
+    "promptSuffix": "High quality automotive photography, professional lighting, 4K resolution, rich details, dark background, full vehicle view, side 45 degree angle, full body visible, no cropping",
+    "awd": "AWD",
+    "sedan": "Sedan",
+    "suv": "SUV",
+    "shareTitle": "{car} Modification Plan",
+    "shareText": "Check out my {car} modification plan",
+    "customInput": {
+      "title": "Custom Car",
+      "brand": "Brand",
+      "brandPlaceholder": "e.g. Honda",
+      "model": "Model",
+      "modelPlaceholder": "e.g. Civic Type R",
+      "year": "Year",
+      "type": "Type",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe your car to help AI generate better results...",
+      "uploadImage": "Upload Photo (Optional)",
+      "clickToUpload": "Click to upload image",
+      "cancel": "Cancel",
+      "startModding": "Start Modding"
+    }
   }
 }

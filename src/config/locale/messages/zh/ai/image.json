@@ -1,15 +1,15 @@
 {
   "metadata": {
-    "title": "AI 图片生成器",
-    "description": "使用 AI 模型生成图片，支持文本到图片和图片到图片。"
+    "title": "AI 改装图片生成器",
+    "description": "使用 AI 模型生成汽车改装图片，支持文生图和图生图。"
   },
   "page": {
-    "title": "AI 图片生成器",
-    "description": "使用 AI 模型生成图片，支持文本到图片和图片到图片。"
+    "title": "AI 改装图片生成器",
+    "description": "使用 AI 模型生成汽车改装图片，支持文生图和图生图。"
   },
   "generator": {
-    "title": "图片生成器",
-    "description": "使用 AI 模型生成图片，支持文本到图片和图片到图片。",
+    "title": "改装图片生成器",
+    "description": "使用 AI 模型生成汽车改装图片，支持文生图和图生图。",
     "tabs": {
       "text-to-image": "文生图",
       "image-to-image": "图生图"
