@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
@@ -20,6 +20,9 @@ import {
   Check,
   CircleCheckBig,
   CircleDashed,
+  Undo2,
+  Redo2,
+  WandSparkles,
 } from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
@@ -28,6 +31,13 @@ import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Progress } from '@/shared/components/ui/progress';
 import { Switch } from '@/shared/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
 import { useAppContext } from '@/shared/contexts/app';
 import { LazyImage } from '@/shared/blocks/common';
 import { Separator } from '@/shared/components/ui/separator';
@@ -100,12 +110,82 @@ const CHINESE_CAR_MODELS: CarModel[] = [
   { id: 'infiniti-g35', name: 'Infiniti G35 / G37', nameZh: '英菲尼迪 G35', brand: 'Infiniti', type: 'sedan', image: '/imgs/cars/infiniti-g35.jpg', localImage: '/imgs/cars/infiniti-g35.jpg', price: 250000 },
 ];
 
-const WHEEL_STYLES = [
-  { id: 'stock', name: 'Stock Wheels', nameZh: '原厂轮毂', description: 'Keep original factory wheels', descriptionZh: '保持原厂轮毂样式', price: 0 },
-  { id: 'sport', name: 'Sport Wheels', nameZh: '运动轮毂', description: 'Multi-spoke sport style', descriptionZh: '多辐条运动风格', price: 8000 },
-  { id: 'luxury', name: 'Luxury Wheels', nameZh: '豪华轮毂', description: 'Large size luxury style', descriptionZh: '大尺寸豪华风格', price: 12000 },
-  { id: 'forged', name: 'Forged Wheels', nameZh: '锻造轮毂', description: 'Lightweight forged construction', descriptionZh: '轻量化锻造工艺', price: 18000 },
-  { id: 'racing', name: 'Racing Wheels', nameZh: '赛道轮毂', description: 'Professional track style', descriptionZh: '专业赛道风格', price: 22000 },
+type WheelConcavity = 'low' | 'mid' | 'deep';
+
+interface WheelStyle {
+  id: string;
+  name: string;
+  nameZh: string;
+  description: string;
+  descriptionZh: string;
+  price: number;
+  tags: string[];
+  defaultSpokeCount: number;
+  defaultConcavity: WheelConcavity;
+}
+
+interface WheelSpec {
+  size: number;
+  spokeCount: number;
+  colorId: string;
+  concavity: WheelConcavity;
+}
+
+interface PresetPack {
+  id: string;
+  name: string;
+  nameZh: string;
+  description: string;
+  descriptionZh: string;
+  wheelId: string;
+  colorId: string;
+  finishId: string;
+  wheelSpec: WheelSpec;
+  mods: string[];
+  accents: string[];
+}
+
+const WHEEL_SIZES = [17, 18, 19, 20];
+const SPOKE_COUNTS = [5, 6, 7, 8, 10, 12];
+const WHEEL_CONCAVITY_OPTIONS: { id: WheelConcavity; name: string; nameZh: string; extraCost: number }[] = [
+  { id: 'low', name: 'Low', nameZh: '浅凹', extraCost: 0 },
+  { id: 'mid', name: 'Medium', nameZh: '中凹', extraCost: 800 },
+  { id: 'deep', name: 'Deep', nameZh: '深凹', extraCost: 1500 },
+];
+const WHEEL_COLORS = [
+  { id: 'satin-black', name: 'Satin Black', nameZh: '缎面黑', extraCost: 0 },
+  { id: 'gunmetal', name: 'Gunmetal Gray', nameZh: '枪灰', extraCost: 500 },
+  { id: 'bronze', name: 'Bronze', nameZh: '古铜', extraCost: 1200 },
+  { id: 'silver', name: 'Machined Silver', nameZh: '亮银', extraCost: 300 },
+  { id: 'white', name: 'Rally White', nameZh: '拉力白', extraCost: 800 },
+];
+
+const WHEEL_SIZE_EXTRA_COST: Record<number, number> = {
+  17: 0,
+  18: 1000,
+  19: 2200,
+  20: 3800,
+};
+
+const WHEEL_STYLES: WheelStyle[] = [
+  { id: 'stock', name: 'Stock Wheels', nameZh: '原厂轮毂', description: 'Keep original factory wheels', descriptionZh: '保持原厂轮毂样式', price: 0, tags: ['daily'], defaultSpokeCount: 10, defaultConcavity: 'low' },
+  { id: 'split5', name: 'Split-5 Sport', nameZh: '五辐分叉运动', description: 'Balanced street performance style', descriptionZh: '街道性能均衡风格', price: 7000, tags: ['sport', 'street'], defaultSpokeCount: 5, defaultConcavity: 'mid' },
+  { id: 'mesh-rs', name: 'Mesh RS', nameZh: '网格 RS', description: 'Dense mesh for premium stance', descriptionZh: '密辐网格豪华姿态', price: 9500, tags: ['luxury', 'show'], defaultSpokeCount: 12, defaultConcavity: 'mid' },
+  { id: 'forged-y', name: 'Forged Y-Spoke', nameZh: 'Y 辐锻造', description: 'Light forged wheel for quick response', descriptionZh: '轻量锻造提升响应', price: 15000, tags: ['track', 'forged'], defaultSpokeCount: 10, defaultConcavity: 'mid' },
+  { id: 'te37-style', name: '6-Spoke Track', nameZh: '六辐赛道', description: 'Classic six spoke motorsport look', descriptionZh: '经典六辐竞技风格', price: 12000, tags: ['track', 'sport'], defaultSpokeCount: 6, defaultConcavity: 'deep' },
+  { id: 'turbofan', name: 'Turbo Fan', nameZh: '涡轮风扇盘', description: 'Retro aerodynamic fan face', descriptionZh: '复古空气动力学轮面', price: 8000, tags: ['retro', 'show'], defaultSpokeCount: 7, defaultConcavity: 'low' },
+  { id: 'monoblock', name: 'Luxury Monoblock', nameZh: '豪华一体盘', description: 'Large monoblock luxury finish', descriptionZh: '大尺寸豪华一体盘', price: 13800, tags: ['luxury'], defaultSpokeCount: 5, defaultConcavity: 'mid' },
+  { id: 'drift-x', name: 'Drift X', nameZh: '漂移 X 辐', description: 'Aggressive drift style layout', descriptionZh: '激进漂移风格布局', price: 9800, tags: ['drift', 'sport'], defaultSpokeCount: 6, defaultConcavity: 'deep' },
+  { id: 'rally-star', name: 'Rally Star', nameZh: '拉力星型', description: 'High durability rally wheel look', descriptionZh: '耐用拉力风外观', price: 9200, tags: ['rally', 'street'], defaultSpokeCount: 5, defaultConcavity: 'low' },
+  { id: 'concave-v', name: 'Concave V', nameZh: 'V 辐深凹', description: 'Deep concave V-spoke profile', descriptionZh: 'V 辐深凹轮面', price: 12800, tags: ['show', 'sport'], defaultSpokeCount: 10, defaultConcavity: 'deep' },
+  { id: 'blade-10', name: 'Blade 10', nameZh: '刀锋十辐', description: 'Sharp blade-like ten spokes', descriptionZh: '锋利刀锋十辐设计', price: 10500, tags: ['sport'], defaultSpokeCount: 10, defaultConcavity: 'mid' },
+  { id: 'classic-mesh', name: 'Classic Mesh', nameZh: '经典网格', description: 'Timeless old-school mesh style', descriptionZh: '经典老派网格风格', price: 8600, tags: ['retro', 'luxury'], defaultSpokeCount: 12, defaultConcavity: 'low' },
+  { id: 'gt-arc', name: 'GT Arc', nameZh: 'GT 弧线辐', description: 'GT-inspired arc spoke geometry', descriptionZh: 'GT 灵感弧线辐条', price: 11800, tags: ['sport', 'track'], defaultSpokeCount: 8, defaultConcavity: 'mid' },
+  { id: 'aero-disc', name: 'Aero Disc', nameZh: '空气动力盘', description: 'Disc-like aero cover styling', descriptionZh: '盘式空气动力学风格', price: 9900, tags: ['ev', 'show'], defaultSpokeCount: 5, defaultConcavity: 'low' },
+  { id: 'wire-lux', name: 'Wire Lux', nameZh: '复古钢丝豪华', description: 'Modernized wire wheel feel', descriptionZh: '现代化钢丝轮质感', price: 13200, tags: ['luxury', 'retro'], defaultSpokeCount: 12, defaultConcavity: 'low' },
+  { id: 'forged-h', name: 'Forged H', nameZh: 'H 辐锻造', description: 'Rigid forged H-spoke shape', descriptionZh: '高刚性 H 辐锻造结构', price: 16200, tags: ['forged', 'track'], defaultSpokeCount: 8, defaultConcavity: 'deep' },
+  { id: 'street-8', name: 'Street 8', nameZh: '街道八辐', description: 'Clean everyday eight spoke wheel', descriptionZh: '干净利落的八辐日常风', price: 7600, tags: ['daily', 'street'], defaultSpokeCount: 8, defaultConcavity: 'mid' },
+  { id: 'stance-pro', name: 'Stance Pro', nameZh: '姿态派 Pro', description: 'Ultra low-offset stance look', descriptionZh: '低趴姿态派风格', price: 14200, tags: ['show', 'stance'], defaultSpokeCount: 10, defaultConcavity: 'deep' },
 ];
 
 const PAINT_COLORS = [
@@ -144,6 +224,126 @@ const ACCENT_OPTIONS = [
   { id: 'racing-stripes', name: 'Racing Stripes', nameZh: '赛车条纹', description: 'Racing stripe decals', descriptionZh: '赛车条纹', price: 2000 },
   { id: 'custom-badge', name: 'Custom Badge', nameZh: '定制徽章', description: 'Custom emblem', descriptionZh: '定制徽章', price: 1000 },
 ];
+
+const PRESET_PACKS: PresetPack[] = [
+  {
+    id: 'street-sport',
+    name: 'Street Sport',
+    nameZh: '街头运动',
+    description: 'Balanced sporty setup for daily use',
+    descriptionZh: '日常可用的均衡运动方案',
+    wheelId: 'split5',
+    colorId: 'racing-red',
+    finishId: 'gloss',
+    wheelSpec: { size: 18, spokeCount: 5, colorId: 'gunmetal', concavity: 'mid' },
+    mods: ['lowered', 'front-lip'],
+    accents: ['chrome-delete'],
+  },
+  {
+    id: 'blackout',
+    name: 'Blackout',
+    nameZh: '黑武士',
+    description: 'Stealth all-black appearance',
+    descriptionZh: '全黑隐形风格',
+    wheelId: 'stance-pro',
+    colorId: 'matte-black',
+    finishId: 'matte',
+    wheelSpec: { size: 19, spokeCount: 10, colorId: 'satin-black', concavity: 'deep' },
+    mods: ['widebody', 'side-skirts', 'front-lip'],
+    accents: ['chrome-delete', 'carbon-roof'],
+  },
+  {
+    id: 'track-day',
+    name: 'Track Day',
+    nameZh: '赛道日',
+    description: 'Lightweight and aero-focused',
+    descriptionZh: '轻量与空气动力导向',
+    wheelId: 'forged-y',
+    colorId: 'pearl-white',
+    finishId: 'gloss',
+    wheelSpec: { size: 19, spokeCount: 10, colorId: 'bronze', concavity: 'mid' },
+    mods: ['lowered', 'spoiler', 'diffuser'],
+    accents: ['custom-badge'],
+  },
+  {
+    id: 'luxury-gt',
+    name: 'Luxury GT',
+    nameZh: '豪华 GT',
+    description: 'Premium grand touring look',
+    descriptionZh: '豪华巡航 GT 风',
+    wheelId: 'monoblock',
+    colorId: 'champagne-gold',
+    finishId: 'satin',
+    wheelSpec: { size: 20, spokeCount: 5, colorId: 'silver', concavity: 'mid' },
+    mods: ['side-skirts'],
+    accents: ['chrome-delete', 'custom-badge'],
+  },
+  {
+    id: 'jdm-drift',
+    name: 'JDM Drift',
+    nameZh: 'JDM 漂移',
+    description: 'Sharp stance with drift vibe',
+    descriptionZh: '激进姿态漂移风',
+    wheelId: 'drift-x',
+    colorId: 'sunset-orange',
+    finishId: 'gloss',
+    wheelSpec: { size: 18, spokeCount: 6, colorId: 'white', concavity: 'deep' },
+    mods: ['lowered', 'widebody', 'spoiler'],
+    accents: ['racing-stripes'],
+  },
+  {
+    id: 'retro-club',
+    name: 'Retro Club',
+    nameZh: '复古俱乐部',
+    description: 'Classic style with modern paint',
+    descriptionZh: '复古轮毂搭配现代涂装',
+    wheelId: 'classic-mesh',
+    colorId: 'ocean-blue',
+    finishId: 'satin',
+    wheelSpec: { size: 17, spokeCount: 12, colorId: 'silver', concavity: 'low' },
+    mods: ['side-skirts'],
+    accents: ['custom-badge'],
+  },
+  {
+    id: 'offroad-rally',
+    name: 'Rally Build',
+    nameZh: '拉力风',
+    description: 'Rugged wheel + vivid accents',
+    descriptionZh: '硬朗轮毂与亮色点缀',
+    wheelId: 'rally-star',
+    colorId: 'forest-green',
+    finishId: 'gloss',
+    wheelSpec: { size: 18, spokeCount: 5, colorId: 'white', concavity: 'low' },
+    mods: ['spoiler'],
+    accents: ['racing-stripes'],
+  },
+  {
+    id: 'ev-clean',
+    name: 'EV Clean',
+    nameZh: '新能源极简',
+    description: 'Minimal aero look for modern EVs',
+    descriptionZh: '现代新能源简洁风格',
+    wheelId: 'aero-disc',
+    colorId: 'titanium-gray',
+    finishId: 'gloss',
+    wheelSpec: { size: 19, spokeCount: 5, colorId: 'gunmetal', concavity: 'low' },
+    mods: ['side-skirts', 'front-lip'],
+    accents: ['chrome-delete'],
+  },
+];
+
+const HISTORY_STORAGE_KEY = 'carmodder-history-v1';
+
+interface BuildSnapshot {
+  selectedCar: CarModel;
+  selectedWheelId: string;
+  selectedColorId: string;
+  selectedFinishId: string;
+  selectedMods: string[];
+  accentOptions: Record<string, boolean>;
+  wheelSpec: WheelSpec;
+  activePresetId: string | null;
+}
 
 interface GeneratedImage {
   id: string;
@@ -193,23 +393,44 @@ function extractImageUrls(result: any): string[] {
   return [];
 }
 
+function buildAccentMap(ids: string[]): Record<string, boolean> {
+  return ACCENT_OPTIONS.reduce<Record<string, boolean>>((acc, item) => {
+    acc[item.id] = ids.includes(item.id);
+    return acc;
+  }, {});
+}
+
+function normalizeWheelSpec(spec?: Partial<WheelSpec>): WheelSpec {
+  return {
+    size: WHEEL_SIZES.includes(spec?.size ?? 0) ? (spec?.size as number) : 18,
+    spokeCount: SPOKE_COUNTS.includes(spec?.spokeCount ?? 0) ? (spec?.spokeCount as number) : 8,
+    colorId: WHEEL_COLORS.some((item) => item.id === spec?.colorId) ? (spec?.colorId as string) : 'satin-black',
+    concavity: WHEEL_CONCAVITY_OPTIONS.some((item) => item.id === spec?.concavity)
+      ? (spec?.concavity as WheelConcavity)
+      : 'mid',
+  };
+}
+
 export default function CarModderConfigurator() {
   const t = useTranslations('pages.carmodder');
   const locale = useLocale();
   const isZh = locale === 'zh';
 
   const [selectedCar, setSelectedCar] = useState<CarModel>(CHINESE_CAR_MODELS[0]);
-  const [selectedWheel, setSelectedWheel] = useState(WHEEL_STYLES[0]);
+  const [selectedWheel, setSelectedWheel] = useState<WheelStyle>(WHEEL_STYLES[0]);
+  const [wheelSpec, setWheelSpec] = useState<WheelSpec>(() => normalizeWheelSpec({
+    size: 18,
+    spokeCount: WHEEL_STYLES[0].defaultSpokeCount,
+    colorId: 'satin-black',
+    concavity: WHEEL_STYLES[0].defaultConcavity,
+  }));
   const [selectedColor, setSelectedColor] = useState(PAINT_COLORS[0]);
   const [selectedFinish, setSelectedFinish] = useState(FINISH_TYPES[0]);
   const [selectedMods, setSelectedMods] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('paint');
-  const [accentOptions, setAccentOptions] = useState<Record<string, boolean>>({
-    'chrome-delete': false,
-    'carbon-roof': false,
-    'racing-stripes': false,
-    'custom-badge': false,
-  });
+  const [accentOptions, setAccentOptions] = useState<Record<string, boolean>>(buildAccentMap([]));
+  const [activePresetId, setActivePresetId] = useState<string | null>(null);
+  const [showAdvancedWheels, setShowAdvancedWheels] = useState(false);
 
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -222,6 +443,14 @@ export default function CarModderConfigurator() {
   const [testMode, setTestMode] = useState(false);
   const [showAllCars, setShowAllCars] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [compareMode, setCompareMode] = useState(false);
+  const [comparePosition, setComparePosition] = useState(52);
+  const [historyState, setHistoryState] = useState<{ entries: BuildSnapshot[]; index: number }>({
+    entries: [],
+    index: -1,
+  });
+  const [historyReady, setHistoryReady] = useState(false);
+  const applyingSnapshotRef = useRef(false);
 
   const handleCustomCarSubmit = useCallback((data: CustomCarInputData) => {
     const customCar = {
@@ -236,38 +465,207 @@ export default function CarModderConfigurator() {
       customInput: data,
     };
     setSelectedCar(customCar);
+    setActivePresetId(null);
     setShowCustomInput(false);
     toast.success(t('carAdded'));
   }, [t]);
 
-  const { user, isCheckSign, setIsShowSignModal, fetchUserCredits } = useAppContext();
+  const { user, setIsShowSignModal, fetchUserCredits } = useAppContext();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  const applySnapshot = useCallback((snapshot: BuildSnapshot) => {
+    applyingSnapshotRef.current = true;
+    setSelectedCar(snapshot.selectedCar);
+    setSelectedWheel(WHEEL_STYLES.find((w) => w.id === snapshot.selectedWheelId) ?? WHEEL_STYLES[0]);
+    setSelectedColor(PAINT_COLORS.find((item) => item.id === snapshot.selectedColorId) ?? PAINT_COLORS[0]);
+    setSelectedFinish(FINISH_TYPES.find((item) => item.id === snapshot.selectedFinishId) ?? FINISH_TYPES[0]);
+    setSelectedMods(snapshot.selectedMods.filter((id) => MODIFICATION_OPTIONS.some((m) => m.id === id)));
+    setAccentOptions(buildAccentMap(
+      Object.entries(snapshot.accentOptions)
+        .filter(([, enabled]) => enabled)
+        .map(([id]) => id)
+    ));
+    setWheelSpec(normalizeWheelSpec(snapshot.wheelSpec));
+    setActivePresetId(snapshot.activePresetId);
+    setTimeout(() => {
+      applyingSnapshotRef.current = false;
+    }, 0);
+  }, []);
+
+  const createSnapshot = useCallback((): BuildSnapshot => ({
+    selectedCar,
+    selectedWheelId: selectedWheel.id,
+    selectedColorId: selectedColor.id,
+    selectedFinishId: selectedFinish.id,
+    selectedMods,
+    accentOptions,
+    wheelSpec: normalizeWheelSpec(wheelSpec),
+    activePresetId,
+  }), [
+    selectedCar,
+    selectedWheel,
+    selectedColor,
+    selectedFinish,
+    selectedMods,
+    accentOptions,
+    wheelSpec,
+    activePresetId,
+  ]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    try {
+      const raw = window.localStorage.getItem(HISTORY_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as BuildSnapshot[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const normalized = parsed.slice(-10).map((item) => ({
+            ...item,
+            selectedMods: Array.isArray(item.selectedMods) ? item.selectedMods : [],
+            accentOptions: item.accentOptions ?? buildAccentMap([]),
+            wheelSpec: normalizeWheelSpec(item.wheelSpec),
+            activePresetId: item.activePresetId ?? null,
+          }));
+          setHistoryState({ entries: normalized, index: normalized.length - 1 });
+          applySnapshot(normalized[normalized.length - 1]);
+        }
+      }
+    } catch (error) {
+      console.error('读取历史记录失败:', error);
+    } finally {
+      setHistoryReady(true);
+    }
+  }, [isMounted, applySnapshot]);
+
+  useEffect(() => {
+    if (!isMounted || !historyReady || applyingSnapshotRef.current) return;
+    const current = createSnapshot();
+    setHistoryState((prev) => {
+      const base = prev.entries.slice(0, prev.index + 1);
+      const last = base[base.length - 1];
+      const lastSignature = last ? JSON.stringify(last) : '';
+      const currentSignature = JSON.stringify(current);
+      if (lastSignature === currentSignature) return prev;
+      const nextEntries = [...base, current].slice(-10);
+      return {
+        entries: nextEntries,
+        index: nextEntries.length - 1,
+      };
+    });
+  }, [isMounted, historyReady, createSnapshot]);
+
+  useEffect(() => {
+    if (!isMounted || !historyReady) return;
+    try {
+      window.localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(historyState.entries));
+    } catch (error) {
+      console.error('保存历史记录失败:', error);
+    }
+  }, [historyState.entries, isMounted, historyReady]);
+
   const costCredits = 4;
   const remainingCredits = user?.credits?.remainingCredits ?? 0;
 
   const toggleMod = (modId: string) => {
+    setActivePresetId(null);
     setSelectedMods((prev) =>
       prev.includes(modId) ? prev.filter((id) => id !== modId) : [...prev, modId]
     );
   };
 
   const toggleAccent = (accentId: string) => {
+    setActivePresetId(null);
     setAccentOptions((prev) => ({
       ...prev,
       [accentId]: !prev[accentId],
     }));
   };
 
+  const updateWheelSpec = useCallback((patch: Partial<WheelSpec>) => {
+    setActivePresetId(null);
+    setWheelSpec((prev) => normalizeWheelSpec({ ...prev, ...patch }));
+  }, []);
+
+  const handleWheelStyleSelect = useCallback((wheel: WheelStyle) => {
+    setActivePresetId(null);
+    setSelectedWheel(wheel);
+    setWheelSpec((prev) => normalizeWheelSpec({
+      ...prev,
+      spokeCount: wheel.defaultSpokeCount,
+      concavity: wheel.defaultConcavity,
+    }));
+  }, []);
+
+  const applyPreset = useCallback((preset: PresetPack) => {
+    const wheel = WHEEL_STYLES.find((item) => item.id === preset.wheelId) ?? WHEEL_STYLES[0];
+    const color = PAINT_COLORS.find((item) => item.id === preset.colorId) ?? PAINT_COLORS[0];
+    const finish = FINISH_TYPES.find((item) => item.id === preset.finishId) ?? FINISH_TYPES[0];
+    setSelectedWheel(wheel);
+    setSelectedColor(color);
+    setSelectedFinish(finish);
+    setSelectedMods(preset.mods.filter((id) => MODIFICATION_OPTIONS.some((mod) => mod.id === id)));
+    setAccentOptions(buildAccentMap(preset.accents));
+    setWheelSpec(normalizeWheelSpec(preset.wheelSpec));
+    setActivePresetId(preset.id);
+    toast.success(isZh ? `已应用预设：${preset.nameZh}` : `Preset applied: ${preset.name}`);
+  }, [isZh]);
+
+  const handleUndo = useCallback(() => {
+    setHistoryState((prev) => {
+      if (prev.index <= 0) return prev;
+      const nextIndex = prev.index - 1;
+      const snapshot = prev.entries[nextIndex];
+      if (snapshot) {
+        applySnapshot(snapshot);
+      }
+      return { ...prev, index: nextIndex };
+    });
+  }, [applySnapshot]);
+
+  const handleRedo = useCallback(() => {
+    setHistoryState((prev) => {
+      if (prev.index >= prev.entries.length - 1) return prev;
+      const nextIndex = prev.index + 1;
+      const snapshot = prev.entries[nextIndex];
+      if (snapshot) {
+        applySnapshot(snapshot);
+      }
+      return { ...prev, index: nextIndex };
+    });
+  }, [applySnapshot]);
+
+  const recommendedPresets = useMemo(() => {
+    const type = selectedCar.type;
+    const map: Record<string, string[]> = {
+      sedan: ['street-sport', 'blackout', 'luxury-gt'],
+      coupe: ['track-day', 'jdm-drift', 'blackout'],
+      sports: ['track-day', 'blackout', 'street-sport'],
+      suv: ['offroad-rally', 'blackout', 'luxury-gt'],
+      hatchback: ['jdm-drift', 'retro-club', 'street-sport'],
+      roadster: ['track-day', 'retro-club', 'street-sport'],
+      truck: ['offroad-rally', 'blackout', 'street-sport'],
+    };
+    const ids = map[type] ?? ['street-sport', 'blackout', 'track-day'];
+    return ids
+      .map((id) => PRESET_PACKS.find((item) => item.id === id))
+      .filter((item): item is PresetPack => !!item);
+  }, [selectedCar.type]);
+
   const buildPrompt = useCallback(() => {
     const parts: string[] = [];
 
     parts.push(`${isZh ? selectedCar.nameZh : selectedCar.name} (${selectedCar.brand})`);
     parts.push(`${t('paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name} (${isZh ? selectedFinish.nameZh : selectedFinish.name}${t('paintFinish')})`);
-    parts.push(`${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name}`);
+    const wheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
+    const concavity = WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity) ?? WHEEL_CONCAVITY_OPTIONS[1];
+    parts.push(
+      `${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name}, ${wheelSpec.size}" ` +
+      `${isZh ? wheelColor.nameZh : wheelColor.name}, ${wheelSpec.spokeCount}${isZh ? '辐' : '-spoke'}, ` +
+      `${isZh ? concavity.nameZh : concavity.name} concavity`
+    );
 
     const activeMods = selectedMods
       .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id))
@@ -286,10 +684,17 @@ export default function CarModderConfigurator() {
       parts.push(`${t('details')}: ${activeAccents.join('、')}`);
     }
 
+    if (activePresetId) {
+      const preset = PRESET_PACKS.find((item) => item.id === activePresetId);
+      if (preset) {
+        parts.push(`${isZh ? '风格预设' : 'Style preset'}: ${isZh ? preset.nameZh : preset.name}`);
+      }
+    }
+
     parts.push(t('promptSuffix'));
 
     return parts.join(', ');
-  }, [selectedCar, selectedColor, selectedFinish, selectedWheel, selectedMods, accentOptions]);
+  }, [selectedCar, selectedColor, selectedFinish, selectedWheel, selectedMods, accentOptions, wheelSpec, activePresetId, isZh, t]);
 
   const prompt = useMemo(() => buildPrompt(), [buildPrompt]);
 
@@ -465,10 +870,11 @@ export default function CarModderConfigurator() {
       }
 
       // Qwen image-to-image is sensitive to long content; keep prompt compact.
+      const wheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
       const compactPrompt = [
         `${isZh ? selectedCar.nameZh : selectedCar.name}`,
         `${t('paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name}`,
-        `${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name}`,
+        `${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name} ${wheelSpec.size}" ${isZh ? wheelColor.nameZh : wheelColor.name}`,
         selectedMods.length > 0
           ? `${t('modifications_')}: ${selectedMods
               .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id))
@@ -476,6 +882,7 @@ export default function CarModderConfigurator() {
               .filter(Boolean)
               .join(', ')}`
           : null,
+        activePresetId ? `${isZh ? '预设' : 'preset'}: ${activePresetId}` : null,
       ]
         .filter(Boolean)
         .join(', ');
@@ -569,14 +976,31 @@ export default function CarModderConfigurator() {
 
   const handleShare = () => {
     const carName = isZh ? selectedCar.nameZh : selectedCar.name;
+    const wheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
+    const activeModsText = selectedMods
+      .map((id) => MODIFICATION_OPTIONS.find((item) => item.id === id))
+      .filter((item): item is (typeof MODIFICATION_OPTIONS)[number] => !!item)
+      .slice(0, 3)
+      .map((item) => (isZh ? item.nameZh : item.name))
+      .join(', ');
+    const shareDescription = [
+      `${isZh ? '车型' : 'Car'}: ${carName}`,
+      `${isZh ? '轮毂' : 'Wheel'}: ${isZh ? selectedWheel.nameZh : selectedWheel.name} ${wheelSpec.size}"`,
+      `${isZh ? '轮毂颜色' : 'Wheel Color'}: ${isZh ? wheelColor.nameZh : wheelColor.name}`,
+      activeModsText ? `${isZh ? '改件' : 'Mods'}: ${activeModsText}` : null,
+      `${isZh ? '预算' : 'Budget'}: ${formatPrice(totalBuildCost)}`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
     if (navigator.share) {
       navigator.share({
         title: t('shareTitle', { car: carName }),
-        text: t('shareText', { car: carName }),
+        text: `${t('shareText', { car: carName })}\n\n${shareDescription}`,
         url: window.location.href,
       });
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(`${window.location.href}\n\n${shareDescription}`);
       toast.success(t('linkCopied'));
     }
   };
@@ -600,6 +1024,9 @@ export default function CarModderConfigurator() {
   const totalBuildCost = useMemo(() => {
     let basePrice = selectedCar.price;
     basePrice += selectedWheel.price;
+    basePrice += WHEEL_SIZE_EXTRA_COST[wheelSpec.size] ?? 0;
+    basePrice += WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId)?.extraCost ?? 0;
+    basePrice += WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity)?.extraCost ?? 0;
     basePrice += selectedColor.price;
     basePrice += selectedFinish.price;
     basePrice += selectedMods.reduce((sum, modId) => {
@@ -613,11 +1040,20 @@ export default function CarModderConfigurator() {
         return sum + (accent?.price || 0);
       }, 0);
     return basePrice;
-  }, [selectedCar, selectedWheel, selectedColor, selectedFinish, selectedMods, accentOptions]);
+  }, [selectedCar, selectedWheel, selectedColor, selectedFinish, selectedMods, accentOptions, wheelSpec]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(price);
   };
+
+  const selectedWheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
+  const selectedConcavity = WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity) ?? WHEEL_CONCAVITY_OPTIONS[1];
+  const wheelSpecExtraCost =
+    (WHEEL_SIZE_EXTRA_COST[wheelSpec.size] ?? 0) +
+    selectedWheelColor.extraCost +
+    selectedConcavity.extraCost;
+  const canUndo = historyState.index > 0;
+  const canRedo = historyState.index >= 0 && historyState.index < historyState.entries.length - 1;
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden font-[family-name:var(--font-sans)]">
@@ -686,6 +1122,28 @@ export default function CarModderConfigurator() {
                     <span className="text-muted-foreground text-sm">{t('modCost')}</span>
                     <span className="text-sm font-medium text-[#6366f1]">+{formatPrice(totalBuildCost - selectedCar.price)}</span>
                   </div>
+                  <div className="grid grid-cols-2 gap-2 mt-4">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled={!canUndo}
+                      onClick={handleUndo}
+                      className="bg-card border border-border"
+                    >
+                      <Undo2 className="w-4 h-4 mr-2" />
+                      {isZh ? '撤销' : 'Undo'}
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled={!canRedo}
+                      onClick={handleRedo}
+                      className="bg-card border border-border"
+                    >
+                      <Redo2 className="w-4 h-4 mr-2" />
+                      {isZh ? '重做' : 'Redo'}
+                    </Button>
+                  </div>
                 </motion.div>
 
                 <Card className="bg-card border-border shadow-lg overflow-hidden">
@@ -706,6 +1164,17 @@ export default function CarModderConfigurator() {
                     >
                       <span className="text-muted-foreground text-sm">{t('wheels')}</span>
                       <span className="font-medium">{formatPrice(selectedWheel.price)}</span>
+                    </motion.div>
+                    <motion.div
+                      className="flex justify-between items-center py-3 border-b border-muted"
+                      whileHover={{ x: 5 }}
+                    >
+                      <span className="text-muted-foreground text-sm">
+                        {isZh ? `规格 ${wheelSpec.size}" / ${wheelSpec.spokeCount}辐` : `Spec ${wheelSpec.size}" / ${wheelSpec.spokeCount}-spoke`}
+                      </span>
+                      <span className="text-sm text-[#6366f1]">
+                        +{formatPrice(wheelSpecExtraCost)}
+                      </span>
                     </motion.div>
                     <motion.div 
                       className="flex justify-between items-center py-3 border-b border-muted"
@@ -775,10 +1244,34 @@ export default function CarModderConfigurator() {
                         transition={{ duration: 0.5 }}
                       >
                         <LazyImage
-                          src={generatedImages[0].url}
-                          alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
+                          src={selectedCar.localImage}
+                          alt={`${isZh ? selectedCar.nameZh : selectedCar.name} before`}
                           className="w-full h-full object-cover"
                         />
+                        {compareMode ? (
+                          <>
+                            <div
+                              className="absolute inset-0 overflow-hidden"
+                              style={{ clipPath: `inset(0 ${100 - comparePosition}% 0 0)` }}
+                            >
+                              <LazyImage
+                                src={generatedImages[0].url}
+                                alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div
+                              className="absolute top-0 bottom-0 w-0.5 bg-white/90 shadow-[0_0_12px_rgba(255,255,255,0.8)]"
+                              style={{ left: `${comparePosition}%` }}
+                            />
+                          </>
+                        ) : (
+                          <LazyImage
+                            src={generatedImages[0].url}
+                            alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
+                            className="absolute inset-0 w-full h-full object-cover"
+                          />
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
                           <div className="p-6 w-full">
                             <h3 className="text-xl font-bold mb-2">{isZh ? selectedCar.nameZh : selectedCar.name} {t('modEffect')}</h3>
@@ -809,9 +1302,43 @@ export default function CarModderConfigurator() {
                                 <Share2 className="w-4 h-4 mr-2" />
                                 {t('share')}
                               </Button>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={() => setCompareMode((prev) => !prev)}
+                                className="bg-muted/10 hover:bg-muted/20 backdrop-blur-sm"
+                              >
+                                {compareMode ? (
+                                  <>
+                                    <EyeOff className="w-4 h-4 mr-2" />
+                                    {isZh ? '关闭对比' : 'Hide Compare'}
+                                  </>
+                                ) : (
+                                  <>
+                                    <Eye className="w-4 h-4 mr-2" />
+                                    {isZh ? '前后对比' : 'Compare'}
+                                  </>
+                                )}
+                              </Button>
                             </div>
                           </div>
                         </div>
+                        {compareMode && (
+                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[75%] bg-background/70 backdrop-blur-md border border-border rounded-lg px-3 py-2">
+                            <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                              <span>{isZh ? '原图' : 'Before'}</span>
+                              <span>{isZh ? '效果图' : 'After'}</span>
+                            </div>
+                            <input
+                              type="range"
+                              min={0}
+                              max={100}
+                              value={comparePosition}
+                              onChange={(event) => setComparePosition(Number(event.target.value))}
+                              className="w-full accent-[#6366f1]"
+                            />
+                          </div>
+                        )}
                       </motion.div>
                     ) : (
                       <motion.div 
@@ -831,6 +1358,64 @@ export default function CarModderConfigurator() {
                         </div>
                       </motion.div>
                     )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card border-border shadow-lg overflow-hidden">
+                <CardHeader className="bg-card border-b border-border p-5">
+                  <CardTitle className="text-lg font-bold">
+                    {isZh ? '一键风格包' : 'Preset Packs'}
+                  </CardTitle>
+                  <p className="text-muted-foreground text-sm mt-1">
+                    {isZh
+                      ? '根据车型推荐，先选一个预设再做微调更快。'
+                      : 'Pick a recommended pack first, then fine-tune your build.'}
+                  </p>
+                </CardHeader>
+                <CardContent className="p-5 space-y-4">
+                  <div className="space-y-2">
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                      {isZh ? '推荐给你' : 'Recommended for this car'}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {recommendedPresets.map((preset) => (
+                        <Button
+                          key={preset.id}
+                          variant={activePresetId === preset.id ? 'default' : 'secondary'}
+                          className={`justify-start h-auto py-3 px-3 ${
+                            activePresetId === preset.id
+                              ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white'
+                              : 'bg-card border border-border'
+                          }`}
+                          onClick={() => applyPreset(preset)}
+                        >
+                          <div className="text-left">
+                            <div className="text-sm font-semibold">{isZh ? preset.nameZh : preset.name}</div>
+                            <div className="text-xs opacity-80">{isZh ? preset.descriptionZh : preset.description}</div>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                      {isZh ? '全部预设' : 'All packs'}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {PRESET_PACKS.map((preset) => (
+                        <Button
+                          key={preset.id}
+                          size="sm"
+                          variant={activePresetId === preset.id ? 'default' : 'outline'}
+                          className={activePresetId === preset.id ? 'bg-[#6366f1] text-white' : ''}
+                          onClick={() => applyPreset(preset)}
+                        >
+                          <WandSparkles className="w-3.5 h-3.5 mr-1.5" />
+                          {isZh ? preset.nameZh : preset.name}
+                        </Button>
+                      ))}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -871,7 +1456,10 @@ export default function CarModderConfigurator() {
                     <motion.div
                       key={car.id}
                       className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedCar.id === car.id ? 'border-[#6366f1] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-border/60'}`}
-                      onClick={() => setSelectedCar(car)}
+                      onClick={() => {
+                        setActivePresetId(null);
+                        setSelectedCar(car);
+                      }}
                       whileHover={{ scale: 1.05, y: -5 }}
                       whileTap={{ scale: 0.95 }}
                       initial={{ opacity: 0, y: 20 }}
@@ -1036,7 +1624,10 @@ export default function CarModderConfigurator() {
                             <motion.button
                               key={finish.id}
                               className={`px-5 py-3 rounded-xl text-sm transition-all ${selectedFinish.id === finish.id ? 'bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white shadow-[0_0_15px_rgba(99,102,241,0.4)]' : 'bg-card text-muted-foreground hover:text-foreground border border-border'}`}
-                              onClick={() => setSelectedFinish(finish)}
+                              onClick={() => {
+                                setActivePresetId(null);
+                                setSelectedFinish(finish);
+                              }}
                               whileHover={{ scale: 1.03, y: -2 }}
                               whileTap={{ scale: 0.97 }}
                             >
@@ -1057,7 +1648,10 @@ export default function CarModderConfigurator() {
                             <motion.div
                               key={color.id}
                               className={`relative cursor-pointer group ${selectedColor.id === color.id ? 'ring-2 ring-[#6366f1] ring-offset-2 ring-offset-card' : ''}`}
-                              onClick={() => setSelectedColor(color)}
+                              onClick={() => {
+                                setActivePresetId(null);
+                                setSelectedColor(color);
+                              }}
                               whileHover={{ scale: 1.15, y: -5 }}
                               whileTap={{ scale: 0.95 }}
                             >
@@ -1092,39 +1686,140 @@ export default function CarModderConfigurator() {
                       <CardTitle className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80">Wheel Selector</CardTitle>
                       <p className="text-muted-foreground text-sm mt-1">Choose wheel style and size for your build.</p>
                     </CardHeader>
-                    <CardContent className="space-y-4 p-6">
-                      {WHEEL_STYLES.map((wheel) => (
-                        <motion.div
-                          key={wheel.id}
-                          className={`p-5 rounded-xl cursor-pointer transition-all border ${selectedWheel.id === wheel.id ? 'border-[#6366f1] bg-card shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-muted hover:border-border bg-card'}`}
-                          onClick={() => setSelectedWheel(wheel)}
-                          whileHover={{ scale: 1.02, y: -3 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <div className="flex items-start gap-4">
-                            <motion.div 
-                              className="w-14 h-14 rounded-full bg-card flex items-center justify-center border border-border"
-                              whileHover={{ rotate: 10 }}
-                            >
-                              <CircleDashed className="h-5 w-5 text-[#6366f1]" />
-                            </motion.div>
-                            <div className="flex-1">
-                              <div className="flex justify-between items-center mb-2">
-                                <h4 className="font-bold text-foreground">{isZh ? wheel.nameZh : wheel.name}</h4>
-                                {wheel.price > 0 && (
-                                  <motion.span 
-                                    className="text-sm font-medium text-[#6366f1]"
-                                    whileHover={{ scale: 1.1 }}
-                                  >
-                                    +{formatPrice(wheel.price)}
-                                  </motion.span>
-                                )}
+                    <CardContent className="space-y-5 p-6">
+                      <div className="grid grid-cols-1 gap-3 max-h-[360px] overflow-y-auto pr-1">
+                        {WHEEL_STYLES.map((wheel) => (
+                          <motion.div
+                            key={wheel.id}
+                            className={`p-4 rounded-xl cursor-pointer transition-all border ${selectedWheel.id === wheel.id ? 'border-[#6366f1] bg-card shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-muted hover:border-border bg-card'}`}
+                            onClick={() => handleWheelStyleSelect(wheel)}
+                            whileHover={{ scale: 1.02, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <div className="flex items-start gap-4">
+                              <motion.div 
+                                className="w-12 h-12 rounded-full bg-card flex items-center justify-center border border-border shrink-0"
+                                whileHover={{ rotate: 10 }}
+                              >
+                                <CircleDashed className="h-4 w-4 text-[#6366f1]" />
+                              </motion.div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-center mb-1 gap-2">
+                                  <h4 className="font-semibold text-foreground text-sm truncate">{isZh ? wheel.nameZh : wheel.name}</h4>
+                                  {wheel.price > 0 && (
+                                    <motion.span 
+                                      className="text-xs font-medium text-[#6366f1] shrink-0"
+                                      whileHover={{ scale: 1.1 }}
+                                    >
+                                      +{formatPrice(wheel.price)}
+                                    </motion.span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-muted-foreground">{isZh ? wheel.descriptionZh : wheel.description}</p>
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {wheel.tags.slice(0, 3).map((tag) => (
+                                    <Badge key={tag} variant="outline" className="text-[10px] border-border text-muted-foreground">
+                                      {tag}
+                                    </Badge>
+                                  ))}
+                                </div>
                               </div>
-                              <p className="text-xs text-muted-foreground">{isZh ? wheel.descriptionZh : wheel.description}</p>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+
+                      <div className="pt-2 border-t border-border">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowAdvancedWheels((prev) => !prev)}
+                          className="w-full justify-between"
+                        >
+                          <span>{isZh ? '更多轮毂参数' : 'Advanced Wheel Spec'}</span>
+                          {showAdvancedWheels ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </Button>
+                        {showAdvancedWheels && (
+                          <div className="mt-3 space-y-3">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <p className="text-xs text-muted-foreground">{isZh ? '尺寸' : 'Size'}</p>
+                                <Select
+                                  value={String(wheelSpec.size)}
+                                  onValueChange={(value) => updateWheelSpec({ size: Number(value) })}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder={isZh ? '选择尺寸' : 'Size'} />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {WHEEL_SIZES.map((size) => (
+                                      <SelectItem key={size} value={String(size)}>
+                                        {size}" ({WHEEL_SIZE_EXTRA_COST[size] > 0 ? `+${formatPrice(WHEEL_SIZE_EXTRA_COST[size])}` : isZh ? '基础' : 'Base'})
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="space-y-1">
+                                <p className="text-xs text-muted-foreground">{isZh ? '轮辐数' : 'Spokes'}</p>
+                                <Select
+                                  value={String(wheelSpec.spokeCount)}
+                                  onValueChange={(value) => updateWheelSpec({ spokeCount: Number(value) })}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder={isZh ? '选择轮辐数' : 'Spokes'} />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {SPOKE_COUNTS.map((count) => (
+                                      <SelectItem key={count} value={String(count)}>
+                                        {count} {isZh ? '辐' : 'spokes'}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <p className="text-xs text-muted-foreground">{isZh ? '轮毂颜色' : 'Wheel Color'}</p>
+                                <Select
+                                  value={wheelSpec.colorId}
+                                  onValueChange={(value) => updateWheelSpec({ colorId: value })}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder={isZh ? '选择颜色' : 'Color'} />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {WHEEL_COLORS.map((color) => (
+                                      <SelectItem key={color.id} value={color.id}>
+                                        {isZh ? color.nameZh : color.name} {color.extraCost > 0 ? `(+${formatPrice(color.extraCost)})` : ''}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="space-y-1">
+                                <p className="text-xs text-muted-foreground">{isZh ? '凹度' : 'Concavity'}</p>
+                                <Select
+                                  value={wheelSpec.concavity}
+                                  onValueChange={(value) => updateWheelSpec({ concavity: value as WheelConcavity })}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder={isZh ? '选择凹度' : 'Concavity'} />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {WHEEL_CONCAVITY_OPTIONS.map((item) => (
+                                      <SelectItem key={item.id} value={item.id}>
+                                        {isZh ? item.nameZh : item.name} {item.extraCost > 0 ? `(+${formatPrice(item.extraCost)})` : ''}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
                             </div>
                           </div>
-                        </motion.div>
-                      ))}
+                        )}
+                      </div>
                     </CardContent>
                   </motion.div>
                 </Card>
@@ -1229,6 +1924,40 @@ export default function CarModderConfigurator() {
                   </motion.div>
                 </Card>
                 )}
+
+                <Card className="bg-card border-border shadow-lg overflow-hidden">
+                  <CardHeader className="bg-card border-b border-border p-5">
+                    <CardTitle className="text-base font-semibold">
+                      {isZh ? '最近配置' : 'Recent Configs'}
+                    </CardTitle>
+                    <p className="text-xs text-muted-foreground">
+                      {isZh ? '自动保存最近 10 次配置，可随时恢复。' : 'Last 10 configs are auto-saved and restorable.'}
+                    </p>
+                  </CardHeader>
+                  <CardContent className="p-5 space-y-2">
+                    <Select
+                      value={historyState.index >= 0 ? String(historyState.index) : undefined}
+                      onValueChange={(value) => {
+                        const idx = Number(value);
+                        const snapshot = historyState.entries[idx];
+                        if (!snapshot) return;
+                        applySnapshot(snapshot);
+                        setHistoryState((prev) => ({ ...prev, index: idx }));
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={isZh ? '选择历史记录' : 'Choose a snapshot'} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {historyState.entries.map((entry, idx) => (
+                          <SelectItem key={`${entry.selectedCar.id}-${idx}`} value={String(idx)}>
+                            {isZh ? entry.selectedCar.nameZh : entry.selectedCar.name} · {entry.wheelSpec.size}" · {idx === historyState.index ? (isZh ? '当前' : 'Current') : `${isZh ? '步骤' : 'Step'} ${idx + 1}`}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </CardContent>
+                </Card>
 
                 {/* Action Buttons */}
                 <div className="space-y-4">
