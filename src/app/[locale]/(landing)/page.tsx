@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import autoScroll from 'embla-carousel-auto-scroll';
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/shared/components/ui/carousel';
 
 export default function CarModderLanding() {
   const t = useTranslations('pages.carmodder');
@@ -146,34 +148,67 @@ export default function CarModderLanding() {
           <div className="lg:col-span-7 relative h-[50vh] lg:h-[80vh] w-full flex items-center justify-center order-1 lg:order-2 [perspective:1000px]">
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[80%] h-20 bg-[#4725f4]/40 blur-[60px] rounded-[100%] z-0 scale-y-50"></div>
 
-            <motion.div
-              className="relative z-10 w-full transform transition-transform duration-700 hover:scale-105 cursor-pointer group"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+            <Carousel 
+              opts={{ 
+                loop: true 
+              }} 
+              className="w-full max-w-4xl"
             >
-              <div className="absolute top-[35%] left-[20%] z-20 group/spot">
-                <div className="w-4 h-4 bg-[#4725f4] rounded-full animate-ping absolute"></div>
-                <div className="w-4 h-4 bg-white rounded-full relative shadow-[0_0_15px_#4725f4] cursor-pointer hover:scale-125 transition-transform"></div>
-                <div className="absolute left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/spot:opacity-100 transition-opacity duration-300 whitespace-nowrap bg-black/80 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-xs text-white">
-                  {t('customForgedRims')}
-                </div>
-              </div>
+              <CarouselContent>
+                <CarouselItem>
+                  <div className="relative z-10 w-full transform transition-transform duration-700 hover:scale-105 cursor-pointer group">
+                    <div className="absolute top-[35%] left-[20%] z-20 group/spot">
+                      <div className="w-4 h-4 bg-[#4725f4] rounded-full animate-ping absolute"></div>
+                      <div className="w-4 h-4 bg-white rounded-full relative shadow-[0_0_15px_#4725f4] cursor-pointer hover:scale-125 transition-transform"></div>
+                      <div className="absolute left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/spot:opacity-100 transition-opacity duration-300 whitespace-nowrap bg-black/80 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-xs text-white">
+                        {t('customForgedRims')}
+                      </div>
+                    </div>
 
-              <div className="absolute top-[45%] right-[25%] z-20 group/spot">
-                <div className="w-4 h-4 bg-[#4725f4] rounded-full animate-ping absolute"></div>
-                <div className="w-4 h-4 bg-white rounded-full relative shadow-[0_0_15px_#4725f4] cursor-pointer hover:scale-125 transition-transform"></div>
-                <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/spot:opacity-100 transition-opacity duration-300 whitespace-nowrap bg-black/80 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-xs text-white">
-                  {t('aeroSideSkirts')}
-                </div>
-              </div>
+                    <div className="absolute top-[45%] right-[25%] z-20 group/spot">
+                      <div className="w-4 h-4 bg-[#4725f4] rounded-full animate-ping absolute"></div>
+                      <div className="w-4 h-4 bg-white rounded-full relative shadow-[0_0_15px_#4725f4] cursor-pointer hover:scale-125 transition-transform"></div>
+                      <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/spot:opacity-100 transition-opacity duration-300 whitespace-nowrap bg-black/80 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-xs text-white">
+                        {t('aeroSideSkirts')}
+                      </div>
+                    </div>
 
-              <img
-                className="w-full h-auto object-contain drop-shadow-2xl"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDciVRobZQzVQn_4Vgc4xRll_frKDXa0AjsS86SBFoXStRExyIwa0Dkn0YdsLuJ1BuJIdiuncl6usnfQSWqsISPMnEV4SQw1TMwKkB0yYAH59ALL1my1HgQQ28OHgqQ3dIMpWlT4sN8KM9YsK4GdK10kzQElQAScm6G5M3qHfLiShH2AhRDBNPUoItTi27W-5tIv80LK1R8N2S_dQD-_a14zHgFct5NsDUtuEXTIWQHkBY0Fh9KUKkKmEVDMicX0HOcuHBE2CRxRlzX"
-                alt="Sleek dark sports car in neon environment representing Xiaomi SU7"
-              />
-            </motion.div>
+                    <img
+                      className="w-full h-auto object-contain drop-shadow-2xl"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDciVRobZQzVQn_4Vgc4xRll_frKDXa0AjsS86SBFoXStRExyIwa0Dkn0YdsLuJ1BuJIdiuncl6usnfQSWqsISPMnEV4SQw1TMwKkB0yYAH59ALL1my1HgQQ28OHgqQ3dIMpWlT4sN8KM9YsK4GdK10kzQElQAScm6G5M3qHfLiShH2AhRDBNPUoItTi27W-5tIv80LK1R8N2S_dQD-_a14zHgFct5NsDUtuEXTIWQHkBY0Fh9KUKkKmEVDMicX0HOcuHBE2CRxRlzX"
+                      alt="Sleek dark sports car in neon environment representing Xiaomi SU7"
+                    />
+                  </div>
+                </CarouselItem>
+                
+
+                
+
+                
+                <CarouselItem>
+                  <div className="relative z-10 w-full transform transition-transform duration-700 hover:scale-105 cursor-pointer group">
+                    <img
+                      className="w-full h-auto object-contain drop-shadow-2xl"
+                      src="/front_img/image_巴塞罗那MWC｜小米Vision..._7.png"
+                      alt="Barcelona MWC image 7"
+                    />
+                  </div>
+                </CarouselItem>
+                
+                <CarouselItem>
+                  <div className="relative z-10 w-full transform transition-transform duration-700 hover:scale-105 cursor-pointer group">
+                    <img
+                      className="w-full h-auto object-contain drop-shadow-2xl"
+                      src="/front_img/image_巴塞罗那MWC｜小米Vision..._9.png"
+                      alt="Barcelona MWC image 9"
+                    />
+                  </div>
+                </CarouselItem>
+              </CarouselContent>
+              
+              <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors" />
+              <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors" />
+            </Carousel>
 
             <motion.div
               className="absolute right-0 top-20 hidden lg:block animate-bounce [animation-duration:3000ms]"
