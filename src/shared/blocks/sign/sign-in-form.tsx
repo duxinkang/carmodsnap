@@ -85,7 +85,7 @@ export function SignInForm({
             // Do NOT reset loading here; navigation may not have completed yet.
           },
           onSuccess: (ctx) => {
-            // Keep loading=true until navigation completes.
+            setLoading(false);
           },
           onError: (e: any) => {
             const status = e?.error?.status;
@@ -113,6 +113,8 @@ export function SignInForm({
       );
     } catch (e: any) {
       toast.error(e?.message || 'sign in failed');
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };

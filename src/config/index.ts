@@ -5,8 +5,17 @@ import packageJson from '../../package.json';
 
 export type ConfigMap = Record<string, string>;
 
+const derivedDeploymentUrl =
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+  process.env.VERCEL_URL ||
+  '';
+
+const fallbackAppUrl = derivedDeploymentUrl
+  ? `https://${derivedDeploymentUrl}`
+  : 'http://localhost:3000';
+
 export const envConfigs: ConfigMap = {
-  app_url: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+  app_url: process.env.NEXT_PUBLIC_APP_URL ?? fallbackAppUrl,
   app_name: process.env.NEXT_PUBLIC_APP_NAME ?? 'ModSnap',
   app_description: process.env.NEXT_PUBLIC_APP_DESCRIPTION ?? 'AI-powered car modification platform',
   app_logo: process.env.NEXT_PUBLIC_APP_LOGO ?? '/logo.png',
@@ -33,7 +42,7 @@ export const envConfigs: ConfigMap = {
     process.env.DB_MIGRATIONS_OUT ?? './src/config/db/migrations',
   db_singleton_enabled: process.env.DB_SINGLETON_ENABLED || 'false',
   db_max_connections: process.env.DB_MAX_CONNECTIONS || '1',
-  auth_url: process.env.AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || '',
+  auth_url: process.env.AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || fallbackAppUrl,
   auth_secret: process.env.AUTH_SECRET ?? '', // openssl rand -base64 32
   version: packageJson.version,
   locale_detect_enabled:
