@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
-import { AIMediaType, AITaskStatus } from '@/extensions/ai/types';
+import { AITaskStatus } from '@/extensions/ai/types';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Progress } from '@/shared/components/ui/progress';
@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { useAppContext } from '@/shared/contexts/app';
+import { getUuid } from '@/shared/lib/hash';
 import { Separator } from '@/shared/components/ui/separator';
 import { Badge } from '@/shared/components/ui/badge';
 import { CustomCarInput, type CustomCarInputData } from './custom-car-input';
@@ -350,6 +351,28 @@ interface GeneratedImage {
   prompt?: string;
 }
 
+type ShowcaseShotType = 'panorama' | 'closeup';
+type ShotStatus = 'idle' | AITaskStatus;
+
+interface ShowcaseShotState {
+  image: GeneratedImage | null;
+  status: ShotStatus;
+  taskId: string | null;
+  error: string | null;
+}
+
+type ShowcaseStates = Record<ShowcaseShotType, ShowcaseShotState>;
+
+interface ShowcaseTaskResp {
+  shotType: ShowcaseShotType;
+  id?: string;
+  status: AITaskStatus | 'failed';
+  message?: string;
+  taskInfo?: string | null;
+  taskResult?: string | null;
+  prompt?: string;
+}
+
 interface BackendTask {
   id: string;
   status: string;
@@ -359,6 +382,23 @@ interface BackendTask {
   taskInfo: string | null;
   taskResult: string | null;
 }
+
+const SHOT_TYPES: ShowcaseShotType[] = ['panorama', 'closeup'];
+
+const getInitialShowcaseStates = (): ShowcaseStates => ({
+  panorama: {
+    image: null,
+    status: 'idle',
+    taskId: null,
+    error: null,
+  },
+  closeup: {
+    image: null,
+    status: 'idle',
+    taskId: null,
+    error: null,
+  },
+});
 
 function parseTaskResult(taskResult: string | null): any {
   if (!taskResult) return null;
@@ -431,12 +471,13 @@ export default function CarModderConfigurator() {
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [showAdvancedWheels, setShowAdvancedWheels] = useState(false);
 
-  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
+  const [showcaseStates, setShowcaseStates] = useState<ShowcaseStates>(
+    getInitialShowcaseStates
+  );
+  const [activeShot, setActiveShot] = useState<ShowcaseShotType>('panorama');
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [taskId, setTaskId] = useState<string | null>(null);
   const [generationStartTime, setGenerationStartTime] = useState<number | null>(null);
-  const [taskStatus, setTaskStatus] = useState<AITaskStatus | null>(null);
   const [downloadingImageId, setDownloadingImageId] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [testMode, setTestMode] = useState(false);
@@ -474,6 +515,12 @@ export default function CarModderConfigurator() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (activeShot !== 'panorama' && compareMode) {
+      setCompareMode(false);
+    }
+  }, [activeShot, compareMode]);
 
   const applySnapshot = useCallback((snapshot: BuildSnapshot) => {
     applyingSnapshotRef.current = true;
@@ -697,23 +744,88 @@ export default function CarModderConfigurator() {
 
   const prompt = useMemo(() => buildPrompt(), [buildPrompt]);
 
+  const activeImage =
+    showcaseStates[activeShot].image ??
+    showcaseStates.panorama.image ??
+    showcaseStates.closeup.image;
+
+  const getReferenceImage = useCallback(() => {
+    const urlRef = selectedCar.customInput?.imageUrl;
+    const dataUrlRef = selectedCar.customInput?.imageDataUrl;
+    const isValidQwenRef = (value?: string) =>
+      !!value &&
+      (value.startsWith('http://') ||
+        value.startsWith('https://') ||
+        value.startsWith('data:image/'));
+
+    if (isValidQwenRef(urlRef)) return urlRef;
+    if (isValidQwenRef(dataUrlRef)) return dataUrlRef;
+    return undefined;
+  }, [selectedCar.customInput?.imageDataUrl, selectedCar.customInput?.imageUrl]);
+
+  const buildCompactPrompt = useCallback(() => {
+    const wheelColor =
+      WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ??
+      WHEEL_COLORS[0];
+    return [
+      `${isZh ? selectedCar.nameZh : selectedCar.name}`,
+      `${t('paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name}`,
+      `${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name} ${wheelSpec.size}" ${isZh ? wheelColor.nameZh : wheelColor.name}`,
+      selectedMods.length > 0
+        ? `${t('modifications_')}: ${selectedMods
+            .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id))
+            .map((m) => (isZh ? m?.nameZh : m?.name))
+            .filter(Boolean)
+            .join(', ')}`
+        : null,
+      activePresetId ? `${t('preset')}: ${activePresetId}` : null,
+    ]
+      .filter(Boolean)
+      .join(', ');
+  }, [
+    activePresetId,
+    isZh,
+    selectedCar.name,
+    selectedCar.nameZh,
+    selectedColor.name,
+    selectedColor.nameZh,
+    selectedMods,
+    selectedWheel.name,
+    selectedWheel.nameZh,
+    t,
+    wheelSpec.colorId,
+    wheelSpec.size,
+  ]);
+
+  const buildShowcasePrompts = useCallback(
+    (scene: 'text-to-image' | 'image-to-image') => {
+      const compactPrompt = buildCompactPrompt();
+      const baseIdentityPrompt =
+        scene === 'image-to-image'
+          ? `${compactPrompt}. Keep same car identity from reference image; apply selected modifications only.`
+          : prompt;
+
+      const panoramaPrompt = `${baseIdentityPrompt}, cinematic automotive commercial shot, full vehicle in frame, 3/4 front view, dramatic studio lighting, rich reflections, high contrast, premium ad style, ultra-detailed, 4k`;
+      const closeupPrompt = `${compactPrompt}. cinematic close-up automotive commercial shot, focus on front wheel and fender area, wheel texture and brake caliper details, shallow depth of field, dramatic highlights, premium ad style, ultra-detailed, 4k`;
+
+      return { panoramaPrompt, closeupPrompt };
+    },
+    [buildCompactPrompt, prompt]
+  );
+
   const resetTaskState = useCallback(() => {
     setIsGenerating(false);
     setProgress(0);
-    setTaskId(null);
     setGenerationStartTime(null);
-    setTaskStatus(null);
+    setShowcaseStates((prev) => ({
+      panorama: { ...prev.panorama, taskId: null, status: 'idle', error: null },
+      closeup: { ...prev.closeup, taskId: null, status: 'idle', error: null },
+    }));
   }, []);
 
-  const pollTaskStatus = useCallback(
-    async (id: string) => {
+  const pollShotTask = useCallback(
+    async (shotType: ShowcaseShotType, id: string) => {
       try {
-        if (generationStartTime && Date.now() - generationStartTime > GENERATION_TIMEOUT) {
-          resetTaskState();
-          toast.error(t('generationTimeout'));
-          return true;
-        }
-
         const resp = await fetch('/api/ai/query', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -727,97 +839,260 @@ export default function CarModderConfigurator() {
 
         const task = data as BackendTask;
         const currentStatus = task.status as AITaskStatus;
-        setTaskStatus(currentStatus);
-
         const parsedResult = parseTaskResult(task.taskInfo);
         const imageUrls = extractImageUrls(parsedResult);
 
-        if (currentStatus === AITaskStatus.PENDING) {
-          setProgress((prev) => Math.max(prev, 20));
-          return false;
-        }
+        setShowcaseStates((prev) => {
+          const current = prev[shotType];
+          const next: ShowcaseShotState = {
+            ...current,
+            status: currentStatus,
+            error: null,
+          };
 
-        if (currentStatus === AITaskStatus.PROCESSING) {
-          if (imageUrls.length > 0) {
-            setGeneratedImages(
-              imageUrls.map((url, index) => ({
-                id: `${task.id}-${index}`,
-                url,
-                prompt: task.prompt ?? undefined,
-              }))
-            );
-            setProgress((prev) => Math.max(prev, 85));
-          } else {
-            setProgress((prev) => Math.min(prev + 10, 80));
+          if (
+            (currentStatus === AITaskStatus.PROCESSING ||
+              currentStatus === AITaskStatus.SUCCESS) &&
+            imageUrls.length > 0
+          ) {
+            next.image = {
+              id: `${task.id}-${shotType}`,
+              url: imageUrls[0],
+              prompt: task.prompt ?? undefined,
+            };
           }
-          return false;
-        }
 
-        if (currentStatus === AITaskStatus.SUCCESS) {
-          if (imageUrls.length === 0) {
-            toast.error(t('generationFailed'));
-          } else {
-            setGeneratedImages(
-              imageUrls.map((url, index) => ({
-                id: `${task.id}-${index}`,
-                url,
-                prompt: task.prompt ?? undefined,
-              }))
-            );
-            toast.success(t('generationComplete'));
+          if (currentStatus === AITaskStatus.SUCCESS) {
+            next.taskId = null;
+            next.error = imageUrls.length === 0 ? t('generationFailed') : null;
+            if (imageUrls.length === 0) {
+              next.status = AITaskStatus.FAILED;
+            }
           }
-          setProgress(100);
-          resetTaskState();
-          return true;
-        }
 
-        if (currentStatus === AITaskStatus.FAILED) {
-          const errorMessage = parsedResult?.errorMessage || t('generationFailed');
-          toast.error(errorMessage);
-          resetTaskState();
-          fetchUserCredits();
-          return true;
-        }
+          if (currentStatus === AITaskStatus.FAILED) {
+            next.taskId = null;
+            next.error = parsedResult?.errorMessage || t('generationFailed');
+          }
 
-        setProgress((prev) => Math.min(prev + 5, 95));
-        return false;
+          return {
+            ...prev,
+            [shotType]: next,
+          };
+        });
       } catch (error: any) {
-        console.error('轮询任务状态失败:', error);
-        toast.error(`${t('queryFailed')}: ${error.message}`);
-        resetTaskState();
-        fetchUserCredits();
-        return true;
+        console.error('poll shot task failed:', error);
+        setShowcaseStates((prev) => ({
+          ...prev,
+          [shotType]: {
+            ...prev[shotType],
+            status: AITaskStatus.FAILED,
+            taskId: null,
+            error: `${t('queryFailed')}: ${error.message}`,
+          },
+        }));
       }
     },
-    [generationStartTime, resetTaskState, fetchUserCredits]
+    [t]
   );
 
   useEffect(() => {
-    if (!taskId || !isGenerating) return;
+    if (!isGenerating) return;
 
-    let cancelled = false;
-    const tick = async () => {
-      if (!taskId) return;
-      const completed = await pollTaskStatus(taskId);
-      if (completed) cancelled = true;
+    const progressMap: Record<ShotStatus, number> = {
+      idle: 10,
+      [AITaskStatus.PENDING]: 25,
+      [AITaskStatus.PROCESSING]: 70,
+      [AITaskStatus.SUCCESS]: 100,
+      [AITaskStatus.FAILED]: 100,
+      [AITaskStatus.CANCELED]: 100,
     };
 
-    tick();
+    const progressValue = Math.round(
+      (progressMap[showcaseStates.panorama.status] +
+        progressMap[showcaseStates.closeup.status]) /
+        2
+    );
+    setProgress(progressValue);
 
-    const interval = setInterval(async () => {
-      if (cancelled || !taskId) {
-        clearInterval(interval);
-        return;
+    const hasTimedOut =
+      generationStartTime &&
+      Date.now() - generationStartTime > GENERATION_TIMEOUT;
+    if (hasTimedOut) {
+      setShowcaseStates((prev) => ({
+        panorama:
+          prev.panorama.status === AITaskStatus.SUCCESS
+            ? prev.panorama
+            : {
+                ...prev.panorama,
+                status: AITaskStatus.FAILED,
+                taskId: null,
+                error: t('generationTimeout'),
+              },
+        closeup:
+          prev.closeup.status === AITaskStatus.SUCCESS
+            ? prev.closeup
+            : {
+                ...prev.closeup,
+                status: AITaskStatus.FAILED,
+                taskId: null,
+                error: t('generationTimeout'),
+              },
+      }));
+      setIsGenerating(false);
+      setGenerationStartTime(null);
+      toast.error(t('generationTimeout'));
+      void fetchUserCredits();
+      return;
+    }
+
+    const doneStatuses = new Set<ShotStatus>([
+      AITaskStatus.SUCCESS,
+      AITaskStatus.FAILED,
+      AITaskStatus.CANCELED,
+    ]);
+    const allDone =
+      doneStatuses.has(showcaseStates.panorama.status) &&
+      doneStatuses.has(showcaseStates.closeup.status);
+
+    if (allDone) {
+      const panoramaOk = !!showcaseStates.panorama.image;
+      const closeupOk = !!showcaseStates.closeup.image;
+      if (panoramaOk && closeupOk) {
+        toast.success(t('generationComplete'));
+      } else if (panoramaOk || closeupOk) {
+        toast.success(t('partialSuccessHint'));
+      } else {
+        toast.error(t('generationFailed'));
       }
-      const completed = await pollTaskStatus(taskId);
-      if (completed) clearInterval(interval);
+      setIsGenerating(false);
+      setGenerationStartTime(null);
+      setShowcaseStates((prev) => ({
+        panorama: { ...prev.panorama, taskId: null },
+        closeup: { ...prev.closeup, taskId: null },
+      }));
+      void fetchUserCredits();
+      return;
+    }
+
+    const interval = setInterval(() => {
+      for (const shotType of SHOT_TYPES) {
+        const shot = showcaseStates[shotType];
+        if (!shot.taskId) continue;
+        if (
+          shot.status === AITaskStatus.PENDING ||
+          shot.status === AITaskStatus.PROCESSING
+        ) {
+          void pollShotTask(shotType, shot.taskId);
+        }
+      }
     }, POLL_INTERVAL);
 
     return () => {
-      cancelled = true;
       clearInterval(interval);
     };
-  }, [taskId, isGenerating, pollTaskStatus]);
+  }, [
+    fetchUserCredits,
+    generationStartTime,
+    isGenerating,
+    pollShotTask,
+    showcaseStates,
+    t,
+  ]);
+
+  const applyShowcaseTask = useCallback(
+    (task: ShowcaseTaskResp) => {
+      const parsedResult = parseTaskResult(task.taskInfo ?? null);
+      const imageUrls = extractImageUrls(parsedResult);
+
+      setShowcaseStates((prev) => {
+        const base = prev[task.shotType];
+        const next: ShowcaseShotState = {
+          ...base,
+          status:
+            task.status === 'failed'
+              ? AITaskStatus.FAILED
+              : (task.status as ShotStatus),
+          taskId: task.id ?? null,
+          error: task.message || null,
+        };
+
+        if (imageUrls.length > 0) {
+          next.image = {
+            id: `${task.id || getUuid()}-${task.shotType}`,
+            url: imageUrls[0],
+            prompt: task.prompt,
+          };
+        }
+
+        if (task.status === AITaskStatus.SUCCESS || task.status === 'failed') {
+          next.taskId = null;
+        }
+
+        return {
+          ...prev,
+          [task.shotType]: next,
+        };
+      });
+    },
+    []
+  );
+
+  const requestShowcaseGeneration = useCallback(
+    async ({
+      retryShotType,
+      bundleId,
+    }: {
+      retryShotType?: ShowcaseShotType;
+      bundleId?: string;
+    } = {}) => {
+      const referenceImage = getReferenceImage();
+      const canUseReferenceImage = !!referenceImage;
+      const scene = canUseReferenceImage ? 'image-to-image' : 'text-to-image';
+      const model =
+        scene === 'image-to-image' ? 'qwen-image-edit-max' : 'qwen-image-max';
+
+      if (!canUseReferenceImage && selectedCar.customInput?.imageUrl) {
+        toast.error(
+          isZh
+            ? '参考图格式无效，已切换为文生图。请使用公网图片链接或重新上传。'
+            : 'Invalid reference image format. Switched to text-to-image.'
+        );
+      }
+
+      const { panoramaPrompt, closeupPrompt } = buildShowcasePrompts(scene);
+
+      const resp = await fetch('/api/ai/generate-showcase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider: 'qwen',
+          model,
+          scene,
+          prompts: {
+            panorama: panoramaPrompt,
+            closeup: closeupPrompt,
+          },
+          referenceImage,
+          retryShotType,
+          bundleId,
+        }),
+      });
+
+      if (!resp.ok) throw new Error(`${t('requestFailed')}: ${resp.status}`);
+
+      const { code, message, data } = await resp.json();
+      if (code !== 0) throw new Error(message || t('queryTaskFailed'));
+      return data as { bundleId: string; tasks: ShowcaseTaskResp[] };
+    },
+    [
+      buildShowcasePrompts,
+      getReferenceImage,
+      isZh,
+      selectedCar.customInput?.imageUrl,
+      t,
+    ]
+  );
 
   const handleGenerate = async () => {
     if (!user && !testMode) {
@@ -830,122 +1105,73 @@ export default function CarModderConfigurator() {
       return;
     }
 
+    setShowcaseStates({
+      panorama: { image: null, status: AITaskStatus.PENDING, taskId: null, error: null },
+      closeup: { image: null, status: AITaskStatus.PENDING, taskId: null, error: null },
+    });
+    setActiveShot('panorama');
     setIsGenerating(true);
     setProgress(15);
-    setTaskStatus(AITaskStatus.PENDING);
-    setGeneratedImages([]);
     setGenerationStartTime(Date.now());
 
     try {
-      const urlRef = selectedCar.customInput?.imageUrl;
-      const dataUrlRef = selectedCar.customInput?.imageDataUrl;
-
-      const isValidQwenRef = (value?: string) =>
-        !!value &&
-        (value.startsWith('http://') ||
-          value.startsWith('https://') ||
-          value.startsWith('data:image/'));
-
-      const referenceImage = isValidQwenRef(urlRef)
-        ? urlRef
-        : isValidQwenRef(dataUrlRef)
-          ? dataUrlRef
-          : undefined;
-      const canUseReferenceImage = !!referenceImage;
-
-      const scene =
-        canUseReferenceImage
-          ? 'image-to-image'
-          : 'text-to-image';
-      const model =
-        scene === 'image-to-image' ? 'qwen-image-edit-max' : 'qwen-image-max';
-
-      if (!canUseReferenceImage && selectedCar.customInput?.imageUrl) {
-        toast.error(
-          isZh
-            ? '参考图格式无效，已切换为文生图。请使用公网图片链接或重新上传。'
-            : 'Invalid reference image format. Switched to text-to-image.'
-        );
+      const data = await requestShowcaseGeneration();
+      data.tasks.forEach((task) => applyShowcaseTask(task));
+      const panoramaSuccess = data.tasks.some(
+        (item) => item.shotType === 'panorama' && item.status === AITaskStatus.SUCCESS
+      );
+      if (!panoramaSuccess) {
+        setActiveShot('closeup');
       }
-
-      // Qwen image-to-image is sensitive to long content; keep prompt compact.
-      const wheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
-      const compactPrompt = [
-        `${isZh ? selectedCar.nameZh : selectedCar.name}`,
-        `${t('paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name}`,
-        `${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name} ${wheelSpec.size}" ${isZh ? wheelColor.nameZh : wheelColor.name}`,
-        selectedMods.length > 0
-          ? `${t('modifications_')}: ${selectedMods
-              .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id))
-              .map((m) => (isZh ? m?.nameZh : m?.name))
-              .filter(Boolean)
-              .join(', ')}`
-          : null,
-        activePresetId ? `${t('preset')}: ${activePresetId}` : null,
-      ]
-        .filter(Boolean)
-        .join(', ');
-
-      const finalPrompt =
-        scene === 'image-to-image'
-          ? `${compactPrompt}. Keep same car identity from reference image; apply selected modifications only.`
-          : prompt;
-
-      const resp = await fetch('/api/ai/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mediaType: AIMediaType.IMAGE,
-          scene,
-          provider: 'qwen',
-          model,
-          prompt: finalPrompt,
-          options: {
-            size: '1024*1024',
-            n: 1,
-            ...(scene === 'image-to-image' && referenceImage
-              ? { ref_image: referenceImage }
-              : {}),
-          },
-        }),
-      });
-
-      if (!resp.ok) throw new Error(`${t('requestFailed')}: ${resp.status}`);
-
-      const { code, message, data } = await resp.json();
-      if (code !== 0) throw new Error(message || t('queryTaskFailed'));
-
-      const newTaskId = data?.id;
-      if (!newTaskId) throw new Error(t('queryTaskFailed'));
-
-      if (data.status === AITaskStatus.SUCCESS && data.taskInfo) {
-        const parsedResult = typeof data.taskInfo === 'string' 
-          ? parseTaskResult(data.taskInfo) 
-          : data.taskInfo;
-        const imageUrls = extractImageUrls(parsedResult);
-        if (imageUrls.length > 0) {
-          setGeneratedImages(
-            imageUrls.map((url, index) => ({
-              id: `${newTaskId}-${index}`,
-              url,
-              prompt,
-            }))
-          );
-          toast.success(t('generationComplete'));
-          setProgress(100);
-          resetTaskState();
-          await fetchUserCredits();
-          return;
-        }
-      }
-
-      setTaskId(newTaskId);
-      setProgress(25);
       await fetchUserCredits();
     } catch (error: any) {
       console.error('生成图片失败:', error);
       toast.error(`${t('generationFailed')}: ${error.message}`);
       resetTaskState();
+    }
+  };
+
+  const handleRetryShot = async (shotType: ShowcaseShotType) => {
+    if (!user && !testMode) {
+      setIsShowSignModal(true);
+      return;
+    }
+
+    setShowcaseStates((prev) => ({
+      ...prev,
+      [shotType]: {
+        ...prev[shotType],
+        status: AITaskStatus.PENDING,
+        taskId: null,
+        error: null,
+      },
+    }));
+    setActiveShot(shotType);
+    setIsGenerating(true);
+    setGenerationStartTime(Date.now());
+
+    try {
+      const bundleId = (() => {
+        for (const shot of SHOT_TYPES) {
+          const taskId = showcaseStates[shot].taskId;
+          if (taskId) return taskId;
+        }
+        return undefined;
+      })();
+      const data = await requestShowcaseGeneration({ retryShotType: shotType, bundleId });
+      data.tasks.forEach((task) => applyShowcaseTask(task));
+      await fetchUserCredits();
+    } catch (error: any) {
+      toast.error(`${t('generationFailed')}: ${error.message}`);
+      setShowcaseStates((prev) => ({
+        ...prev,
+        [shotType]: {
+          ...prev[shotType],
+          status: AITaskStatus.FAILED,
+          taskId: null,
+          error: error.message || t('generationFailed'),
+        },
+      }));
     }
   };
 
@@ -1004,9 +1230,10 @@ export default function CarModderConfigurator() {
     }
   };
 
-  const taskStatusLabel = useMemo(() => {
-    if (!taskStatus) return '';
-    switch (taskStatus) {
+  const getShotStatusLabel = useCallback((status: ShotStatus) => {
+    switch (status) {
+      case 'idle':
+        return t('idle');
       case AITaskStatus.PENDING:
         return t('waitingModel');
       case AITaskStatus.PROCESSING:
@@ -1018,7 +1245,7 @@ export default function CarModderConfigurator() {
       default:
         return '';
     }
-  }, [taskStatus, t]);
+  }, [t]);
 
   const totalBuildCost = useMemo(() => {
     let basePrice = selectedCar.price;
@@ -1247,8 +1474,8 @@ export default function CarModderConfigurator() {
               <Card className="bg-[#1c1833]/90 border-white/10 overflow-hidden shadow-xl">
                 <CardContent className="p-0">
                   <div className="relative">
-                    {generatedImages.length > 0 ? (
-                      <motion.div 
+                    {activeImage ? (
+                      <motion.div
                         className="aspect-[16/9] bg-[#131022] relative rounded-xl overflow-hidden"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -1259,23 +1486,26 @@ export default function CarModderConfigurator() {
                           alt={`${isZh ? selectedCar.nameZh : selectedCar.name} before`}
                           className="absolute inset-0 w-full h-full object-cover"
                           onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1280&h=720&fit=crop';
+                            (e.currentTarget as HTMLImageElement).src =
+                              'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1280&h=720&fit=crop';
                           }}
                         />
-                        {compareMode ? (
+                        {activeShot === 'panorama' && compareMode ? (
                           <>
                             <div
                               className="absolute inset-0 overflow-hidden"
-                              style={{ clipPath: `inset(0 0 0 ${comparePosition}%)` }}
+                              style={{
+                                clipPath: `inset(0 0 0 ${comparePosition}%)`,
+                              }}
                             >
                               <img
-                                key={generatedImages[0].url}
-                                src={generatedImages[0].url}
+                                key={activeImage.url}
+                                src={activeImage.url}
                                 alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
                                 className="absolute inset-0 h-full w-full object-cover"
                                 onError={(e) => {
-                                  // If generated image fails to load, keep the preview usable.
-                                  (e.currentTarget as HTMLImageElement).src = selectedCar.localImage;
+                                  (e.currentTarget as HTMLImageElement).src =
+                                    selectedCar.localImage;
                                 }}
                               />
                             </div>
@@ -1286,32 +1516,36 @@ export default function CarModderConfigurator() {
                           </>
                         ) : (
                           <img
-                            key={generatedImages[0].url}
-                            src={generatedImages[0].url}
+                            key={activeImage.url}
+                            src={activeImage.url}
                             alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
                             className="absolute inset-0 h-full w-full object-cover"
                             onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = selectedCar.localImage;
+                              (e.currentTarget as HTMLImageElement).src =
+                                selectedCar.localImage;
                             }}
                           />
                         )}
                         <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:hover:opacity-100">
                           <div className="p-6 w-full">
                             <h3 className="mb-2 line-clamp-2 max-w-full break-words text-xl font-semibold leading-tight tracking-tight">
-                              {isZh ? selectedCar.nameZh : selectedCar.name} {t('modEffect')}
+                              {isZh ? selectedCar.nameZh : selectedCar.name}{' '}
+                              {activeShot === 'panorama'
+                                ? t('shotPanorama')
+                                : t('shotCloseup')}
                             </h3>
                             <p className="mb-4 line-clamp-3 max-w-full break-words text-sm leading-relaxed text-gray-400">
-                              {prompt}
+                              {activeImage.prompt || prompt}
                             </p>
                             <div className="flex flex-wrap gap-2">
                               <Button
                                 size="sm"
                                 variant="secondary"
-                                onClick={() => handleDownloadImage(generatedImages[0])}
-                                disabled={downloadingImageId === generatedImages[0].id}
+                                onClick={() => handleDownloadImage(activeImage)}
+                                disabled={downloadingImageId === activeImage.id}
                                 className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
                               >
-                                {downloadingImageId === generatedImages[0].id ? (
+                                {downloadingImageId === activeImage.id ? (
                                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
                                 ) : (
                                   <>
@@ -1329,28 +1563,30 @@ export default function CarModderConfigurator() {
                                 <Share2 className="w-4 h-4 mr-2" />
                                 {t('share')}
                               </Button>
-                              <Button
-                                size="sm"
-                                variant="secondary"
-                                onClick={() => setCompareMode((prev) => !prev)}
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-                              >
-                                {compareMode ? (
-                                  <>
-                                    <EyeOff className="w-4 h-4 mr-2" />
-                                    {t('hideCompare')}
-                                  </>
-                                ) : (
-                                  <>
-                                    <Eye className="w-4 h-4 mr-2" />
-                                    {t('compare')}
-                                  </>
-                                )}
-                              </Button>
+                              {activeShot === 'panorama' && (
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={() => setCompareMode((prev) => !prev)}
+                                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                                >
+                                  {compareMode ? (
+                                    <>
+                                      <EyeOff className="w-4 h-4 mr-2" />
+                                      {t('hideCompare')}
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Eye className="w-4 h-4 mr-2" />
+                                      {t('compare')}
+                                    </>
+                                  )}
+                                </Button>
+                              )}
                             </div>
                           </div>
                         </div>
-                        {compareMode && (
+                        {activeShot === 'panorama' && compareMode && (
                           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[75%] bg-black/45 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
                             <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
                               <span>{t('before')}</span>
@@ -1371,7 +1607,7 @@ export default function CarModderConfigurator() {
                         )}
                       </motion.div>
                     ) : (
-                      <motion.div 
+                      <motion.div
                         className="aspect-[16/9] bg-[#131022] relative flex items-center justify-center overflow-hidden"
                         whileHover={{ scale: 1.02 }}
                       >
@@ -1380,7 +1616,8 @@ export default function CarModderConfigurator() {
                           alt={isZh ? selectedCar.nameZh : selectedCar.name}
                           className="w-full h-full object-cover opacity-70 transition-opacity duration-300 hover:opacity-90"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
+                            (e.target as HTMLImageElement).src =
+                              'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
                           }}
                         />
                         <div className="absolute bottom-4 left-4 max-w-[85%] rounded-lg bg-black/45 px-4 py-2 backdrop-blur-sm">
@@ -1391,6 +1628,58 @@ export default function CarModderConfigurator() {
                       </motion.div>
                     )}
                   </div>
+                  {(showcaseStates.panorama.image ||
+                    showcaseStates.closeup.image ||
+                    showcaseStates.panorama.error ||
+                    showcaseStates.closeup.error) && (
+                    <div className="grid grid-cols-2 gap-2 p-4">
+                      {SHOT_TYPES.map((shotType) => {
+                        const shot = showcaseStates[shotType];
+                        const selected = activeShot === shotType;
+                        return (
+                          <div
+                            key={shotType}
+                            className={`rounded-lg border p-2 ${
+                              selected
+                                ? 'border-[#4725f4] bg-[#4725f4]/20'
+                                : 'border-white/10 bg-black/20'
+                            }`}
+                          >
+                            <button
+                              type="button"
+                              className="w-full text-left"
+                              onClick={() => {
+                                if (shot.image) setActiveShot(shotType);
+                              }}
+                            >
+                              <div className="text-xs font-medium text-white">
+                                {shotType === 'panorama'
+                                  ? t('shotPanorama')
+                                  : t('shotCloseup')}
+                              </div>
+                              <div className="mt-1 text-[11px] text-gray-400">
+                                {getShotStatusLabel(shot.status)}
+                              </div>
+                            </button>
+                            {shot.error && (
+                              <div className="mt-2">
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  className="h-7 w-full bg-white/10 text-xs"
+                                  onClick={() => handleRetryShot(shotType)}
+                                  disabled={isGenerating}
+                                >
+                                  <RefreshCw className="mr-1.5 h-3 w-3" />
+                                  {t('shotRetry')}
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -1569,23 +1858,30 @@ export default function CarModderConfigurator() {
                           transition={{ duration: 0.5, ease: "easeOut" }}
                         />
                       </Progress>
-                      {taskStatusLabel && (
-                        <motion.p 
-                          className="text-sm text-gray-400 text-center"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          {taskStatusLabel}
-                        </motion.p>
-                      )}
+                      <motion.div
+                        className="space-y-1 text-xs text-gray-400"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {SHOT_TYPES.map((shotType) => (
+                          <p key={shotType} className="flex items-center justify-between">
+                            <span>
+                              {shotType === 'panorama'
+                                ? t('shotPanorama')
+                                : t('shotCloseup')}
+                            </span>
+                            <span>{getShotStatusLabel(showcaseStates[shotType].status)}</span>
+                          </p>
+                        ))}
+                      </motion.div>
                       <div className="flex justify-center mt-2">
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => {
                             resetTaskState();
-                            setGeneratedImages([]);
+                            setShowcaseStates(getInitialShowcaseStates());
                           }}
                           className="text-gray-400 hover:text-white"
                         >
@@ -2009,7 +2305,7 @@ export default function CarModderConfigurator() {
                       ) : (
                         <>
                           <Sparkles className="w-5 h-5 mr-3" />
-                          {t('generateImage')}
+                          {t('generateShowcase')}
                         </>
                       )}
                     </Button>
