@@ -52,7 +52,7 @@
               "icon": "RiFlashlightFill"
             },
             "product_id": "starter-monthly",
-            "payment_product_id": "prod_fnWguOLy6eIcvpIWR1ZD7",
+            "payment_product_id": "prod_3CzrgeyDwYziy7dLqWObCq",
             "product_name": "ModSnap 入门版包月",
             "credits": 100,
             "valid_days": 30,
@@ -95,7 +95,7 @@
               "icon": "RiFlashlightFill"
             },
             "product_id": "standard-monthly",
-            "payment_product_id": "prod_6Z9elkn4DHqeOLKtlrm6zL",
+            "payment_product_id": "prod_1PmLhUxkONMWYVJ4l7KCvv",
             "product_name": "ModSnap 标准版包月",
             "credits": 300,
             "valid_days": 30,
@@ -138,7 +138,7 @@
               "icon": "RiFlashlightFill"
             },
             "product_id": "premium-monthly",
-            "payment_product_id": "prod_1guh2e8qEFGuTvmy5uRUAt",
+            "payment_product_id": "prod_4cTo0i9LYHaBhBOH7sumhB",
             "product_name": "ModSnap 高级版包月",
             "credits": 800,
             "valid_days": 30,

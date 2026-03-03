@@ -19,8 +19,9 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ provider: string }> }
 ) {
+  let provider = '';
   try {
-    const { provider } = await params;
+    ({ provider } = await params);
 
     if (!provider) {
       throw new Error('provider is required');
@@ -163,7 +164,9 @@ export async function POST(
         const orderNo = session.metadata?.order_no;
 
         if (!orderNo) {
-          console.log('one-time payment: order_no not found in metadata, skipping');
+          console.log(
+            'one-time payment: order_no not found in metadata, skipping'
+          );
           return Response.json({ message: 'success' });
         }
 
@@ -224,6 +227,19 @@ export async function POST(
       message: 'success',
     });
   } catch (err: any) {
+    // Creem may send event types that we intentionally don't process (e.g. refund/dispute).
+    // Acknowledge them to avoid unnecessary retries from provider side.
+    if (
+      provider === 'creem' &&
+      (err?.message?.includes('Not handle creem event type') ||
+        err?.message?.includes('Invalid webhook event'))
+    ) {
+      console.log('skip unsupported creem event:', err?.message);
+      return Response.json({
+        message: 'ignored unsupported creem event',
+      });
+    }
+
     console.log('handle payment notify failed', err);
     return Response.json(
       {
