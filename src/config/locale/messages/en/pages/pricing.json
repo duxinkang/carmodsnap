@@ -43,6 +43,7 @@
               "icon": "RiFlashlightFill"
             },
             "product_id": "starter-monthly",
+            "payment_product_id": "prod_fnWguOLy6eIcvpIWR1ZD7",
             "product_name": "ModSnap Starter Monthly",
             "credits": 100,
             "valid_days": 30,
@@ -76,6 +77,7 @@
               "icon": "RiFlashlightFill"
             },
             "product_id": "standard-monthly",
+            "payment_product_id": "prod_6Z9elkn4DHqeOLKtlrm6zL",
             "product_name": "ModSnap Standard Monthly",
             "credits": 300,
             "valid_days": 30,
@@ -109,6 +111,7 @@
               "icon": "RiFlashlightFill"
             },
             "product_id": "premium-monthly",
+            "payment_product_id": "prod_1guh2e8qEFGuTvmy5uRUAt",
             "product_name": "ModSnap Premium Monthly",
             "credits": 800,
             "valid_days": 30,
