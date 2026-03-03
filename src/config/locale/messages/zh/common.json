@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "ModSnap",
-    "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台。使用先进的 3D 技术可视化和定制您的爱车。",
-    "keywords": "汽车改装, AI改装, 3D配置器, ModSnap, 汽车定制"
+    "title": "CarModSnap",
+    "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台。使用先进的 3D 技术可视化和定制您的爱车。",
+    "keywords": "汽车改装, AI改装, 3D配置器, CarModSnap, 汽车定制"
   },
   "sign": {
     "sign_in_title": "登录",

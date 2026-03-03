@@ -17,8 +17,8 @@ async function main() {
 
     const configs = {
       creem_enabled: 'true',
-      creem_environment: 'production',
-      creem_api_key: 'creem_73zrP29bZPZ6IHwEnYQXQZ',
+      creem_environment: 'sandbox',
+      creem_api_key: 'creem_test_KN6zA6MEcGSBBMXE6ry2T',
       creem_product_ids: JSON.stringify(creemProductIds, null, 2)
     };
 

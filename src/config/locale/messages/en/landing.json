@@ -2,10 +2,10 @@
   "header": {
     "id": "header",
     "brand": {
-      "title": "ModSnap",
+      "title": "CarModSnap",
       "logo": {
         "src": "/logo.png",
-        "alt": "ModSnap",
+        "alt": "CarModSnap",
         "width": 100,
         "height": 100
       },
@@ -94,7 +94,7 @@
   },
   "hero": {
     "title": "Visualize Your Dream Build",
-    "description": "ModSnap is an AI-powered car modification platform. Start with free core visualization tools and unlock advanced AI generation features via paid plans.",
+    "description": "CarModSnap is an AI-powered car modification platform. Start with free core visualization tools and unlock advanced AI generation features via paid plans.",
     "buttons": [
       {
         "title": "Start Modding",
@@ -132,11 +132,11 @@
   "footer": {
     "id": "footer",
     "brand": {
-      "title": "ModSnap",
-      "description": "ModSnap is an AI-powered car modification platform. Visualize and customize your car with cutting-edge 3D technology.",
+      "title": "CarModSnap",
+      "description": "CarModSnap is an AI-powered car modification platform. Visualize and customize your car with cutting-edge 3D technology.",
       "logo": {
         "src": "/logo.png",
-        "alt": "ModSnap",
+        "alt": "CarModSnap",
         "width": 1024,
         "height": 1024
       },
@@ -189,7 +189,7 @@
           "children": [
             {
               "title": "Support Email",
-              "url": "mailto:support@modsnap.tech",
+              "url": "mailto:support@carmodsnap.com",
               "target": "_self"
             },
             {
@@ -206,7 +206,7 @@
         {
           "title": "Email",
           "icon": "Mail",
-          "url": "mailto:support@modsnap.tech",
+          "url": "mailto:support@carmodsnap.com",
           "target": "_self"
         }
       ]

@@ -6,7 +6,7 @@ export function BuiltWith() {
   return (
     <Button asChild variant="outline" size="sm" className="hover:bg-primary/10">
       <Link href="#" target="_blank">
-        Built with ❤️ ModSnap
+        Built with ❤️ CarModSnap
       </Link>
     </Button>
   );
