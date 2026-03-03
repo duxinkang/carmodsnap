@@ -805,7 +805,7 @@ export default function CarModderConfigurator() {
           ? `${compactPrompt}. Keep same car identity from reference image; apply selected modifications only.`
           : prompt;
 
-      const panoramaPrompt = `${baseIdentityPrompt}, cinematic automotive commercial shot, full vehicle in frame, 3/4 front view, dramatic studio lighting, rich reflections, high contrast, premium ad style, ultra-detailed, 4k`;
+      const panoramaPrompt = `${baseIdentityPrompt}, cinematic automotive commercial shot, 3/4 front view, camera pulled back wide framing, centered composition, full car from front bumper to rear bumper fully visible, all four wheels fully visible, clear ground shadow under the whole vehicle, leave clean space around the vehicle edges, nothing cropped or cut off, dramatic studio lighting, rich reflections, high contrast, premium ad style, ultra-detailed, 4k`;
       const closeupPrompt = `${compactPrompt}. cinematic close-up automotive commercial shot, focus on front wheel and fender area, wheel texture and brake caliper details, shallow depth of field, dramatic highlights, premium ad style, ultra-detailed, 4k`;
 
       return { panoramaPrompt, closeupPrompt };
