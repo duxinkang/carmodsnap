@@ -139,7 +139,7 @@
   "shopServices": "Services",
   "getDirections": "Get Directions",
   "submitQuoteRequest": "Submit Quote Request",
-  "quoteRequestSuccess": "Quote request submitted. Shops will contact you soon.",
+  "quoteRequestSuccess": "Quote request submitted successfully. You can view request status in your account activity.",
   "quoteRequestError": "Submission failed. Please try again.",
   "loadingShops": "Loading shops...",
   "useCurrentLocation": "Use Current Location",

@@ -147,7 +147,7 @@
   "shopServices": "服务项目",
   "getDirections": "获取路线",
   "submitQuoteRequest": "提交报价请求",
-  "quoteRequestSuccess": "报价请求已提交，店铺将尽快与您联系",
+  "quoteRequestSuccess": "报价请求已提交成功，您可在账户活动中查看请求状态",
   "quoteRequestError": "提交失败，请重试",
   "loadingShops": "正在加载店铺列表...",
   "useCurrentLocation": "使用当前位置",
