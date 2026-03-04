@@ -619,6 +619,7 @@ export const carBuild = sqliteTable(
     carType: text('car_type'),
     carPrice: integer('car_price').default(0),
     carImage: text('car_image'),
+    model3dUrl: text('model_3d_url'),
     
     // 自定义车型输入（可选）
     customCarInput: text('custom_car_input'), // JSON
@@ -657,6 +658,9 @@ export const carBuild = sqliteTable(
     
     // 生成的图片
     generatedImages: text('generated_images'), // JSON array
+    
+    // 生成的视频（360°环绕视频）
+    generatedVideos: text('generated_videos'), // JSON array [{url, prompt, taskId, status}]
     
     // 总价
     totalPrice: integer('total_price').default(0),

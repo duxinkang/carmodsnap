@@ -47,4 +47,6 @@ export const envConfigs: ConfigMap = {
   version: packageJson.version,
   locale_detect_enabled:
     process.env.NEXT_PUBLIC_LOCALE_DETECT_ENABLED ?? 'false',
+  // Alibaba DashScope API Key for video generation
+  dashscope_api_key: process.env.DASHSCOPE_API_KEY ?? '',
 };

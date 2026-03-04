@@ -23,6 +23,7 @@ export async function POST(request: Request) {
       carType,
       carPrice,
       carImage,
+      model3dUrl,
       customCarInput,
       wheels,
       paint,
@@ -56,6 +57,7 @@ export async function POST(request: Request) {
       carType: carType || null,
       carPrice: carPrice || 0,
       carImage: carImage || null,
+      model3dUrl: model3dUrl || null,
       customCarInput: customCarInput ? JSON.stringify(customCarInput) : null,
       
       wheelsId: wheels?.id || null,

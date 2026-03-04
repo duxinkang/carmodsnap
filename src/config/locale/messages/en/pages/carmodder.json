@@ -5,6 +5,8 @@
   "interiorView": "Interior View",
   "exteriorView": "Exterior View",
   "nightMode": "Night Mode",
+  "view2d": "2D View",
+  "view3d": "3D View",
   "paintTab": "Paint",
   "wheelsTab": "Wheels",
   "stanceTab": "Stance",

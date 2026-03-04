@@ -42,7 +42,9 @@ import { useAppContext } from '@/shared/contexts/app';
 import { getUuid } from '@/shared/lib/hash';
 import { Separator } from '@/shared/components/ui/separator';
 import { Badge } from '@/shared/components/ui/badge';
+import { VehicleViewer } from '@/components/vehicle-3d-viewer';
 import { CustomCarInput, type CustomCarInputData } from './custom-car-input';
+import { useVideoGeneration } from '@/components/vehicle-3d-viewer/useVideoGeneration';
 
 const POLL_INTERVAL = 5000;
 const GENERATION_TIMEOUT = 180000;
@@ -353,6 +355,7 @@ interface GeneratedImage {
 
 type ShowcaseShotType = 'panorama' | 'closeup';
 type ShotStatus = 'idle' | AITaskStatus;
+type PreviewMode = 'image' | 'view3d' | 'video';
 
 interface ShowcaseShotState {
   image: GeneratedImage | null;
@@ -485,6 +488,11 @@ export default function CarModderConfigurator() {
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [compareMode, setCompareMode] = useState(false);
   const [comparePosition, setComparePosition] = useState(52);
+  // 中央预览区支持 2D 生成图、3D 交互视图和视频模式切换。
+  const [previewMode, setPreviewMode] = useState<PreviewMode>('image');
+  
+  // 视频生成
+  const videoState = useVideoGeneration();
   const [historyState, setHistoryState] = useState<{ entries: BuildSnapshot[]; index: number }>({
     entries: [],
     index: -1,
@@ -1474,7 +1482,85 @@ export default function CarModderConfigurator() {
               <Card className="bg-[#1c1833]/90 border-white/10 overflow-hidden shadow-xl">
                 <CardContent className="p-0">
                   <div className="relative">
-                    {activeImage ? (
+                    <div className="absolute right-3 top-3 z-20 flex items-center gap-2 rounded-lg border border-white/15 bg-black/35 p-1 backdrop-blur-sm">
+                      <Button
+                        size="sm"
+                        variant={previewMode === 'image' ? 'default' : 'secondary'}
+                        onClick={() => { setPreviewMode('image'); resetVideo(); }}
+                        className={
+                          previewMode === 'image'
+                            ? 'h-8 bg-[#4725f4] px-3'
+                            : 'h-8 bg-white/10 px-3 hover:bg-white/20'
+                        }
+                      >
+                        {t('view2d')}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={previewMode === 'view3d' ? 'default' : 'secondary'}
+                        onClick={() => { setPreviewMode('view3d'); resetVideo(); }}
+                        className={
+                          previewMode === 'view3d'
+                            ? 'h-8 bg-[#4725f4] px-3'
+                            : 'h-8 bg-white/10 px-3 hover:bg-white/20'
+                        }
+                      >
+                        {t('view3d')}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={previewMode === 'video' ? 'default' : 'secondary'}
+                        onClick={() => setPreviewMode('video')}
+                        disabled={!videoState.videoUrl}
+                        className={
+                          previewMode === 'video'
+                            ? 'h-8 bg-[#f44725] px-3'
+                            : 'h-8 bg-white/10 px-3 hover:bg-white/20 disabled:opacity-50'
+                        }
+                      >
+                        🎬 Video {videoState.videoUrl ? '' : '(Generate first)'}
+                      </Button>
+                    </div>
+                    {previewMode === 'video' ? (
+                      <div className="aspect-[16/9] bg-[#131022] relative">
+                        {videoState.videoUrl ? (
+                          <VehicleViewer
+                            className="h-full w-full"
+                            videoUrl={videoState.videoUrl}
+                          />
+                        ) : videoState.isGenerating || videoState.status === 'running' || videoState.status === 'pending' ? (
+                          <div className="flex flex-col items-center justify-center h-full gap-4">
+                            <Loader2 className="w-12 h-12 animate-spin text-[#4725f4]" />
+                            <div className="text-white text-sm">
+                              {videoState.status === 'pending' ? '创建任务...' : '生成视频中...'}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center justify-center h-full gap-4 p-8">
+                            <div className="text-white/60 text-center">
+                              <p className="text-lg font-medium mb-2">🎬 生成 360°环绕视频</p>
+                              <p className="text-sm">基于当前车辆图片生成专业的 360 度环绕展示视频</p>
+                            </div>
+                            <Button
+                              onClick={() => generateVideo(activeImage?.url)}
+                              className="bg-[#4725f4] hover:bg-[#4725f4]/90"
+                              disabled={!activeImage}
+                            >
+                              <Sparkles className="w-4 h-4 mr-2" />
+                              生成环绕视频
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ) : previewMode === 'view3d' ? (
+                      <div className="aspect-[16/9] bg-[#131022]">
+                        <VehicleViewer
+                          className="h-full w-full"
+                          modelUrl="/models/vehicle-base.glb"
+                          bodyColor={selectedColor.color}
+                        />
+                      </div>
+                    ) : activeImage ? (
                       <motion.div
                         className="aspect-[16/9] bg-[#131022] relative rounded-xl overflow-hidden"
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -2310,6 +2396,41 @@ export default function CarModderConfigurator() {
                       )}
                     </Button>
                   </motion.div>
+                  
+                  {/* 视频生成按钮 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.25 }}
+                  >
+                    <Button
+                      variant="outline"
+                      className="min-h-11 w-full bg-gradient-to-r from-[#f44725] to-[#ff7c5c] py-4 text-base font-semibold text-white shadow-[0_0_15px_rgba(244,71,37,0.3)] transition-all duration-300 hover:from-[#b81b08] hover:to-[#e12d21]"
+                      onClick={() => {
+                        const carImageUrl = selectedCar.localImage;
+                        generateVideo(carImageUrl, `360 degree orbit around ${isZh ? selectedCar.nameZh : selectedCar.name}, professional product showcase, cinematic lighting, smooth camera movement, 4k`);
+                      }}
+                      disabled={videoState.isGenerating || !activeImage}
+                    >
+                      {videoState.isGenerating ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin mr-3" />
+                          Generating 360° Video...
+                        </>
+                      ) : (
+                        <>
+                          <WandSparkles className="w-5 h-5 mr-3" />
+                          Generate 360° Orbit Video
+                        </>
+                      )}
+                    </Button>
+                    {videoState.videoUrl && (
+                      <p className="mt-2 text-xs text-green-400 text-center">
+                        ✅ Video ready! Switch to video tab to view.
+                      </p>
+                    )}
+                  </motion.div>
+                  
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}

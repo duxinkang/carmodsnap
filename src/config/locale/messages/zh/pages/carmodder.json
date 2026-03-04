@@ -5,6 +5,8 @@
   "interiorView": "内饰视图",
   "exteriorView": "外观视图",
   "nightMode": "夜间模式",
+  "view2d": "2D 视图",
+  "view3d": "3D 视图",
   "paintTab": "喷漆",
   "wheelsTab": "轮毂",
   "stanceTab": "姿态",
