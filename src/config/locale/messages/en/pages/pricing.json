@@ -4,7 +4,7 @@
     "description": "Choose a plan to get started"
   },
   "page": {
-    "title": "ModSnap Pricing",
+    "title": "CarModSnap Pricing",
     "sections": {
       "pricing": {
         "id": "pricing",
@@ -44,7 +44,7 @@
             },
             "product_id": "starter-monthly",
             "payment_product_id": "prod_3CzrgeyDwYziy7dLqWObCq",
-            "product_name": "ModSnap Starter Monthly",
+            "product_name": "CarModSnap Starter Monthly",
             "credits": 100,
             "valid_days": 30,
             "group": "monthly",
@@ -78,7 +78,7 @@
             },
             "product_id": "standard-monthly",
             "payment_product_id": "prod_1PmLhUxkONMWYVJ4l7KCvv",
-            "product_name": "ModSnap Standard Monthly",
+            "product_name": "CarModSnap Standard Monthly",
             "credits": 300,
             "valid_days": 30,
             "group": "monthly",
@@ -112,7 +112,7 @@
             },
             "product_id": "premium-monthly",
             "payment_product_id": "prod_4cTo0i9LYHaBhBOH7sumhB",
-            "product_name": "ModSnap Premium Monthly",
+            "product_name": "CarModSnap Premium Monthly",
             "credits": 800,
             "valid_days": 30,
             "group": "monthly",

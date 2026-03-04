@@ -2356,6 +2356,22 @@ export default function CarModderConfigurator() {
               </div>
             </motion.div>
           </div>
+          <div className="mt-10 rounded-xl border border-white/10 bg-[#1c1833]/70 p-4 text-xs leading-relaxed text-gray-400">
+            {isZh ? (
+              <p>
+                声明：页面中提及的汽车品牌、车型名称与商标仅用于识别和兼容性说明。CarModSnap
+                为独立服务，除非另有明确说明，不隶属于、也不代表任何汽车制造商或商标权利人。
+              </p>
+            ) : (
+              <p>
+                Disclaimer: Car brand names, model names, and trademarks shown
+                on this page are used for identification and compatibility
+                reference only. CarModSnap is an independent service and is not
+                affiliated with, endorsed by, or sponsored by any vehicle
+                manufacturer or trademark owner unless explicitly stated.
+              </p>
+            )}
+          </div>
         </div>
       </main>
     </div>

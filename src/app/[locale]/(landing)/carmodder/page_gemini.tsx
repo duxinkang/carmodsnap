@@ -773,6 +773,10 @@ export default function CarModderConfigurator() {
               </Card>
             </div>
           </div>
+          <div className="mt-8 rounded-xl border border-white/10 bg-[#1c1833]/70 p-4 text-xs leading-relaxed text-white/60">
+            声明：页面中出现的汽车品牌、车型名称及商标仅用于识别与兼容性说明。CarModSnap
+            为独立服务，除非另有明确说明，不隶属于、也不代表任何汽车制造商或商标权利人。
+          </div>
         </div>
       </main>
 

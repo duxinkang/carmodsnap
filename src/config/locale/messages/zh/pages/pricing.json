@@ -4,7 +4,7 @@
     "description": "选择方案，立即开始"
   },
   "page": {
-    "title": "ModSnap 价格表",
+    "title": "CarModSnap 价格表",
     "sections": {
       "pricing": {
         "id": "pricing",
@@ -53,7 +53,7 @@
             },
             "product_id": "starter-monthly",
             "payment_product_id": "prod_3CzrgeyDwYziy7dLqWObCq",
-            "product_name": "ModSnap 入门版包月",
+            "product_name": "CarModSnap 入门版包月",
             "credits": 100,
             "valid_days": 30,
             "group": "monthly",
@@ -96,7 +96,7 @@
             },
             "product_id": "standard-monthly",
             "payment_product_id": "prod_1PmLhUxkONMWYVJ4l7KCvv",
-            "product_name": "ModSnap 标准版包月",
+            "product_name": "CarModSnap 标准版包月",
             "credits": 300,
             "valid_days": 30,
             "group": "monthly",
@@ -139,7 +139,7 @@
             },
             "product_id": "premium-monthly",
             "payment_product_id": "prod_4cTo0i9LYHaBhBOH7sumhB",
-            "product_name": "ModSnap 高级版包月",
+            "product_name": "CarModSnap 高级版包月",
             "credits": 800,
             "valid_days": 30,
             "group": "monthly",

@@ -14,9 +14,17 @@ const fallbackAppUrl = derivedDeploymentUrl
   ? `https://${derivedDeploymentUrl}`
   : 'http://localhost:3000';
 
+function normalizeUrl(url: string): string {
+  return url.replace(/\/+$/, '');
+}
+
+const resolvedAppUrl = normalizeUrl(
+  process.env.NEXT_PUBLIC_APP_URL ?? fallbackAppUrl
+);
+
 export const envConfigs: ConfigMap = {
-  app_url: process.env.NEXT_PUBLIC_APP_URL ?? fallbackAppUrl,
-  app_name: process.env.NEXT_PUBLIC_APP_NAME ?? 'ModSnap',
+  app_url: resolvedAppUrl,
+  app_name: process.env.NEXT_PUBLIC_APP_NAME ?? 'CarModSnap',
   app_description: process.env.NEXT_PUBLIC_APP_DESCRIPTION ?? 'AI-powered car modification platform',
   app_logo: process.env.NEXT_PUBLIC_APP_LOGO ?? '/logo.png',
   app_favicon: process.env.NEXT_PUBLIC_APP_FAVICON ?? '/favicon.ico',
@@ -42,7 +50,7 @@ export const envConfigs: ConfigMap = {
     process.env.DB_MIGRATIONS_OUT ?? './src/config/db/migrations',
   db_singleton_enabled: process.env.DB_SINGLETON_ENABLED || 'false',
   db_max_connections: process.env.DB_MAX_CONNECTIONS || '1',
-  auth_url: process.env.AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || fallbackAppUrl,
+  auth_url: normalizeUrl(process.env.AUTH_URL || resolvedAppUrl),
   auth_secret: process.env.AUTH_SECRET ?? '', // openssl rand -base64 32
   version: packageJson.version,
   locale_detect_enabled:

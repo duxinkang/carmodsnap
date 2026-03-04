@@ -7,8 +7,6 @@
       "benefits",
       "usage",
       "features",
-      "stats",
-      "testimonials",
       "faq",
       "cta"
     ],
@@ -17,10 +15,10 @@
         "id": "hero",
         "title": "Transform Your Car with AI-Powered Modifications",
         "highlight_text": "AI-Powered",
-        "description": "ModSnap is an AI-powered car modification platform.<br/>Visualize and customize your car with cutting-edge 3D technology.",
+        "description": "CarModSnap is an AI-powered car modification platform.<br/>Visualize and customize your car with cutting-edge 3D technology.",
         "announcement": {
           "badge": "New",
-          "title": "🎉 ModSnap Platform Launch",
+          "title": "🎉 CarModSnap Platform Launch",
           "url": "/pricing"
         },
         "tip": "🎁 Special offer for early adopters",
@@ -41,7 +39,7 @@
           }
         ],
         "show_avatars": true,
-        "avatars_tip": "999+ users are using ModSnap",
+        "avatars_tip": "Users are exploring CarModSnap in beta",
         "show_award": false,
         "image": {
           "src": "/imgs/features/admin.png",
@@ -62,7 +60,7 @@
       },
       "logos": {
         "id": "logos",
-        "title": "ModSnap is built on the shoulders of giants",
+        "title": "CarModSnap is built on the shoulders of giants",
         "items": [
           {
             "title": "Next.js",
@@ -104,9 +102,9 @@
       "introduce": {
         "block": "features-list",
         "id": "introduce",
-        "title": "What is ModSnap",
+        "title": "What is CarModSnap",
         "label": "Introduce",
-        "description": "ModSnap is an AI-powered car modification platform, including 3D visualization, community showcases, and local service provider connections.",
+        "description": "CarModSnap is an AI-powered car modification platform, including 3D visualization, community showcases, and local service provider connections.",
         "image": {
           "src": "/imgs/features/landing-page.png",
           "alt": "introduce"
@@ -154,7 +152,7 @@
       "benefits": {
         "block": "features-accordion",
         "id": "benefits",
-        "title": "Why Choose ModSnap",
+        "title": "Why Choose CarModSnap",
         "label": "Benefits",
         "description": "Get everything you need to transform your car - from 3D visualization to local service connections.",
         "items": [
@@ -190,7 +188,7 @@
       "usage": {
         "block": "features-step",
         "id": "usage",
-        "title": "How to Use ModSnap",
+        "title": "How to Use CarModSnap",
         "description": "Transform your car in three simple steps:",
         "image": {
           "src": "/imgs/features/1.png",
@@ -236,7 +234,7 @@
       },
       "features": {
         "id": "features",
-        "title": "Key Features of ModSnap",
+        "title": "Key Features of CarModSnap",
         "description": "Everything you need to transform your car with confidence.",
         "items": [
           {
@@ -261,7 +259,7 @@
           },
           {
             "title": "Mobile-Friendly",
-            "description": "Access ModSnap from any device, anywhere.",
+            "description": "Access CarModSnap from any device, anywhere.",
             "icon": "RiBarChart2Line"
           },
           {
@@ -273,7 +271,7 @@
       },
       "stats": {
         "id": "stats",
-        "title": "People Love ModSnap",
+        "title": "People Love CarModSnap",
         "description": "for its realistic visualization and easy-to-use platform.",
         "items": [
           {
@@ -293,13 +291,13 @@
       },
       "testimonials": {
         "id": "testimonials",
-        "title": "What Users Say About ModSnap",
-        "description": "Hear from car enthusiasts who transformed their vehicles with ModSnap.",
+        "title": "What Users Say About CarModSnap",
+        "description": "Hear from car enthusiasts who transformed their vehicles with CarModSnap.",
         "items": [
           {
             "name": "David Chen",
             "role": "Car Enthusiast",
-            "quote": "ModSnap helped me visualize my dream car before making any changes. The 3D renderings were incredibly realistic!",
+            "quote": "CarModSnap helped me visualize my dream car before making any changes. The 3D renderings were incredibly realistic!",
             "image": {
               "src": "/imgs/avatars/1.png",
               "alt": "david"
@@ -308,7 +306,7 @@
           {
             "name": "Rachel Kim",
             "role": "Car Owner",
-            "quote": "I was able to find a trusted mechanic in my area through ModSnap. The entire process was seamless!",
+            "quote": "I was able to find a trusted mechanic in my area through CarModSnap. The entire process was seamless!",
             "image": {
               "src": "/imgs/avatars/2.png",
               "alt": "rachel"
@@ -317,7 +315,7 @@
           {
             "name": "Marcus Thompson",
             "role": "Car Collector",
-            "quote": "The community showcases gave me so many ideas for my classic car collection. ModSnap is a game-changer!",
+            "quote": "The community showcases gave me so many ideas for my classic car collection. CarModSnap is a game-changer!",
             "image": {
               "src": "/imgs/avatars/3.png",
               "alt": "marcus"
@@ -326,7 +324,7 @@
           {
             "name": "Sofia Garcia",
             "role": "Car Customizer",
-            "quote": "As a professional customizer, ModSnap has become an essential tool for showing clients what their car will look like.",
+            "quote": "As a professional customizer, CarModSnap has become an essential tool for showing clients what their car will look like.",
             "image": {
               "src": "/imgs/avatars/4.png",
               "alt": "sofia"
@@ -344,7 +342,7 @@
           {
             "name": "Anna Zhang",
             "role": "First-time Car Owner",
-            "quote": "ModSnap made it easy for me to understand what modifications would look like on my first car. I'm thrilled with the results!",
+            "quote": "CarModSnap made it easy for me to understand what modifications would look like on my first car. I'm thrilled with the results!",
             "image": {
               "src": "/imgs/avatars/6.png",
               "alt": "anna"
@@ -354,20 +352,20 @@
       },
       "faq": {
         "id": "faq",
-        "title": "Frequently Asked Questions About ModSnap",
+        "title": "Frequently Asked Questions About CarModSnap",
         "description": "Have another question? Contact us on Discord or by email.",
         "items": [
           {
-            "question": "What exactly is ModSnap and how does it work?",
-            "answer": "ModSnap is an AI-powered car modification platform that allows you to visualize and customize your car with 3D technology. It also helps you connect with local service providers to bring your ideas to life."
+            "question": "What exactly is CarModSnap and how does it work?",
+            "answer": "CarModSnap is an AI-powered car modification platform that allows you to visualize and customize your car with 3D technology. It also helps you connect with local service providers to bring your ideas to life."
           },
           {
-            "question": "Do I need technical skills to use ModSnap?",
-            "answer": "No! ModSnap is designed to be user-friendly. You don't need any technical skills to use our 3D configurator or browse the community showcases."
+            "question": "Do I need technical skills to use CarModSnap?",
+            "answer": "No! CarModSnap is designed to be user-friendly. You don't need any technical skills to use our 3D configurator or browse the community showcases."
           },
           {
-            "question": "What types of cars does ModSnap support?",
-            "answer": "ModSnap supports a wide range of car makes and models, from popular brands to rare classics. Our database is constantly growing."
+            "question": "What types of cars does CarModSnap support?",
+            "answer": "CarModSnap supports a wide range of car makes and models, from popular brands to rare classics. Our database is constantly growing."
           },
           {
             "question": "How realistic are the 3D renderings?",
@@ -375,21 +373,21 @@
           },
           {
             "question": "How do I connect with service providers?",
-            "answer": "ModSnap has a directory of trusted local mechanics and shops. You can browse providers in your area, read reviews, and contact them directly through the platform."
+            "answer": "CarModSnap has a directory of trusted local mechanics and shops. You can browse providers in your area, read reviews, and contact them directly through the platform."
           },
           {
-            "question": "Is ModSnap free to use?",
-            "answer": "ModSnap offers both free and premium plans. The free plan allows you to use the basic 3D configurator and browse the community. Premium plans offer additional features like advanced customization options, AI-generated images, and priority service provider connections. Payment is processed securely through Creem."
+            "question": "Is CarModSnap free to use?",
+            "answer": "CarModSnap offers both free and premium plans. The free plan allows you to use the basic 3D configurator and browse the community. Premium plans offer additional features like advanced customization options, AI-generated images, and priority service provider connections. Payment is processed securely through Creem."
           }
         ]
       },
       "cta": {
         "id": "cta",
         "title": "Transform Your Car Today",
-        "description": "Start from here, create with ModSnap.",
+        "description": "Start from here, create with CarModSnap.",
         "buttons": [
           {
-            "title": "Get ModSnap",
+            "title": "Get CarModSnap",
             "url": "#",
             "target": "_blank",
             "icon": "Zap"
@@ -407,7 +405,7 @@
       "subscribe": {
         "id": "subscribe",
         "title": "Subscribe to our newsletter",
-        "description": "Get the latest news and updates from ModSnap.",
+        "description": "Get the latest news and updates from CarModSnap.",
         "submit": {
           "input": {
             "placeholder": "Enter your email"

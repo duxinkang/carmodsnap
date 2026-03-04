@@ -7,8 +7,6 @@
       "benefits",
       "usage",
       "features",
-      "stats",
-      "testimonials",
       "faq",
       "cta"
     ],
@@ -17,10 +15,10 @@
         "id": "hero",
         "title": "用 AI 技术打造你的梦想座驾",
         "highlight_text": "AI 技术",
-        "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台。<br/>使用先进的 3D 技术可视化和定制你的爱车。",
+        "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台。<br/>使用先进的 3D 技术可视化和定制你的爱车。",
         "announcement": {
           "badge": "全新",
-          "title": "🎉 ModSnap 平台正式上线",
+          "title": "🎉 CarModSnap 平台正式上线",
           "url": "/pricing"
         },
         "tip": "🎁 早期用户特别优惠",
@@ -41,7 +39,7 @@
           }
         ],
         "show_avatars": true,
-        "avatars_tip": "999+ 用户正在使用 ModSnap",
+        "avatars_tip": "用户正在体验 CarModSnap Beta",
         "show_award": false,
         "image": {
           "src": "/imgs/features/admin.png",
@@ -61,7 +59,7 @@
         }
       },
       "logos": {
-        "title": "ModSnap 使用以下技术栈构建",
+        "title": "CarModSnap 使用以下技术栈构建",
         "items": [
           {
             "title": "Next.js",
@@ -103,9 +101,9 @@
       "introduce": {
         "block": "features-list",
         "id": "introduce",
-        "title": "ModSnap 是什么？",
+        "title": "CarModSnap 是什么？",
         "label": "产品简介",
-        "description": "ModSnap 是一个 AI 驱动的汽车改装可视化平台，包括 3D 可视化、社区展示和本地服务商对接。",
+        "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台，包括 3D 可视化、社区展示和本地服务商对接。",
         "image": {
           "src": "/imgs/features/landing-page.png",
           "alt": "introduce"
@@ -153,7 +151,7 @@
       "benefits": {
         "block": "features-accordion",
         "id": "benefits",
-        "title": "为何选择 ModSnap",
+        "title": "为何选择 CarModSnap",
         "label": "产品优势",
         "description": "获得你所需的一切，从 3D 可视化到本地服务连接，让你的爱车焕然一新。",
         "items": [
@@ -189,7 +187,7 @@
       "usage": {
         "block": "features-step",
         "id": "usage",
-        "title": "三步使用 ModSnap 打造梦想座驾",
+        "title": "三步使用 CarModSnap 打造梦想座驾",
         "description": "只需三步，开启你的汽车改装之旅：",
         "image": {
           "src": "/imgs/features/1.png",
@@ -235,7 +233,7 @@
       },
       "features": {
         "id": "features",
-        "title": "ModSnap 核心功能",
+        "title": "CarModSnap 核心功能",
         "description": "一切你需要的工具，让你自信地改造你的爱车。",
         "items": [
           {
@@ -260,7 +258,7 @@
           },
           {
             "title": "移动友好",
-            "description": "随时随地从任何设备访问 ModSnap。",
+            "description": "随时随地从任何设备访问 CarModSnap。",
             "icon": "RiBarChart2Line"
           },
           {
@@ -272,7 +270,7 @@
       },
       "stats": {
         "id": "stats",
-        "title": "用户喜爱 ModSnap",
+        "title": "用户喜爱 CarModSnap",
         "description": "因其逼真的可视化效果和易用的平台。",
         "items": [
           {
@@ -292,13 +290,13 @@
       },
       "testimonials": {
         "id": "testimonials",
-        "title": "用户对 ModSnap 的评价",
-        "description": "听听汽车爱好者如何通过 ModSnap 改造他们的爱车。",
+        "title": "用户对 CarModSnap 的评价",
+        "description": "听听汽车爱好者如何通过 CarModSnap 改造他们的爱车。",
         "items": [
           {
             "name": "David Chen",
             "role": "汽车爱好者",
-            "quote": "ModSnap 帮助我在进行任何改动之前可视化我的梦想座驾。3D 渲染效果非常逼真！",
+            "quote": "CarModSnap 帮助我在进行任何改动之前可视化我的梦想座驾。3D 渲染效果非常逼真！",
             "image": {
               "src": "/imgs/avatars/1.png",
               "alt": "david"
@@ -307,7 +305,7 @@
           {
             "name": "Rachel Kim",
             "role": "车主",
-            "quote": "通过 ModSnap，我找到了当地可信的 mechanic。整个过程非常顺畅！",
+            "quote": "通过 CarModSnap，我找到了当地可信的 mechanic。整个过程非常顺畅！",
             "image": {
               "src": "/imgs/avatars/2.png",
               "alt": "rachel"
@@ -316,7 +314,7 @@
           {
             "name": "Marcus Thompson",
             "role": "汽车收藏家",
-            "quote": "社区展示给我的经典车收藏提供了很多创意。ModSnap 是一个游戏规则改变者！",
+            "quote": "社区展示给我的经典车收藏提供了很多创意。CarModSnap 是一个游戏规则改变者！",
             "image": {
               "src": "/imgs/avatars/3.png",
               "alt": "marcus"
@@ -325,7 +323,7 @@
           {
             "name": "Sofia Garcia",
             "role": "汽车定制师",
-            "quote": "作为专业定制师，ModSnap 已成为向客户展示他们的汽车将会是什么样子的必备工具。",
+            "quote": "作为专业定制师，CarModSnap 已成为向客户展示他们的汽车将会是什么样子的必备工具。",
             "image": {
               "src": "/imgs/avatars/4.png",
               "alt": "sofia"
@@ -343,7 +341,7 @@
           {
             "name": "Anna Zhang",
             "role": "首次车主",
-            "quote": "ModSnap 让我轻松了解改装会如何改变我的第一辆车。我对结果非常满意！",
+            "quote": "CarModSnap 让我轻松了解改装会如何改变我的第一辆车。我对结果非常满意！",
             "image": {
               "src": "/imgs/avatars/6.png",
               "alt": "anna"
@@ -353,20 +351,20 @@
       },
       "faq": {
         "id": "faq",
-        "title": "关于 ModSnap 的常见问题",
+        "title": "关于 CarModSnap 的常见问题",
         "description": "还有其他问题？欢迎加入 Discord 或发邮件联系我们。",
         "items": [
           {
-            "question": "ModSnap 是什么？它如何帮助我？",
-            "answer": "ModSnap 是一个 AI 驱动的汽车改装可视化平台，允许你使用 3D 技术可视化和定制你的爱车。它还帮助你连接本地服务商，将你的创意变为现实。"
+            "question": "CarModSnap 是什么？它如何帮助我？",
+            "answer": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台，允许你使用 3D 技术可视化和定制你的爱车。它还帮助你连接本地服务商，将你的创意变为现实。"
           },
           {
-            "question": "使用 ModSnap 需要技术技能吗？",
-            "answer": "不需要！ModSnap 设计为用户友好。你不需要任何技术技能来使用我们的 3D 配置器或浏览社区展示。"
+            "question": "使用 CarModSnap 需要技术技能吗？",
+            "answer": "不需要！CarModSnap 设计为用户友好。你不需要任何技术技能来使用我们的 3D 配置器或浏览社区展示。"
           },
           {
-            "question": "ModSnap 支持哪些类型的汽车？",
-            "answer": "ModSnap 支持广泛的汽车品牌和车型，从流行品牌到稀有经典车型。我们的数据库不断增长。"
+            "question": "CarModSnap 支持哪些类型的汽车？",
+            "answer": "CarModSnap 支持广泛的汽车品牌和车型，从流行品牌到稀有经典车型。我们的数据库不断增长。"
           },
           {
             "question": "3D 渲染效果有多逼真？",
@@ -374,21 +372,21 @@
           },
           {
             "question": "如何连接服务商？",
-            "answer": "ModSnap 拥有可信的本地 mechanic 和店铺目录。你可以浏览你所在地区的服务商，阅读评论，并通过平台直接联系他们。"
+            "answer": "CarModSnap 拥有可信的本地 mechanic 和店铺目录。你可以浏览你所在地区的服务商，阅读评论，并通过平台直接联系他们。"
           },
           {
-            "question": "ModSnap 是免费使用的吗？",
-            "answer": "ModSnap 提供免费和高级计划。免费计划允许你使用基本的 3D 配置器和浏览社区。高级计划提供额外功能，如高级定制选项、AI 生成效果图和优先服务商连接。支付通过 Creem 安全处理。"
+            "question": "CarModSnap 是免费使用的吗？",
+            "answer": "CarModSnap 提供免费和高级计划。免费计划允许你使用基本的 3D 配置器和浏览社区。高级计划提供额外功能，如高级定制选项、AI 生成效果图和优先服务商连接。支付通过 Creem 安全处理。"
           }
         ]
       },
       "cta": {
         "id": "cta",
         "title": "今天就改造你的爱车",
-        "description": "从这里出发，用 ModSnap 创造你的梦想座驾。",
+        "description": "从这里出发，用 CarModSnap 创造你的梦想座驾。",
         "buttons": [
           {
-            "title": "获取 ModSnap",
+            "title": "获取 CarModSnap",
             "url": "#",
             "target": "_blank",
             "icon": "Zap"
@@ -406,7 +404,7 @@
       "subscribe": {
         "id": "subscribe",
         "title": "订阅我们的邮件通知",
-        "description": "获取 ModSnap 最新资讯与产品动态。",
+        "description": "获取 CarModSnap 最新资讯与产品动态。",
         "submit": {
           "input": {
             "placeholder": "输入邮箱"
