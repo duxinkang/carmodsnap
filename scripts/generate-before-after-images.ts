@@ -56,10 +56,11 @@ function getEnvValue(...keys: string[]): string {
 
 function getScriptConfigs() {
   return {
-    qwen_api_key: getEnvValue('QWENT_API_KEY', 'DASHSCOPE_API_KEY', 'qwen_api_key'),
-    qwen_base_url: getEnvValue('QWEN_BASE_URL', 'DASHSCOPE_BASE_URL', 'qwen_base_url'),
+    nanobanana_api_key: getEnvValue('NANOBANANA_API_KEY', 'nanobanana_api_key'),
+    nanobanana_base_url: getEnvValue('NANOBANANA_BASE_URL', 'nanobanana_base_url'),
     replicate_api_token: getEnvValue('REPLICATE_API_TOKEN', 'replicate_api_token'),
     fal_api_key: getEnvValue('FAL_API_KEY', 'fal_api_key'),
+    qwen_api_key: getEnvValue('QWEN_API_KEY', 'DASHSCOPE_API_KEY', 'qwen_api_key'),
   };
 }
 
@@ -161,8 +162,9 @@ async function generateImage({
 async function main() {
   mkdirSync(OUTPUT_DIR, { recursive: true });
 
-  const providers = ['replicate', 'fal', 'qwen'];
+  const providers = ['nanobanana', 'replicate', 'fal', 'qwen'];
   const models: Record<string, string> = {
+    nanobanana: 'nano-banana-2',
     replicate: 'google/nano-banana-pro',
     fal: 'fal-ai/flux-2-flex',
     qwen: 'qwen-image-max',
@@ -176,7 +178,7 @@ async function main() {
   const providerName = providers.find((p) => availableProviders.includes(p));
   if (!providerName) {
     console.error('No supported image provider is configured');
-    console.log('Please configure at least one of: replicate, fal, qwen');
+    console.log('Please configure at least one of: nanobanana, replicate, fal, qwen');
     return;
   }
 
