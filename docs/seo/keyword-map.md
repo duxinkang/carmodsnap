@@ -21,8 +21,15 @@ Goal: publish 10 commercial-intent pages with clear page-to-keyword mapping.
 - Every page links to: `/pricing`, `/showcases`, `/blog`, `/carmodder`.
 - Anchor text should vary naturally and stay descriptive.
 - Homepage, pricing page, and blog index should all link to showcases + core conversion pages.
+- Blog category pages link to related blog posts and core conversion pages.
 
-# CarModSnap SEO Keyword Map (Phase 2)
+## Category Pages
+
+| Page URL                           | Primary Keyword         | Secondary Keywords (3-5)                                               | Intent        | CTA        |
+| ---------------------------------- | ----------------------- | ---------------------------------------------------------------------- | ------------- | ---------- |
+| `/blog/category/commercial-intent` | commercial car mod guides | car modification buying guides, car mod product comparisons, wrap buying tips | Commercial Investigation | `/pricing` |
+
+## Phase 2 Pages
 
 Goal: add 10 more commercial-intent pages around specific modification use cases and higher-buying-intent comparisons.
 

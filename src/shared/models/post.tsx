@@ -362,11 +362,30 @@ export async function getPostsAndCategories({
     return dateB - dateA;
   });
 
+  // Merge categories: local + remote, remove duplicates by slug
+  const categoriesMap = new Map<string, BlogCategoryType>();
+
+  // Add local categories first
+  localCategories.forEach((cat) => {
+    if (cat.slug) {
+      categoriesMap.set(cat.slug, cat);
+    }
+  });
+
+  // Add remote categories (remote has higher priority)
+  remoteCategories.forEach((cat) => {
+    if (cat.slug) {
+      categoriesMap.set(cat.slug, cat);
+    }
+  });
+
+  categories = Array.from(categoriesMap.values());
+
   return {
     posts,
     postsCount: posts.length,
-    categories: remoteCategories, // todo: merge local categories
-    categoriesCount: remoteCategoriesCount, // todo: merge local categories count
+    categories,
+    categoriesCount: categories.length,
   };
 }
 
@@ -462,6 +481,7 @@ export async function getLocalPostsAndCategories({
   type?: PostType;
 }) {
   const localPostsList: BlogPostType[] = [];
+  const categoriesMap = new Map<string, { slug: string; title: string; count: number }>();
 
   // get posts from local files
   let localPosts = postsSource.getPages(locale);
@@ -502,6 +522,22 @@ export async function getLocalPostsAndCategories({
           })
         : '';
 
+      // Extract categories from frontmatter and build category map
+      const postCategories = frontmatter.categories || [];
+      postCategories.forEach((catSlug: string) => {
+        const existing = categoriesMap.get(catSlug);
+        if (existing) {
+          categoriesMap.set(catSlug, { ...existing, count: existing.count + 1 });
+        } else {
+          // Convert slug to title case
+          const title = catSlug
+            .split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+          categoriesMap.set(catSlug, { slug: catSlug, title, count: 1 });
+        }
+      });
+
       return {
         id: post.path,
         slug: slug,
@@ -515,17 +551,26 @@ export async function getLocalPostsAndCategories({
         url: `${postPrefix}${slug}`,
         version: frontmatter.version || '',
         tags: frontmatter.tags || [],
-        categories: frontmatter.categories || [],
+        categories: postCategories,
         body,
       };
     })
   );
 
+  // Convert categories map to array
+  const categories = Array.from(categoriesMap.values()).map(cat => ({
+    id: cat.slug,
+    slug: cat.slug,
+    title: cat.title,
+    description: `Browse all ${cat.title} articles`,
+    url: `${categoryPrefix}${cat.slug}`,
+  }));
+
   return {
     posts: localPostsList,
     postsCount: localPostsList.length,
-    categories: [],
-    categoriesCount: 0,
+    categories,
+    categoriesCount: categories.length,
   };
 }
 
