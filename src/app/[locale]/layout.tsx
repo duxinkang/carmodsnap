@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/core/theme/provider';
 import { Toaster } from '@/shared/components/ui/sonner';
 import { AppContextProvider } from '@/shared/contexts/app';
 import { getMetadata } from '@/shared/lib/seo';
+import { GlobalSchemaMarkup } from '@/shared/components/seo/schema-markup';
 
 export const generateMetadata = getMetadata();
 
@@ -30,6 +31,7 @@ export default async function LocaleLayout({
         <AppContextProvider>
           {children}
           <Toaster position="top-center" richColors />
+          <GlobalSchemaMarkup />
         </AppContextProvider>
       </ThemeProvider>
     </NextIntlClientProvider>

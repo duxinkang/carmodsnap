@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';
 import { InternalLinkHub } from '@/shared/components/seo/internal-link-hub';
+import { PricingSchemaMarkup } from '@/shared/components/seo/schema-markup';
 import { getMetadata } from '@/shared/lib/seo';
 import { getCurrentSubscription } from '@/shared/models/subscription';
 import { getUserInfo } from '@/shared/models/user';
@@ -56,6 +57,15 @@ export default async function PricingPage({
     <>
       <Page locale={locale} page={page} />
       <InternalLinkHub locale={locale} />
+      <PricingSchemaMarkup
+        productName="CarModSnap Subscription"
+        description={t.raw('page.sections.pricing.description')}
+        offers={t.raw('page.sections.pricing.items').map((item: any) => ({
+          price: item.amount / 100,
+          priceCurrency: item.currency,
+          availability: 'https://schema.org/InStock',
+        }))}
+      />
     </>
   );
 }
