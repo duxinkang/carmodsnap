@@ -17,35 +17,35 @@ import { LazyImage } from '@/shared/blocks/common';
 const POLL_INTERVAL = 5000;
 const GENERATION_TIMEOUT = 180000;
 
-const CHINESE_CAR_MODELS = [
-  { id: 'xiaomi-su7', name: '小米 SU7', brand: '小米', type: 'sedan', image: 'https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1s6hvh.img?w=800&h=415&m=6' },
-  { id: 'byd-han', name: '比亚迪 汉', brand: '比亚迪', type: 'sedan', image: 'https://autoimg.vastimg.com/files/202401/2024010909444047275.jpg' },
-  { id: 'byd-tang', name: '比亚迪 唐', brand: '比亚迪', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2023/03/20/f8e2b7c2-8c7f-4c2d-9e5e-3b8c7f8e2b7c2.jpg' },
-  { id: 'byd-seal', name: '比亚迪 海豹', brand: '比亚迪', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2023/06/15/7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d.jpg' },
-  { id: 'zeekr-001', name: '极氪 001', brand: '极氪', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2023/04/20/a1b2c3d4-e5f6-7890-abcd-ef1234567890.jpg' },
-  { id: 'zeekr-007', name: '极氪 007', brand: '极氪', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2024/01/15/12345678-90ab-cdef-1234-567890abcdef.jpg' },
-  { id: 'nio-et7', name: '蔚来 ET7', brand: '蔚来', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2023/05/10/abcdef12-3456-7890-abcd-ef1234567890.jpg' },
-  { id: 'nio-es6', name: '蔚来 ES6', brand: '蔚来', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2023/07/20/23456789-0abc-def1-2345-67890abcdef1.jpg' },
-  { id: 'xpeng-p7', name: '小鹏 P7', brand: '小鹏', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2023/02/15/34567890-abcd-ef12-3456-7890abcdef12.jpg' },
-  { id: 'xpeng-g9', name: '小鹏 G9', brand: '小鹏', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2023/08/25/45678901-bcde-f123-4567-890abcdef123.jpg' },
-  { id: 'lixiang-l7', name: '理想 L7', brand: '理想', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2023/09/10/56789012-cdef-1234-5678-90abcdef1234.jpg' },
-  { id: 'lixiang-l9', name: '理想 L9', brand: '理想', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2023/10/05/67890123-def1-2345-6789-0abcdef12345.jpg' },
-  { id: 'avatr-11', name: '阿维塔 11', brand: '阿维塔', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2023/11/15/78901234-ef12-3456-7890-abcdef123456.jpg' },
-  { id: 'avatr-12', name: '阿维塔 12', brand: '阿维塔', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2023/12/20/89012345-f123-4567-890a-bcdef1234567.jpg' },
-  { id: 'aion-s', name: '广汽埃安 S', brand: '广汽埃安', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2024/01/10/90123456-1234-5678-90ab-cdef12345678.jpg' },
-  { id: 'aion-y', name: '广汽埃安 Y', brand: '广汽埃安', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2024/02/15/01234567-2345-6789-0abc-def123456789.jpg' },
-  { id: 'deepal-sl03', name: '深蓝 SL03', brand: '深蓝', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2024/03/20/12345678-3456-7890-abcd-ef1234567890.jpg' },
-  { id: 'deepal-s7', name: '深蓝 S7', brand: '深蓝', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2024/04/25/23456789-4567-890a-bcde-f12345678901.jpg' },
-  { id: 'voyah-ziyou', name: '岚图 逍遥', brand: '岚图', type: 'suv', image: 'https://img1.bitautoimg.com/bitauto/2024/05/10/34567890-5678-90ab-cdef-123456789012.jpg' },
-  { id: 'im-l7', name: '智己 L7', brand: '智己', type: 'sedan', image: 'https://img1.bitautoimg.com/bitauto/2024/06/15/45678901-6789-0abc-def1-234567890123.jpg' },
+const CAR_MODELS = [
+  { id: 'tesla-model-3', name: 'Tesla Model 3', brand: 'Tesla', type: 'sedan', image: 'https://tesla-cdn.thron.com/static/3_model_3--header-202403.jpg' },
+  { id: 'tesla-model-y', name: 'Tesla Model Y', brand: 'Tesla', type: 'suv', image: 'https://tesla-cdn.thron.com/static/Y_Performance_Header.jpg' },
+  { id: 'tesla-model-s', name: 'Tesla Model S', brand: 'Tesla', type: 'sedan', image: 'https://tesla-cdn.thron.com/static/4_model_s-2023.jpg' },
+  { id: 'tesla-model-x', name: 'Tesla Model X', brand: 'Tesla', type: 'suv', image: 'https://tesla-cdn.thron.com/static/5_model_x-2023.jpg' },
+  { id: 'ford-mustang', name: 'Ford Mustang', brand: 'Ford', type: 'sedan', image: 'https://www.ford.com/cmslibs/content/dam/ford_com/en-us/:name/Display-Mustang.jpg' },
+  { id: 'ford-f150', name: 'Ford F-150', brand: 'Ford', type: 'truck', image: 'https://www.ford.com/cmslibs/content/dam/ford_com/en-us/name/F-150-RAPTOR.jpg' },
+  { id: 'chevy-corvette', name: 'Chevy Corvette', brand: 'Chevrolet', type: 'sedan', image: 'https://www.chevrolet.com/content/dam/chevrolet/na/us/eng/index/nameplate/corvette/2024/model-year-image/corvette-2024.jpg' },
+  { id: 'chevy-camaro', name: 'Chevy Camaro', brand: 'Chevrolet', type: 'sedan', image: 'https://www.chevrolet.com/content/dam/chevrolet/na/us/eng/index/nameplate/camaro/2024/model-year-image/camaro-2024.jpg' },
+  { id: 'bmw-3series', name: 'BMW 3 Series', brand: 'BMW', type: 'sedan', image: 'https://www.bmwusa.com/content/dam/bmwusa/3-series/2024/overview/bmw-3series-overview.jpg' },
+  { id: 'bmw-m4', name: 'BMW M4', brand: 'BMW', type: 'sedan', image: 'https://www.bmwusa.com/content/dam/bmwusa/m-series/m4/2024/overview/bmw-m4-2024.jpg' },
+  { id: 'bmw-x5', name: 'BMW X5', brand: 'BMW', type: 'suv', image: 'https://www.bmwusa.com/content/dam/bmwusa/x-series/x5/2024/overview/bmw-x5-2024.jpg' },
+  { id: 'mercedes-cclass', name: 'Mercedes C-Class', brand: 'Mercedes-Benz', type: 'sedan', image: 'https://www.mbusa.com/content/dam/mbusa/vehicles/2024/class/c-class/model-group-page/mercedes-benz-c-class-model-group.jpg' },
+  { id: 'mercedes-gle', name: 'Mercedes GLE', brand: 'Mercedes-Benz', type: 'suv', image: 'https://www.mbusa.com/content/dam/mbusa/vehicles/2024/class/gle/model-group-page/mercedes-benz-gle-model-group.jpg' },
+  { id: 'audi-a4', name: 'Audi A4', brand: 'Audi', type: 'sedan', image: 'https://www.audi.com/content/dam/audi_com/A4_2024.jpg' },
+  { id: 'audi-q5', name: 'Audi Q5', brand: 'Audi', type: 'suv', image: 'https://www.audi.com/content/dam/audi_com/Q5_2024.jpg' },
+  { id: 'porsche-911', name: 'Porsche 911', brand: 'Porsche', type: 'sedan', image: 'https://www.porsche.com/usa/models/911/' },
+  { id: 'porsche-cayenne', name: 'Porsche Cayenne', brand: 'Porsche', type: 'suv', image: 'https://www.porsche.com/usa/models/cayenne/' },
+  { id: 'jeep-wrangler', name: 'Jeep Wrangler', brand: 'Jeep', type: 'suv', image: 'https://www.jeep.com/wrangler.html' },
+  { id: 'dodge-charger', name: 'Dodge Charger', brand: 'Dodge', type: 'sedan', image: 'https://www.dodge.com/charger.html' },
+  { id: 'nissan-gtr', name: 'Nissan GT-R', brand: 'Nissan', type: 'sedan', image: 'https://www.nissanusa.com/gtr.html' },
 ];
 
 const WHEEL_STYLES = [
-  { id: 'stock', name: '原厂轮毂', description: '保持原厂轮毂样式' },
-  { id: 'sport', name: '运动轮毂', description: '多辐条运动风格' },
-  { id: 'luxury', name: '豪华轮毂', description: '大尺寸豪华风格' },
-  { id: 'forged', name: '锻造轮毂', description: '轻量化锻造工艺' },
-  { id: 'racing', name: '赛道轮毂', description: '专业赛道风格' },
+  { id: 'stock', name: 'Stock Wheels', description: 'Keep original factory wheels' },
+  { id: 'sport', name: 'Sport Wheels', description: 'Multi-spoke sport style' },
+  { id: 'luxury', name: 'Luxury Wheels', description: 'Large size luxury style' },
+  { id: 'forged', name: 'Forged Wheels', description: 'Lightweight forged construction' },
+  { id: 'racing', name: 'Racing Wheels', description: 'Professional track style' },
 ];
 
 const PAINT_COLORS = [
@@ -129,7 +129,7 @@ function extractImageUrls(result: any): string[] {
 export default function CarModderConfigurator() {
   const t = useTranslations('pages.carmodder');
 
-  const [selectedCar, setSelectedCar] = useState(CHINESE_CAR_MODELS[0]);
+  const [selectedCar, setSelectedCar] = useState(CAR_MODELS[0]);
   const [selectedWheel, setSelectedWheel] = useState(WHEEL_STYLES[0]);
   const [selectedColor, setSelectedColor] = useState(PAINT_COLORS[0]);
   const [selectedFinish, setSelectedFinish] = useState(FINISH_TYPES[0]);
@@ -476,7 +476,7 @@ export default function CarModderConfigurator() {
                 <CardContent className="space-y-6">
                   {activeTab === 'car' && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                      {CHINESE_CAR_MODELS.map((car) => (
+                      {CAR_MODELS.map((car) => (
                         <motion.div
                           key={car.id}
                           className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${
