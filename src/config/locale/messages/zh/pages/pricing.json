@@ -145,7 +145,193 @@
             "group": "monthly",
             "plan_name": "高级版"
           }
-        ]
+        ],
+        "feature_comparison": {
+          "title": "功能对比",
+          "description": "对比所有套餐的功能，找到最适合你的方案",
+          "features": [
+            {
+              "name": "每月积分",
+              "starter": "100",
+              "standard": "300",
+              "premium": "800",
+              "category": "credits"
+            },
+            {
+              "name": "AI 改装模式",
+              "starter": "基础",
+              "standard": "高级",
+              "premium": "全部",
+              "category": "features"
+            },
+            {
+              "name": "改色膜可视化",
+              "starter": true,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "轮毂搭配预览",
+              "starter": true,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "包围套件可视化",
+              "starter": false,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "改装前后对比",
+              "starter": false,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "多角度视图",
+              "starter": false,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "保存改装方案",
+              "starter": false,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "批量生成",
+              "starter": false,
+              "standard": false,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "导出画质",
+              "starter": "高清 (1080p)",
+              "standard": "4K 超高清",
+              "premium": "8K 超高清",
+              "category": "export"
+            },
+            {
+              "name": "生成速度",
+              "starter": "标准",
+              "standard": "优先",
+              "premium": "最快",
+              "category": "performance"
+            },
+            {
+              "name": "商用授权",
+              "starter": false,
+              "standard": false,
+              "premium": true,
+              "category": "license"
+            },
+            {
+              "name": "API 访问",
+              "starter": false,
+              "standard": false,
+              "premium": true,
+              "category": "api"
+            },
+            {
+              "name": "优先支持",
+              "starter": false,
+              "standard": false,
+              "premium": true,
+              "category": "support"
+            }
+          ]
+        },
+        "features_detail": {
+          "title": "详细功能说明",
+          "description": "可视化你的汽车改装所需的一切功能",
+          "sections": [
+            {
+              "title": "AI 驱动的可视化",
+              "icon": "RiMagicLine",
+              "features": [
+                {
+                  "title": "改色膜可视化",
+                  "description": "在你的确切车型上预览哑光、缎面和亮光改色膜效果。在预约安装前并排对比颜色。"
+                },
+                {
+                  "title": "轮毂搭配预览",
+                  "description": "可视化不同的轮毂尺寸、ET 值和款式效果。在购买前查看定制轮毂的上车效果。"
+                },
+                {
+                  "title": "包围套件可视化",
+                  "description": "预览空气动力学套件、前唇、侧裙和后扩散器。以照片级真实度查看夸张的车身改装效果。"
+                },
+                {
+                  "title": "改装前后对比",
+                  "description": "生成原厂状态与改装后的并排对比图。完美用于规划和分享你的改装愿景。"
+                }
+              ]
+            },
+            {
+              "title": "导出与分享",
+              "icon": "RiDownloadLine",
+              "features": [
+                {
+                  "title": "高清/4K/8K 下载",
+                  "description": "根据你的套餐导出适用于社交媒体、印刷或大幅面展示的高分辨率图片。"
+                },
+                {
+                  "title": "多角度视图",
+                  "description": "生成改装方案的多角度视图，实现全方位可视化。"
+                },
+                {
+                  "title": "方案保存",
+                  "description": "保存你的改装方案并随时查看。创建多个设计概念进行对比。"
+                }
+              ]
+            },
+            {
+              "title": "专业工具",
+              "icon": "RiToolLine",
+              "features": [
+                {
+                  "title": "批量生成",
+                  "description": "一次生成多个变体效果。高效对比不同的颜色组合和改装风格。"
+                },
+                {
+                  "title": "商用授权",
+                  "description": "将生成的图片用于商业用途，包括营销材料、客户演示和社交媒体管理。"
+                },
+                {
+                  "title": "API 访问",
+                  "description": "通过我们的 REST API 将 CarModSnap 可视化集成到你现有的工作流或应用中。"
+                }
+              ]
+            }
+          ]
+        },
+        "trust_badges": {
+          "money_back": {
+            "title": "30 天退款保证",
+            "description": "30 天内不满意可获全额退款"
+          },
+          "secure_payment": {
+            "title": "安全支付",
+            "description": "通过 Stripe、PayPal 等可信服务商进行加密交易"
+          },
+          "cancel_anytime": {
+            "title": "随时取消",
+            "description": "无长期合约限制，可随时取消订阅"
+          },
+          "instant_access": {
+            "title": "即时访问",
+            "description": "支付后立即解锁所有功能"
+          }
+        }
       }
     }
   },

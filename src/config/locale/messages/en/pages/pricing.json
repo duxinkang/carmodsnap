@@ -118,7 +118,193 @@
             "group": "monthly",
             "plan_name": "Premium"
           }
-        ]
+        ],
+        "feature_comparison": {
+          "title": "Feature Comparison",
+          "description": "Compare features across all plans to find the best fit for your needs",
+          "features": [
+            {
+              "name": "Monthly Credits",
+              "starter": "100",
+              "standard": "300",
+              "premium": "800",
+              "category": "credits"
+            },
+            {
+              "name": "AI Modification Modes",
+              "starter": "Basic",
+              "standard": "Advanced",
+              "premium": "All Modes",
+              "category": "features"
+            },
+            {
+              "name": "Wrap Color Visualization",
+              "starter": true,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "Wheel Fitment Preview",
+              "starter": true,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "Body Kit Visualizer",
+              "starter": false,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "Before/After Simulator",
+              "starter": false,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "Multi-Angle Views",
+              "starter": false,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "Save Projects",
+              "starter": false,
+              "standard": true,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "Batch Generation",
+              "starter": false,
+              "standard": false,
+              "premium": true,
+              "category": "features"
+            },
+            {
+              "name": "Export Quality",
+              "starter": "HD (1080p)",
+              "standard": "4K Ultra HD",
+              "premium": "8K Ultra HD",
+              "category": "export"
+            },
+            {
+              "name": "Generation Speed",
+              "starter": "Standard",
+              "standard": "Priority",
+              "premium": "Fastest",
+              "category": "performance"
+            },
+            {
+              "name": "Commercial License",
+              "starter": false,
+              "standard": false,
+              "premium": true,
+              "category": "license"
+            },
+            {
+              "name": "API Access",
+              "starter": false,
+              "standard": false,
+              "premium": true,
+              "category": "api"
+            },
+            {
+              "name": "Priority Support",
+              "starter": false,
+              "standard": false,
+              "premium": true,
+              "category": "support"
+            }
+          ]
+        },
+        "features_detail": {
+          "title": "Detailed Features",
+          "description": "Everything you need to visualize and plan your car modification",
+          "sections": [
+            {
+              "title": "AI-Powered Visualization",
+              "icon": "RiMagicLine",
+              "features": [
+                {
+                  "title": "Wrap Color Visualizer",
+                  "description": "Preview matte, satin, and gloss wrap finishes on your exact vehicle model. Compare colors side-by-side before booking installation."
+                },
+                {
+                  "title": "Wheel Fitment Preview",
+                  "description": "Visualize different wheel sizes, offsets, and styles on your car. See how custom rims look before purchasing."
+                },
+                {
+                  "title": "Body Kit Visualizer",
+                  "description": "Preview aero kits, front lips, side skirts, and rear diffusers. See aggressive body modifications in photorealistic quality."
+                },
+                {
+                  "title": "Before/After Simulator",
+                  "description": "Generate side-by-side comparisons of your stock vs modified build. Perfect for planning and sharing your vision."
+                }
+              ]
+            },
+            {
+              "title": "Export & Sharing",
+              "icon": "RiDownloadLine",
+              "features": [
+                {
+                  "title": "HD/4K/8K Downloads",
+                  "description": "Export high-resolution images suitable for social media, print, or large-format displays depending on your plan."
+                },
+                {
+                  "title": "Multi-Angle Views",
+                  "description": "Generate multiple viewing angles of your modified build for comprehensive visualization."
+                },
+                {
+                  "title": "Project Saving",
+                  "description": "Save your modification projects and revisit them later. Build multiple concepts for comparison."
+                }
+              ]
+            },
+            {
+              "title": "Professional Tools",
+              "icon": "RiToolLine",
+              "features": [
+                {
+                  "title": "Batch Generation",
+                  "description": "Generate multiple variations at once. Compare different color combinations and modification styles efficiently."
+                },
+                {
+                  "title": "Commercial License",
+                  "description": "Use generated images for commercial purposes including marketing materials, client presentations, and social media management."
+                },
+                {
+                  "title": "API Access",
+                  "description": "Integrate CarModSnap visualization into your existing workflow or applications via our REST API."
+                }
+              ]
+            }
+          ]
+        },
+        "trust_badges": {
+          "money_back": {
+            "title": "30-Day Money-Back Guarantee",
+            "description": "Full refund if not satisfied within the first 30 days"
+          },
+          "secure_payment": {
+            "title": "Secure Payment",
+            "description": "Encrypted transactions via Stripe, PayPal, and trusted providers"
+          },
+          "cancel_anytime": {
+            "title": "Cancel Anytime",
+            "description": "No long-term contracts. Cancel your subscription at any time."
+          },
+          "instant_access": {
+            "title": "Instant Access",
+            "description": "Get immediate access to all features after payment"
+          }
+        }
       }
     }
   },

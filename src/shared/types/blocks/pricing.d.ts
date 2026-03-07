@@ -46,6 +46,49 @@ export interface PricingItem {
   group?: string;
 }
 
+export interface FeatureComparisonRow {
+  name: string;
+  starter: boolean | string;
+  standard: boolean | string;
+  premium: boolean | string;
+  category?: string;
+}
+
+export interface FeatureDetailItem {
+  title: string;
+  description: string;
+}
+
+export interface FeatureDetailSection {
+  title: string;
+  icon?: string;
+  features: FeatureDetailItem[];
+}
+
+export interface FeatureComparison {
+  title?: string;
+  description?: string;
+  features: FeatureComparisonRow[];
+}
+
+export interface FeaturesDetail {
+  title?: string;
+  description?: string;
+  sections: FeatureDetailSection[];
+}
+
+export interface TrustBadge {
+  title?: string;
+  description?: string;
+}
+
+export interface TrustBadges {
+  money_back?: TrustBadge;
+  secure_payment?: TrustBadge;
+  cancel_anytime?: TrustBadge;
+  instant_access?: TrustBadge;
+}
+
 export interface Pricing {
   id?: string;
   disabled?: boolean;
@@ -56,4 +99,9 @@ export interface Pricing {
   groups?: PricingGroup[];
   className?: string;
   sr_only_title?: string;
+
+  // New fields for enhanced pricing page
+  feature_comparison?: FeatureComparison;
+  features_detail?: FeaturesDetail;
+  trust_badges?: TrustBadges;
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, Loader2, Shield, CreditCard, RotateCcw, Zap } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -525,6 +525,166 @@ export function Pricing({
           handleCheckout(item, paymentProvider)
         }
       />
+
+      {/* Feature Comparison Table */}
+      {section.feature_comparison && (
+        <div className="container mt-24">
+          <div className="mx-auto mb-12 text-center">
+            <h2 className="mb-4 text-2xl font-bold md:text-3xl">
+              {section.feature_comparison.title}
+            </h2>
+            <p className="text-muted-foreground mx-auto max-w-2xl">
+              {section.feature_comparison.description}
+            </p>
+          </div>
+
+          <div className="overflow-x-auto rounded-lg border">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b bg-muted/50">
+                  <th className="px-4 py-4 text-left font-semibold">Feature</th>
+                  <th className="px-4 py-4 text-center font-semibold">Starter</th>
+                  <th className="px-4 py-4 text-center font-semibold">Standard</th>
+                  <th className="px-4 py-4 text-center font-semibold">Premium</th>
+                </tr>
+              </thead>
+              <tbody>
+                {section.feature_comparison.features.map((feature, idx) => (
+                  <tr
+                    key={idx}
+                    className={cn(
+                      'border-b last:border-0',
+                      idx % 2 === 0 ? 'bg-background' : 'bg-muted/30'
+                    )}
+                  >
+                    <td className="px-4 py-3 font-medium">{feature.name}</td>
+                    <td className="px-4 py-3 text-center">
+                      {renderFeatureValue(feature.starter)}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {renderFeatureValue(feature.standard)}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {renderFeatureValue(feature.premium)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Detailed Features Sections */}
+      {section.features_detail && (
+        <div className="container mt-24">
+          <div className="mx-auto mb-12 text-center">
+            <h2 className="mb-4 text-2xl font-bold md:text-3xl">
+              {section.features_detail.title}
+            </h2>
+            <p className="text-muted-foreground mx-auto max-w-2xl">
+              {section.features_detail.description}
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {section.features_detail.sections.map((section, idx) => (
+              <Card key={idx} className="border-muted bg-card">
+                <CardHeader>
+                  <div className="mb-2 flex items-center gap-3">
+                    {section.icon && (
+                      <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+                        <SmartIcon
+                          name={section.icon}
+                          className="size-5 text-primary"
+                        />
+                      </div>
+                    )}
+                    <CardTitle className="text-lg">{section.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {section.features.map((feature, featureIdx) => (
+                    <div key={featureIdx} className="space-y-1">
+                      <h4 className="font-medium text-sm">
+                        {feature.title}
+                      </h4>
+                      <p className="text-muted-foreground text-sm">
+                        {feature.description}
+                      </p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Trust Badges */}
+      {section.trust_badges && (
+        <div className="container mt-24">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <TrustBadge
+              icon={Shield}
+              title={section.trust_badges.secure_payment?.title}
+              description={section.trust_badges.secure_payment?.description}
+            />
+            <TrustBadge
+              icon={RotateCcw}
+              title={section.trust_badges.money_back?.title}
+              description={section.trust_badges.money_back?.description}
+            />
+            <TrustBadge
+              icon={CreditCard}
+              title={section.trust_badges.cancel_anytime?.title}
+              description={section.trust_badges.cancel_anytime?.description}
+            />
+            <TrustBadge
+              icon={Zap}
+              title={section.trust_badges.instant_access?.title}
+              description={section.trust_badges.instant_access?.description}
+            />
+          </div>
+        </div>
+      )}
     </section>
+  );
+}
+
+// Helper component for rendering feature values
+function renderFeatureValue(value: any) {
+  if (typeof value === 'boolean') {
+    return value ? (
+      <Check className="mx-auto size-5 text-green-600" />
+    ) : (
+      <span className="text-muted-foreground">—</span>
+    );
+  }
+  return <span className="text-sm">{value}</span>;
+}
+
+// Trust Badge Component
+function TrustBadge({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: any;
+  title?: string;
+  description?: string;
+}) {
+  if (!title) return null;
+
+  return (
+    <div className="flex flex-col items-center rounded-lg border bg-card p-6 text-center">
+      <div className="mb-3 flex size-12 items-center justify-center rounded-full bg-primary/10">
+        <Icon className="size-6 text-primary" />
+      </div>
+      <h3 className="mb-1 font-semibold">{title}</h3>
+      {description && (
+        <p className="text-muted-foreground text-sm">{description}</p>
+      )}
+    </div>
   );
 }
