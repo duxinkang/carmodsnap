@@ -92,7 +92,7 @@ export default function CommunityShowcase() {
 
   return (
     <div className="min-h-screen bg-[#131022] font-[family-name:var(--font-sans)] text-white">
-      <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#131022]/80 backdrop-blur-xl">
+      <header className="sticky top-14 z-30 w-full border-b border-white/10 bg-[#131022]/80 backdrop-blur-xl lg:top-18">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-4 sm:px-6 md:flex-row lg:px-8">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4725f4] shadow-[0_0_20px_rgba(71,37,244,0.5)]">
