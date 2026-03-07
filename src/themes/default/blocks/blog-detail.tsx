@@ -62,6 +62,18 @@ export function BlogDetail({ post }: { post: PostType }) {
               </div>
             </div>
 
+            {post.image && (
+              <div className="mx-auto mb-10 max-w-5xl overflow-hidden rounded-2xl border shadow-sm">
+                <div className="aspect-[16/9]">
+                  <img
+                    src={post.image}
+                    alt={post.title || ''}
+                    className="block h-full w-full object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 gap-8 md:mt-12 lg:grid-cols-12">
               {/* Table of Contents - Left Sidebar */}

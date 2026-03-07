@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { Calendar } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-import { Link } from '@/core/i18n/navigation';
 import { Tabs } from '@/shared/blocks/common/tabs';
 import { cn } from '@/shared/lib/utils';
 import {
@@ -32,9 +31,10 @@ export function Blog({
       name: category.slug,
       title: category.title,
       url:
-        !category.slug || category.slug === 'all'
+        category.url ||
+        (!category.slug || category.slug === 'all'
           ? '/blog'
-          : `/blog/category/${category.slug}`,
+          : `/blog/category/${category.slug}`),
       is_active: currentCategory?.slug == category.slug,
     });
   });
@@ -66,7 +66,7 @@ export function Blog({
         {posts && posts.length > 0 ? (
           <div className="flex w-full flex-wrap items-start">
             {posts?.map((item, idx) => (
-              <Link
+              <a
                 key={idx}
                 href={item.url || ''}
                 target={item.target || '_self'}
@@ -74,11 +74,11 @@ export function Blog({
               >
                 <div className="border-border flex flex-col overflow-clip rounded-xl border">
                   {item.image && (
-                    <div>
+                    <div className="aspect-[16/9] overflow-hidden">
                       <img
                         src={item.image}
                         alt={item.title || ''}
-                        className="aspect-16/9 h-full w-full object-cover object-center"
+                        className="block h-full w-full object-cover object-center"
                       />
                     </div>
                   )}
@@ -125,7 +125,7 @@ export function Blog({
                     )} */}
                   </div>
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
         ) : (

@@ -3,6 +3,7 @@ import { and, count, desc, eq, like } from 'drizzle-orm';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import moment from 'moment';
 
+import { defaultLocale } from '@/config/locale';
 import { db } from '@/core/db';
 import { logsSource, pagesSource, postsSource } from '@/core/docs/source';
 import { generateTOC } from '@/core/docs/toc';
@@ -240,7 +241,8 @@ export async function getLocalPost({
     author_name: frontmatter.author_name || '',
     author_image: frontmatter.author_image || '',
     author_role: '',
-    url: `${postPrefix}${slug}`,
+    image: frontmatter.image || '',
+    url: getLocalizedPostUrl(`${postPrefix}${slug}`, locale),
   };
 
   return post;
@@ -438,7 +440,7 @@ export async function getRemotePostsAndCategories({
             locale,
           }) || '',
         image: post.image || '',
-        url: `${postPrefix}${post.slug}`,
+        url: getLocalizedPostUrl(`${postPrefix}${post.slug}`, locale),
       }))
     );
 
@@ -453,7 +455,7 @@ export async function getRemotePostsAndCategories({
         id: category.id,
         slug: category.slug,
         title: category.title,
-        url: `${categoryPrefix}${category.slug}`,
+        url: getLocalizedPostUrl(`${categoryPrefix}${category.slug}`, locale),
       }))
     );
   } catch (e) {
@@ -548,7 +550,7 @@ export async function getLocalPostsAndCategories({
         created_at: createdAt,
         date: frontmatter.date || createdAt,
         image: frontmatter.image || '',
-        url: `${postPrefix}${slug}`,
+        url: getLocalizedPostUrl(`${postPrefix}${slug}`, locale),
         version: frontmatter.version || '',
         tags: frontmatter.tags || [],
         categories: postCategories,
@@ -563,7 +565,7 @@ export async function getLocalPostsAndCategories({
     slug: cat.slug,
     title: cat.title,
     description: `Browse all ${cat.title} articles`,
-    url: `${categoryPrefix}${cat.slug}`,
+    url: getLocalizedPostUrl(`${categoryPrefix}${cat.slug}`, locale),
   }));
 
   return {
@@ -591,6 +593,18 @@ export function getPostSlug({
   }
 
   return url;
+}
+
+function getLocalizedPostUrl(url: string, locale: string) {
+  if (!url.startsWith('/')) {
+    return url;
+  }
+
+  if (locale === defaultLocale || url.startsWith(`/${locale}/`)) {
+    return url;
+  }
+
+  return `/${locale}${url}`;
 }
 
 export function getPostDate({

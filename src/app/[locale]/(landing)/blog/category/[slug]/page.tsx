@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { defaultLocale } from '@/config/locale';
 import { getThemePage } from '@/core/theme';
 import { envConfigs } from '@/config';
 import {
@@ -86,7 +87,7 @@ export default async function CategoryBlogPage({
     id: category.id,
     slug: category.slug,
     title: category.title,
-    url: `/blog/category/${category.slug}`,
+    url: getLocalizedBlogUrl(`/blog/category/${category.slug}`, locale),
   }));
 
   // Add "All" category at the beginning
@@ -94,7 +95,7 @@ export default async function CategoryBlogPage({
     id: 'all',
     slug: 'all',
     title: t('messages.all'),
-    url: `/blog`,
+    url: getLocalizedBlogUrl('/blog', locale),
   });
 
   // Current category data - use db data or build from slug
@@ -103,7 +104,7 @@ export default async function CategoryBlogPage({
         id: categoryData.id,
         slug: categoryData.slug,
         title: categoryData.title,
-        url: `/blog/category/${categoryData.slug}`,
+        url: getLocalizedBlogUrl(`/blog/category/${categoryData.slug}`, locale),
       }
     : {
         id: slug,
@@ -112,7 +113,7 @@ export default async function CategoryBlogPage({
           .split('-')
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
           .join(' '),
-        url: `/blog/category/${slug}`,
+        url: getLocalizedBlogUrl(`/blog/category/${slug}`, locale),
       };
 
   // Get posts filtered by category
@@ -138,7 +139,7 @@ export default async function CategoryBlogPage({
         author_image: post.authorImage || '',
         created_at: moment(post.createdAt).format('MMM D, YYYY') || '',
         image: post.image || '',
-        url: `/blog/${post.slug}`,
+        url: getLocalizedBlogUrl(`/blog/${post.slug}`, locale),
       }))
     );
   } catch (e) {
@@ -217,10 +218,22 @@ export default async function CategoryBlogPage({
       <BreadcrumbListSchemaMarkup
         items={[
           { position: 1, name: 'Home', item: '/' },
-          { position: 2, name: 'Blog', item: '/blog' },
-          { position: 3, name: currentCategory.title || slug, item: `/blog/category/${slug}` },
+          { position: 2, name: 'Blog', item: getLocalizedBlogUrl('/blog', locale) },
+          {
+            position: 3,
+            name: currentCategory.title || slug,
+            item: getLocalizedBlogUrl(`/blog/category/${slug}`, locale),
+          },
         ]}
       />
     </>
   );
+}
+
+function getLocalizedBlogUrl(url: string, locale: string) {
+  if (locale === defaultLocale) {
+    return url;
+  }
+
+  return `/${locale}${url}`;
 }
