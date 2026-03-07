@@ -21,3 +21,20 @@ Goal: publish 10 commercial-intent pages with clear page-to-keyword mapping.
 - Every page links to: `/pricing`, `/showcases`, `/blog`, `/carmodder`.
 - Anchor text should vary naturally and stay descriptive.
 - Homepage, pricing page, and blog index should all link to showcases + core conversion pages.
+
+# CarModSnap SEO Keyword Map (Phase 2)
+
+Goal: add 10 more commercial-intent pages around specific modification use cases and higher-buying-intent comparisons.
+
+| Page URL                           | Primary Keyword            | Secondary Keywords (3-5)                                                                             | Intent                   | CTA          |
+| ---------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------ | ------------ |
+| `/blog/chrome-delete-visualizer`   | chrome delete visualizer   | black trim preview, chrome delete before after, trim delete simulator, gloss black trim concept      | Commercial Investigation | `/carmodder` |
+| `/blog/custom-rims-on-my-car`      | custom rims on my car      | see rims on my car, wheel style preview, rims visualizer, aftermarket wheels preview                 | Commercial Investigation | `/showcases` |
+| `/blog/ppf-vs-wrap-visualizer`     | ppf vs wrap visualizer     | paint protection film vs wrap, satin ppf look, stealth ppf preview, wrap vs ppf comparison           | Commercial Investigation | `/pricing`   |
+| `/blog/car-livery-design-tool`     | car livery design tool     | race livery preview, sponsor livery mockup, car graphics preview, motorsport wrap visualizer         | Commercial Investigation | `/carmodder` |
+| `/blog/tesla-wrap-visualizer`      | tesla wrap visualizer      | tesla color wrap preview, model 3 wrap simulator, model y wrap ideas, tesla chrome delete visualizer | Commercial Investigation | `/showcases` |
+| `/blog/truck-wrap-visualizer`      | truck wrap visualizer      | pickup wrap preview, suv wrap simulator, off-road truck wrap ideas, fleet truck wrap concept         | Commercial Investigation | `/pricing`   |
+| `/blog/car-wrap-mockup-online`     | car wrap mockup online     | online wrap mockup, wrap design preview, car graphics mockup, vinyl wrap concept tool                | Commercial Investigation | `/carmodder` |
+| `/blog/widebody-kit-visualizer`    | widebody kit visualizer    | widebody preview, overfender concept tool, aggressive body kit visualizer, stance plus widebody      | Commercial Investigation | `/showcases` |
+| `/blog/see-wheels-on-my-car`       | see wheels on my car       | visualize wheels on my car, wheel swap preview, custom wheel comparison, rim fitment mockup          | Commercial Investigation | `/carmodder` |
+| `/blog/car-paint-color-visualizer` | car paint color visualizer | paint color preview, respray color simulator, custom paint concept, color change planning tool       | Commercial Investigation | `/pricing`   |
