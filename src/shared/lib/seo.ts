@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { envConfigs } from '@/config';
-import { defaultLocale } from '@/config/locale';
+import { defaultLocale, locales } from '@/config/locale';
 
 // get metadata for page component
 export function getMetadata(
@@ -51,6 +51,7 @@ export function getMetadata(
       options.canonicalUrl || '',
       locale || ''
     );
+    const alternatesLanguages = getAlternateLanguageUrls(options.canonicalUrl);
 
     const title =
       passedMetadata.title || translatedMetadata.title || defaultMetadata.title;
@@ -88,6 +89,7 @@ export function getMetadata(
         defaultMetadata.keywords,
       alternates: {
         canonical: canonicalUrl,
+        languages: alternatesLanguages,
       },
 
       openGraph: {
@@ -153,4 +155,36 @@ async function getCanonicalUrl(canonicalUrl: string, locale: string) {
   }
 
   return canonicalUrl;
+}
+
+function getAlternateLanguageUrls(canonicalUrl?: string) {
+  // For external canonicals, keep alternates undefined to avoid invalid pairs.
+  if (canonicalUrl?.startsWith('http')) {
+    return undefined;
+  }
+
+  const normalizedPath = normalizePath(canonicalUrl || '/');
+  const languages = Object.fromEntries(
+    locales.map((loc) => [
+      loc,
+      `${envConfigs.app_url}${loc === defaultLocale ? '' : `/${loc}`}${normalizedPath}`,
+    ])
+  );
+
+  return {
+    ...languages,
+    'x-default': languages[defaultLocale],
+  };
+}
+
+function normalizePath(path: string) {
+  if (!path.startsWith('/')) {
+    path = `/${path}`;
+  }
+
+  if (path !== '/' && path.endsWith('/')) {
+    path = path.slice(0, -1);
+  }
+
+  return path;
 }
