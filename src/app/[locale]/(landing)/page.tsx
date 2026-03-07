@@ -13,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/shared/components/ui/carousel';
+import { BeforeAfterSlider } from '@/shared/components/ui/before-after-slider';
 
 export default function CarModderLanding() {
   const t = useTranslations('pages.carmodder');
@@ -349,6 +350,168 @@ export default function CarModderLanding() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Before/After Comparison Section */}
+      <section className="relative bg-[#0a0a14] px-6 py-24">
+        <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-[#4725f4]/50 to-transparent"></div>
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-16 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 rounded-full border border-[#4725f4]/30 bg-[#4725f4]/10 px-4 py-2 text-xs font-bold tracking-wider text-[#4725f4]"
+            >
+              <span className="h-2 w-2 animate-ping rounded-full bg-[#4725f4]"></span>
+              AI-Powered Transformation
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="mt-6 mb-4 text-3xl font-bold text-white md:text-5xl"
+            >
+              See the{' '}
+              <span className="bg-gradient-to-r from-[#4725f4] to-purple-400 bg-clip-text text-transparent">
+                Difference
+              </span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="mx-auto max-w-2xl text-lg text-gray-400"
+            >
+              Drag the slider to explore real transformations created by our community.
+              From subtle upgrades to complete makeovers.
+            </motion.p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {/* Wrap Color Transformation */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <BeforeAfterSlider
+                beforeImage="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&h=600&fit=crop"
+                afterImage="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=800&h=600&fit=crop"
+                beforeLabel="Stock"
+                afterLabel="Matte Black Wrap"
+                aspectRatio="video"
+              />
+              <div className="mt-6">
+                <h3 className="text-xl font-bold text-white">
+                  Matte Black Wrap Transformation
+                </h3>
+                <p className="mt-2 text-gray-400">
+                  Complete color change with premium matte finish.
+                  Drag the slider to see the dramatic difference.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Wheel Upgrade */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <BeforeAfterSlider
+                beforeImage="https://images.unsplash.com/photo-1610450949368-7a322853c4bf?w=800&h=600&fit=crop"
+                afterImage="https://images.unsplash.com/photo-1493238792015-164e8568f09b?w=800&h=600&fit=crop"
+                beforeLabel="Stock Wheels"
+                afterLabel="Custom Forged Rims"
+                aspectRatio="video"
+              />
+              <div className="mt-6">
+                <h3 className="text-xl font-bold text-white">
+                  Custom Forged Wheel Upgrade
+                </h3>
+                <p className="mt-2 text-gray-400">
+                  See how the right wheels can completely transform
+                  your car's stance and presence.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Body Kit Transformation */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <BeforeAfterSlider
+                beforeImage="https://images.unsplash.com/photo-1552519507-cf0d5a6e5d0d?w=800&h=600&fit=crop"
+                afterImage="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&h=600&fit=crop"
+                beforeLabel="Stock Body"
+                afterLabel="Aero Body Kit"
+                aspectRatio="video"
+              />
+              <div className="mt-6">
+                <h3 className="text-xl font-bold text-white">
+                  Full Aero Body Kit
+                </h3>
+                <p className="mt-2 text-gray-400">
+                  Front lip, side skirts, rear diffuser –
+                  experience the full aggressive treatment.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Chrome Delete */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <BeforeAfterSlider
+                beforeImage="https://images.unsplash.com/photo-1611016186353-9af29c77880e?w=800&h=600&fit=crop"
+                afterImage="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop"
+                beforeLabel="Chrome Trim"
+                afterLabel="Gloss Black Delete"
+                aspectRatio="video"
+              />
+              <div className="mt-6">
+                <h3 className="text-xl font-bold text-white">
+                  Chrome Delete & Window Tint
+                </h3>
+                <p className="mt-2 text-gray-400">
+                  Subtle but impactful modification that adds
+                  a premium, aggressive look.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="mt-16 text-center"
+          >
+            <Link href="/carmodder">
+              <button className="group relative overflow-hidden rounded-full bg-[#4725f4] px-8 py-4 text-base font-bold text-white transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(71,37,244,0.4)]">
+                <span className="relative flex items-center justify-center gap-2">
+                  Create Your Transformation
+                  <span className="material-icons transition-transform group-hover:translate-x-1">
+                    arrow_forward
+                  </span>
+                </span>
+              </button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
