@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "title": "Blog",
-    "description": "Read latest product features, solutions, and updates."
+    "title": "Car Modification Blog | CarModSnap",
+    "description": "Learn car mod ideas, visual tuning tips, and product updates from the CarModSnap team."
   },
   "page": {
-    "title": "ShipAny Blog",
+    "title": "CarModSnap Blog",
     "sections": {
       "blog": {
         "id": "blog",

@@ -1,14 +1,14 @@
 {
   "metadata": {
-    "title": "Showcases",
-    "description": "Awesome projects built with ShipAny"
+    "title": "Car Build Showcases | CarModSnap",
+    "description": "Explore real car modification concepts and visual builds created with CarModSnap."
   },
   "page": {
     "title": "Showcases",
     "sections": {
       "showcases": {
         "id": "showcases",
-        "title": "AI SaaS Startups built with ShipAny",
+        "title": "Car Builds Visualized with CarModSnap",
         "description": "Easy to use and fast to ship.",
         "groups": [
           {

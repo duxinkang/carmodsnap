@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "title": "博客",
-    "description": "阅读我们最新的产品功能、解决方案和更新内容。"
+    "title": "汽车改装博客 | CarModSnap",
+    "description": "阅读 CarModSnap 的汽车改装灵感、可视化技巧和产品更新。"
   },
   "page": {
-    "title": "ShipAny 博客",
+    "title": "CarModSnap 博客",
     "sections": {
       "blog": {
         "id": "blog",
