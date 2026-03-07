@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';
+import { InternalLinkHub } from '@/shared/components/seo/internal-link-hub';
 import { getMetadata } from '@/shared/lib/seo';
 import { getCurrentSubscription } from '@/shared/models/subscription';
 import { getUserInfo } from '@/shared/models/user';
@@ -51,5 +52,10 @@ export default async function PricingPage({
   // load page component
   const Page = await getThemePage('dynamic-page');
 
-  return <Page locale={locale} page={page} />;
+  return (
+    <>
+      <Page locale={locale} page={page} />
+      <InternalLinkHub locale={locale} />
+    </>
+  );
 }

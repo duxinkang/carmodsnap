@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';
+import { InternalLinkHub } from '@/shared/components/seo/internal-link-hub';
 import { getMetadata } from '@/shared/lib/seo';
 import { getPostsAndCategories } from '@/shared/models/post';
 import {
@@ -78,5 +79,10 @@ export default async function BlogPage({
   // load page component
   const Page = await getThemePage('dynamic-page');
 
-  return <Page locale={locale} page={page} />;
+  return (
+    <>
+      <Page locale={locale} page={page} />
+      <InternalLinkHub locale={locale} />
+    </>
+  );
 }

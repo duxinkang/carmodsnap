@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "CarModSnap",
-    "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台。使用先进的 3D 技术可视化和定制您的爱车。",
-    "keywords": "汽车改装, AI改装, 3D配置器, CarModSnap, 汽车定制"
+    "title": "AI 汽车改装可视化工具 | CarModSnap",
+    "description": "用 CarModSnap 在改装前预览贴膜、轮毂与包围效果，快速完成 3D 汽车改装方案。",
+    "keywords": "AI 汽车改装可视化, 3D 汽车配置器, 汽车贴膜预览, 轮毂改装预览, 车身包围模拟"
   },
   "sign": {
     "sign_in_title": "登录",

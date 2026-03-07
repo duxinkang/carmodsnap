@@ -505,6 +505,51 @@ export default function CarModderLanding() {
         </div>
       </section>
 
+      <section className="relative z-10 border-t border-slate-800 bg-[#0f0d1c] px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-6xl rounded-xl border border-slate-700 bg-[#17132a] p-6">
+          <h2 className="text-xl font-semibold text-white">
+            {t('seoLinkHubTitle')}
+          </h2>
+          <p className="mt-2 text-sm text-slate-300">
+            {t('seoLinkHubDescription')}
+          </p>
+          <ul className="mt-4 flex flex-wrap gap-4 text-sm">
+            <li>
+              <Link
+                className="text-[#9f8cff] underline hover:text-white"
+                href="/pricing"
+              >
+                {t('seoLinkPricing')}
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="text-[#9f8cff] underline hover:text-white"
+                href="/showcases"
+              >
+                {t('seoLinkShowcases')}
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="text-[#9f8cff] underline hover:text-white"
+                href="/blog"
+              >
+                {t('seoLinkBlog')}
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="text-[#9f8cff] underline hover:text-white"
+                href="/carmodder"
+              >
+                {t('seoLinkVisualizer')}
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </section>
+
       <div className="pointer-events-none fixed right-0 bottom-8 left-0 z-50 flex justify-center px-4">
         <div className="pointer-events-auto flex max-w-full items-center gap-4 overflow-hidden rounded-full border border-white/10 bg-[#1c1830]/80 p-2 pr-2 pl-6 shadow-[0_0_30px_-5px_rgba(71,37,244,0.7)] backdrop-blur-xl">
           <div className="flex hidden items-center gap-4 border-r border-white/10 pr-4 sm:flex">
