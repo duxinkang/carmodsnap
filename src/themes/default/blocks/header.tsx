@@ -94,10 +94,10 @@ export function Header({ header }: { header: HeaderType }) {
                   <Link
                     href={item.url || ''}
                     target={item.target || '_self'}
-                    className={`flex flex-row items-center gap-2 px-4 py-1.5 text-sm ${
+                    className={`flex flex-row items-center gap-2 rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
                       item.is_active || pathname.endsWith(item.url as string)
-                        ? 'bg-muted/40 text-muted-foreground'
-                        : ''
+                        ? 'bg-white/12 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
+                        : 'text-slate-100/90 hover:bg-white/8 hover:text-white'
                     }`}
                   >
                     {item.icon && <SmartIcon name={item.icon as string} />}
@@ -109,14 +109,14 @@ export function Header({ header }: { header: HeaderType }) {
 
             return (
               <NavigationMenuItem key={idx}>
-                <NavigationMenuTrigger className="flex flex-row items-center gap-2 text-sm">
+                <NavigationMenuTrigger className="flex flex-row items-center gap-2 rounded-md text-sm font-medium text-slate-100/90 hover:bg-white/8 hover:text-white data-[state=open]:bg-white/12 data-[state=open]:text-white">
                   {item.icon && (
                     <SmartIcon name={item.icon as string} className="h-4 w-4" />
                   )}
                   {item.title}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent className="min-w-2xs origin-top p-0.5">
-                  <div className="border-foreground/5 bg-card ring-foreground/5 rounded-[calc(var(--radius)-2px)] border border-transparent p-2 shadow ring-1">
+                      <div className="rounded-[calc(var(--radius)-2px)] border border-white/10 bg-[#17132a]/96 p-2 shadow ring-1 ring-white/10">
                     <ul className="mt-1 space-y-2">
                       {item.children?.map((subItem: NavItem, index: number) => (
                         <ListItem
@@ -147,7 +147,7 @@ export function Header({ header }: { header: HeaderType }) {
     return (
       <nav
         role="navigation"
-        className="w-full [--color-border:--alpha(var(--color-foreground)/5%)] [--color-muted:--alpha(var(--color-foreground)/5%)]"
+        className="w-full [--color-border:--alpha(var(--color-foreground)/10%)] [--color-muted:--alpha(var(--color-foreground)/8%)]"
       >
         <Accordion
           type="single"
@@ -163,7 +163,7 @@ export function Header({ header }: { header: HeaderType }) {
               >
                 {item.children && item.children.length > 0 ? (
                   <>
-                    <AccordionTrigger className="data-[state=open]:bg-muted flex items-center justify-between px-4 py-3 text-lg **:!font-normal">
+                    <AccordionTrigger className="flex items-center justify-between px-4 py-3 text-lg text-slate-100 data-[state=open]:bg-white/8 **:!font-normal">
                       {item.title}
                     </AccordionTrigger>
                     <AccordionContent className="pb-5">
@@ -173,7 +173,7 @@ export function Header({ header }: { header: HeaderType }) {
                             <Link
                               href={subItem.url || ''}
                               onClick={closeMenu}
-                              className="grid grid-cols-[auto_1fr] items-center gap-2.5 px-4 py-2"
+                              className="grid grid-cols-[auto_1fr] items-center gap-2.5 px-4 py-2 text-slate-200/90 transition-colors hover:bg-white/6 hover:text-white"
                             >
                               <div
                                 aria-hidden
@@ -194,7 +194,7 @@ export function Header({ header }: { header: HeaderType }) {
                   <Link
                     href={item.url || ''}
                     onClick={closeMenu}
-                    className="data-[state=open]:bg-muted flex items-center justify-between px-4 py-3 text-lg **:!font-normal"
+                    className="flex items-center justify-between px-4 py-3 text-lg text-slate-100 transition-colors hover:bg-white/6 hover:text-white data-[state=open]:bg-white/8 **:!font-normal"
                   >
                     {item.title}
                   </Link>
@@ -249,14 +249,14 @@ export function Header({ header }: { header: HeaderType }) {
       <header
         data-state={isMobileMenuOpen ? 'active' : 'inactive'}
         {...(isScrolled && { 'data-scrolled': true })}
-        className="has-data-[state=open]:bg-background/50 fixed inset-x-0 top-0 z-50 has-data-[state=open]:h-screen has-data-[state=open]:backdrop-blur"
+        className="fixed inset-x-0 top-0 z-50 has-data-[state=open]:h-screen has-data-[state=open]:bg-[#131022]/72 has-data-[state=open]:backdrop-blur"
       >
         <div
           className={cn(
-            'absolute inset-x-0 top-0 z-50 h-18 border-transparent ring-1 ring-transparent transition-all duration-300',
-            'in-data-scrolled:border-foreground/5 in-data-scrolled:bg-background/75 in-data-scrolled:border-b in-data-scrolled:backdrop-blur',
-            'has-data-[state=open]:ring-foreground/5 has-data-[state=open]:bg-card/75 has-data-[state=open]:h-[calc(var(--navigation-menu-viewport-height)+3.4rem)] has-data-[state=open]:border-b has-data-[state=open]:shadow-lg has-data-[state=open]:shadow-black/10 has-data-[state=open]:backdrop-blur',
-            'max-lg:in-data-[state=active]:bg-background/75 max-lg:h-14 max-lg:overflow-hidden max-lg:border-b max-lg:in-data-[state=active]:h-screen max-lg:in-data-[state=active]:backdrop-blur'
+            'absolute inset-x-0 top-0 z-50 h-18 border-b border-white/10 bg-[#131022]/70 shadow-[0_10px_35px_-28px_rgba(0,0,0,0.95)] ring-1 ring-white/8 backdrop-blur-md transition-all duration-300',
+            'in-data-scrolled:border-white/12 in-data-scrolled:bg-[#131022]/88 in-data-scrolled:backdrop-blur-xl',
+            'has-data-[state=open]:h-[calc(var(--navigation-menu-viewport-height)+3.4rem)] has-data-[state=open]:bg-[#17132a]/94 has-data-[state=open]:shadow-lg has-data-[state=open]:shadow-black/20 has-data-[state=open]:ring-white/10 has-data-[state=open]:backdrop-blur-xl',
+            'max-lg:h-14 max-lg:overflow-hidden max-lg:border-b max-lg:in-data-[state=active]:h-screen max-lg:in-data-[state=active]:bg-[#17132a]/94 max-lg:in-data-[state=active]:backdrop-blur-xl'
           )}
         >
           <div className="container">
@@ -266,7 +266,7 @@ export function Header({ header }: { header: HeaderType }) {
                 {header.brand && <BrandLogo brand={header.brand} />}
 
                 {/* Desktop Navigation Menu */}
-                <div className="hidden flex-1 justify-center items-center lg:flex">
+                <div className="hidden flex-1 items-center justify-center lg:flex">
                   <NavMenu />
                 </div>
                 
@@ -311,7 +311,7 @@ export function Header({ header }: { header: HeaderType }) {
                   aria-label={
                     isMobileMenuOpen == true ? 'Close Menu' : 'Open Menu'
                   }
-                  className="relative z-20 -m-2.5 -ml-3 block cursor-pointer p-2.5 lg:hidden"
+                  className="relative z-20 -m-2.5 -ml-3 block cursor-pointer p-2.5 text-slate-100 lg:hidden"
                 >
                   <Menu className="m-auto size-5 duration-200 in-data-[state=active]:scale-0 in-data-[state=active]:rotate-180 in-data-[state=active]:opacity-0" />
                   <X className="absolute inset-0 m-auto size-5 scale-0 -rotate-180 opacity-0 duration-200 in-data-[state=active]:scale-100 in-data-[state=active]:rotate-0 in-data-[state=active]:opacity-100" />

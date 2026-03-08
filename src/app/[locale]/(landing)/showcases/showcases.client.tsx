@@ -92,7 +92,7 @@ export default function CommunityShowcase() {
 
   return (
     <div className="min-h-screen bg-[#131022] font-[family-name:var(--font-sans)] text-white">
-      <header className="sticky top-14 z-30 w-full border-b border-white/10 bg-[#131022]/80 backdrop-blur-xl lg:top-18">
+      <header className="sticky top-14 z-30 w-full border-b border-white/12 bg-[#131022]/90 shadow-[0_12px_30px_-26px_rgba(0,0,0,0.95)] backdrop-blur-xl lg:top-18">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-4 sm:px-6 md:flex-row lg:px-8">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4725f4] shadow-[0_0_20px_rgba(71,37,244,0.5)]">
@@ -102,7 +102,7 @@ export default function CommunityShowcase() {
               <h1 className="text-2xl font-bold tracking-tight uppercase">
                 {t('wallOfFame')}
               </h1>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-slate-200/85">
                 {t('communityBuildsSeason')}
               </p>
             </div>
@@ -115,7 +115,7 @@ export default function CommunityShowcase() {
                 className={`rounded-full px-5 py-2 text-sm font-medium whitespace-nowrap transition-all ${
                   activeFilter === filter.id
                     ? 'bg-[#4725f4] text-white shadow-[0_0_20px_-5px_rgba(71,37,244,0.5)]'
-                    : 'border border-white/10 bg-[#1c1833] hover:border-[#4725f4]/50'
+                    : 'border border-white/15 bg-[#1c1833]/92 text-slate-100/90 hover:border-[#4725f4]/50 hover:text-white'
                 }`}
                 onClick={() => setActiveFilter(filter.id)}
                 whileHover={{ scale: 1.02 }}
@@ -226,7 +226,7 @@ export default function CommunityShowcase() {
             <h3 className="mb-2 text-xl font-bold text-white">
               {t('joinTheChallenge')}
             </h3>
-            <p className="mb-4 text-sm text-gray-300">{t('submitYourWrap')}</p>
+            <p className="mb-4 text-sm text-slate-200/90">{t('submitYourWrap')}</p>
             <motion.button
               className="rounded-full bg-[#4725f4] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#361bb8]"
               whileHover={{ scale: 1.05 }}
@@ -239,15 +239,15 @@ export default function CommunityShowcase() {
       </main>
 
       <div className="pointer-events-none fixed right-0 bottom-8 left-0 z-50 flex justify-center px-4">
-        <div className="pointer-events-auto flex max-w-full items-center gap-4 overflow-hidden rounded-full border border-white/10 bg-[#1c1833]/80 p-2 pr-2 pl-6 shadow-[0_0_30px_-5px_rgba(71,37,244,0.7)] backdrop-blur-xl">
-          <div className="flex hidden items-center gap-4 border-r border-white/10 pr-4 sm:flex">
-            <button className="group relative flex flex-col items-center justify-center text-gray-400 transition-colors hover:text-white">
+        <div className="pointer-events-auto flex max-w-full items-center gap-4 overflow-hidden rounded-full border border-white/15 bg-[#17132a]/88 p-2 pr-2 pl-6 shadow-[0_0_30px_-5px_rgba(71,37,244,0.7)] backdrop-blur-xl">
+          <div className="flex hidden items-center gap-4 border-r border-white/15 pr-4 sm:flex">
+            <button className="group relative flex flex-col items-center justify-center text-slate-200/85 transition-colors hover:text-white">
               <span className="material-icons text-2xl">wallpaper</span>
               <span className="pointer-events-none absolute -top-10 rounded bg-black px-2 py-1 text-[10px] whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
                 {t('saveWallpaper')}
               </span>
             </button>
-            <button className="group relative flex flex-col items-center justify-center text-gray-400 transition-colors hover:text-red-400">
+            <button className="group relative flex flex-col items-center justify-center text-slate-200/85 transition-colors hover:text-red-400">
               <span className="text-lg font-bold">RED</span>
               <span className="pointer-events-none absolute -top-10 rounded bg-black px-2 py-1 text-[10px] whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
                 {t('shareToXiaohongshu')}
@@ -255,7 +255,7 @@ export default function CommunityShowcase() {
             </button>
           </div>
 
-          <button className="text-gray-400 sm:hidden">
+          <button className="text-slate-200/85 sm:hidden">
             <span className="material-icons">more_vert</span>
           </button>
 

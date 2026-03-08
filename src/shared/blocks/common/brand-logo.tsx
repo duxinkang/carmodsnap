@@ -8,7 +8,7 @@ export function BrandLogo({ brand }: { brand: BrandType }) {
     <Link
       href={brand.url || ''}
       target={brand.target || '_self'}
-      className={`flex items-center space-x-3 ${brand.className}`}
+      className={`flex items-center space-x-3 text-slate-50 ${brand.className}`}
     >
       {brand.logo && (
         <Image
@@ -21,7 +21,9 @@ export function BrandLogo({ brand }: { brand: BrandType }) {
         />
       )}
       {brand.title && (
-        <span className="text-lg font-medium">{brand.title}</span>
+        <span className="text-lg font-medium text-slate-50">
+          {brand.title}
+        </span>
       )}
     </Link>
   );

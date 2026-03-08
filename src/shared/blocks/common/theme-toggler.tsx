@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Monitor, Moon, SunDim } from 'lucide-react';
+import { Moon, SunDim } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { AnimatedThemeToggler } from '@/shared/components/magicui/animated-theme-toggler';
@@ -60,13 +60,6 @@ export function ThemeToggler({
           aria-label="Switch to dark mode"
         >
           <Moon />
-        </ToggleGroupItem>
-        <ToggleGroupItem
-          value="system"
-          onClick={() => setTheme('system')}
-          aria-label="Switch to system mode"
-        >
-          <Monitor />
         </ToggleGroupItem>
       </ToggleGroup>
     );
