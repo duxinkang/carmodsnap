@@ -5,6 +5,7 @@ import Link from 'next/link';
 import autoScroll from 'embla-carousel-auto-scroll';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { preconnect, preload } from 'react-dom';
 
 import {
   Carousel,
@@ -19,6 +20,20 @@ import { beforeAfterItems } from '@/shared/config/before-after';
 export default function CarModderLanding() {
   const t = useTranslations('pages.carmodder');
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const heroImage =
+    'https://lh3.googleusercontent.com/aida-public/AB6AXuDciVRobZQzVQn_4Vgc4xRll_frKDXa0AjsS86SBFoXStRExyIwa0Dkn0YdsLuJ1BuJIdiuncl6usnfQSWqsISPMnEV4SQw1TMwKkB0yYAH59ALL1my1HgQQ28OHgqQ3dIMpWlT4sN8KM9YsK4GdK10kzQElQAScm6G5M3qHfLiShH2AhRDBNPUoItTi27W-5tIv80LK1R8N2S_dQD-_a14zHgFct5NsDUtuEXTIWQHkBY0Fh9KUKkKmEVDMicX0HOcuHBE2CRxRlzX';
+
+  preconnect('https://lh3.googleusercontent.com', { crossOrigin: 'anonymous' });
+  preconnect('https://images.unsplash.com', { crossOrigin: 'anonymous' });
+  preload(heroImage, { as: 'image', fetchPriority: 'high' });
+  preload(beforeAfterItems[0].beforeImage, {
+    as: 'image',
+    fetchPriority: 'high',
+  });
+  preload(beforeAfterItems[0].afterImage, {
+    as: 'image',
+    fetchPriority: 'high',
+  });
 
   const featuredConfigs = [
     {
@@ -103,7 +118,7 @@ export default function CarModderLanding() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mx-auto mb-10 max-w-lg text-lg leading-relaxed font-light text-gray-400 lg:mx-0"
+              className="mx-auto mb-10 max-w-lg text-lg leading-relaxed font-light text-slate-200/90 lg:mx-0"
             >
               {t('ultimateConfiguratorDescription')}
             </motion.p>
@@ -130,10 +145,10 @@ export default function CarModderLanding() {
               </motion.div>
 
               <motion.button
-                className="flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-transparent px-8 py-4 text-base font-medium text-white transition-colors hover:bg-white/5 sm:w-auto"
+                className="flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-8 py-4 text-base font-medium text-slate-50 transition-colors hover:bg-white/[0.12] sm:w-auto"
                 whileHover={{ scale: 1.05 }}
               >
-                <span className="material-icons text-gray-400">
+                <span className="material-icons text-slate-200">
                   play_circle
                 </span>
                 {t('watchDemo')}
@@ -144,23 +159,23 @@ export default function CarModderLanding() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-12 flex items-center justify-center gap-8 border-t border-white/5 pt-8 lg:justify-start"
+              className="mt-12 flex items-center justify-center gap-8 border-t border-white/10 pt-8 lg:justify-start"
             >
               <div>
                 <div className="text-2xl font-bold text-white">Beta</div>
-                <div className="text-xs tracking-widest text-gray-500 uppercase">
+                <div className="text-xs tracking-widest text-slate-300 uppercase">
                   {t('buildsCreated')}
                 </div>
               </div>
-              <div className="h-8 w-px bg-white/10"></div>
+              <div className="h-8 w-px bg-white/20"></div>
               <div>
                 <div className="text-2xl font-bold text-white">Demo</div>
-                <div className="text-xs tracking-widest text-gray-500 uppercase">
+                <div className="text-xs tracking-widest text-slate-300 uppercase">
                   {t('textures')}
                 </div>
               </div>
-              <div className="h-8 w-px bg-white/10"></div>
-              <div className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-gray-300">
+              <div className="h-8 w-px bg-white/20"></div>
+              <div className="rounded-full border border-white/20 bg-white/[0.08] px-3 py-2 text-xs text-slate-100">
                 {t('demoDataNotice')}
               </div>
             </motion.div>
@@ -196,8 +211,11 @@ export default function CarModderLanding() {
 
                     <img
                       className="h-auto w-full object-contain drop-shadow-2xl"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDciVRobZQzVQn_4Vgc4xRll_frKDXa0AjsS86SBFoXStRExyIwa0Dkn0YdsLuJ1BuJIdiuncl6usnfQSWqsISPMnEV4SQw1TMwKkB0yYAH59ALL1my1HgQQ28OHgqQ3dIMpWlT4sN8KM9YsK4GdK10kzQElQAScm6G5M3qHfLiShH2AhRDBNPUoItTi27W-5tIv80LK1R8N2S_dQD-_a14zHgFct5NsDUtuEXTIWQHkBY0Fh9KUKkKmEVDMicX0HOcuHBE2CRxRlzX"
+                      src={heroImage}
                       alt="Sleek dark sports car in neon environment representing Xiaomi SU7"
+                      loading="eager"
+                      fetchPriority="high"
+                      decoding="async"
                     />
                   </div>
                 </CarouselItem>
@@ -249,43 +267,43 @@ export default function CarModderLanding() {
       </section>
 
       <div className="relative z-20 overflow-hidden border-y border-white/5 bg-[#131022] py-6">
-        <motion.div className="animate-marquee flex items-center gap-16 whitespace-nowrap opacity-60 transition-opacity duration-500 hover:opacity-100">
-          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/80">
+        <motion.div className="animate-marquee flex items-center gap-16 whitespace-nowrap opacity-80 transition-opacity duration-500 hover:opacity-100">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
             <span className="material-icons text-[#4725f4]">3d_rotation</span>{' '}
             {t('threeSixtyVisualization')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
-          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/80">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
             <span className="material-icons text-[#4725f4]">blur_on</span>{' '}
             {t('realTimeRendering')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
-          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/80">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
             <span className="material-icons text-[#4725f4]">share</span>{' '}
             {t('instantSharing')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
-          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/80">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
             <span className="material-icons text-[#4725f4]">shopping_bag</span>{' '}
             {t('oneClickOrdering')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
-          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/80">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
             <span className="material-icons text-[#4725f4]">3d_rotation</span>{' '}
             {t('threeSixtyVisualization')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
-          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/80">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
             <span className="material-icons text-[#4725f4]">blur_on</span>{' '}
             {t('realTimeRendering')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
-          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/80">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
             <span className="material-icons text-[#4725f4]">share</span>{' '}
             {t('instantSharing')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
-          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/80">
+          <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
             <span className="material-icons text-[#4725f4]">shopping_bag</span>{' '}
             {t('oneClickOrdering')}
           </div>
@@ -300,8 +318,8 @@ export default function CarModderLanding() {
               <h2 className="mb-2 text-3xl font-bold text-white md:text-4xl">
                 {t('communityBuilds')}
               </h2>
-              <p className="text-gray-400">{t('trendingConfigs')}</p>
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="text-slate-200/90">{t('trendingConfigs')}</p>
+              <p className="mt-2 text-xs text-slate-300">
                 {t('demoDataNotice')}
               </p>
             </div>
@@ -318,7 +336,7 @@ export default function CarModderLanding() {
             {featuredConfigs.map((config, index) => (
               <motion.div
                 key={config.id}
-                className="group relative overflow-hidden rounded-xl border border-white/5 bg-white/5 transition-all duration-300 hover:border-[#4725f4]/50"
+                className="group relative overflow-hidden rounded-xl border border-white/12 bg-white/[0.08] transition-all duration-300 hover:border-[#4725f4]/50"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -338,7 +356,7 @@ export default function CarModderLanding() {
                       <h3 className="mb-1 text-xl font-bold text-white">
                         {config.name}
                       </h3>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-slate-200/90">
                         {t('sampleConcept')}
                       </p>
                     </div>
@@ -385,7 +403,7 @@ export default function CarModderLanding() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="mx-auto max-w-2xl text-lg text-gray-400"
+              className="mx-auto max-w-2xl text-lg text-slate-200/90"
             >
               Drag the slider to explore real transformations created by our community.
               From subtle upgrades to complete makeovers.
@@ -412,7 +430,7 @@ export default function CarModderLanding() {
                 />
                 <div className="mt-6">
                   <h3 className="text-xl font-bold text-white">{item.title}</h3>
-                  <p className="mt-2 text-gray-400">{item.description}</p>
+                  <p className="mt-2 text-slate-200/90">{item.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -566,25 +584,25 @@ export default function CarModderLanding() {
             <h2 className="mt-2 mb-4 text-3xl font-bold text-white md:text-4xl">
               {t('faqTitle')}
             </h2>
-            <p className="text-slate-400">{t('faqDescription')}</p>
+            <p className="text-slate-200/85">{t('faqDescription')}</p>
           </div>
 
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <motion.details
                 key={index}
-                className="group overflow-hidden rounded-lg border border-slate-800 bg-[#1c1830] transition-all duration-300 open:border-[#4725f4]/50 open:ring-1 open:ring-[#4725f4]/20"
+                className="group overflow-hidden rounded-lg border border-slate-700/90 bg-[#1b1730] transition-all duration-300 open:border-[#4725f4]/50 open:ring-1 open:ring-[#4725f4]/20"
                 onToggle={() => toggleFaq(index)}
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between p-6">
                   <span className="text-lg font-medium text-white transition-colors group-hover:text-[#4725f4]">
                     {faq.question}
                   </span>
-                  <span className="material-icons text-slate-500 transition-transform group-open:rotate-180 group-open:text-[#4725f4]">
+                  <span className="material-icons text-slate-300 transition-transform group-open:rotate-180 group-open:text-[#4725f4]">
                     expand_more
                   </span>
                 </summary>
-                <div className="border-t border-slate-800/50 px-6 pt-4 pb-6 leading-relaxed text-slate-400">
+                <div className="border-t border-slate-700/70 px-6 pt-4 pb-6 leading-relaxed text-slate-200/85">
                   {faq.answer}
                 </div>
               </motion.details>
@@ -639,15 +657,15 @@ export default function CarModderLanding() {
       </section>
 
       <div className="pointer-events-none fixed right-0 bottom-8 left-0 z-50 flex justify-center px-4">
-        <div className="pointer-events-auto flex max-w-full items-center gap-4 overflow-hidden rounded-full border border-white/10 bg-[#1c1830]/80 p-2 pr-2 pl-6 shadow-[0_0_30px_-5px_rgba(71,37,244,0.7)] backdrop-blur-xl">
-          <div className="flex hidden items-center gap-4 border-r border-white/10 pr-4 sm:flex">
-            <button className="group relative flex flex-col items-center justify-center text-gray-400 transition-colors hover:text-white">
+        <div className="pointer-events-auto flex max-w-full items-center gap-4 overflow-hidden rounded-full border border-white/15 bg-[#17132a]/88 p-2 pr-2 pl-6 shadow-[0_0_30px_-5px_rgba(71,37,244,0.7)] backdrop-blur-xl">
+          <div className="flex hidden items-center gap-4 border-r border-white/15 pr-4 sm:flex">
+            <button className="group relative flex flex-col items-center justify-center text-slate-200/85 transition-colors hover:text-white">
               <span className="material-icons text-2xl">wallpaper</span>
               <span className="pointer-events-none absolute -top-10 rounded bg-black px-2 py-1 text-[10px] whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
                 {t('saveWallpaper')}
               </span>
             </button>
-            <button className="group relative flex flex-col items-center justify-center text-gray-400 transition-colors hover:text-red-400">
+            <button className="group relative flex flex-col items-center justify-center text-slate-200/85 transition-colors hover:text-red-400">
               <span className="text-lg font-bold">RED</span>
               <span className="pointer-events-none absolute -top-10 rounded bg-black px-2 py-1 text-[10px] whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
                 {t('shareToXiaohongshu')}
@@ -655,7 +673,7 @@ export default function CarModderLanding() {
             </button>
           </div>
 
-          <button className="text-gray-400 sm:hidden">
+          <button className="text-slate-200/85 sm:hidden">
             <span className="material-icons">more_vert</span>
           </button>
 
