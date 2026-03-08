@@ -2152,6 +2152,100 @@ export default function CarModderConfigurator() {
   const canRedo =
     historyState.index >= 0 &&
     historyState.index < historyState.entries.length - 1;
+  const previewFocus = useMemo(() => {
+    if (activeTab === 'paint') {
+      return {
+        label: t('paint'),
+        title: isZh ? selectedColor.nameZh : selectedColor.name,
+        summary: `${isZh ? selectedFinish.nameZh : selectedFinish.name} · ${isZh ? selectedColor.descriptionZh : selectedColor.description}`,
+        note: isZh
+          ? '当前重点是车身漆面与材质反光。'
+          : 'Focus is on body color and finish reflections.',
+        spotlight:
+          'radial-gradient(circle at 50% 38%, rgba(255,255,255,0.16), transparent 28%)',
+        anchorClass: 'top-5 left-5',
+      };
+    }
+
+    if (activeTab === 'wheels') {
+      return {
+        label: t('wheels'),
+        title: isZh ? selectedWheel.nameZh : selectedWheel.name,
+        summary: `${wheelSpec.size}" · ${wheelSpec.spokeCount}${t('spokeUnit')} · ${isZh ? selectedWheelColor.nameZh : selectedWheelColor.name}`,
+        note: isZh
+          ? '当前重点是轮毂样式、尺寸和轮圈颜色。'
+          : 'Focus is on wheel design, sizing, and rim color.',
+        spotlight:
+          'radial-gradient(circle at 28% 72%, rgba(255,255,255,0.16), transparent 16%), radial-gradient(circle at 72% 72%, rgba(255,255,255,0.16), transparent 16%)',
+        anchorClass: 'bottom-5 left-5',
+      };
+    }
+
+    if (activeTab === 'mods') {
+      return {
+        label: t('modifications_'),
+        title:
+          selectedMods.length > 0
+            ? `${selectedMods.length} ${t('modifications_')}`
+            : t('performanceStylingTitle'),
+        summary:
+          selectedMods.length > 0
+            ? selectedMods
+                .map((id) => MODIFICATION_OPTIONS.find((item) => item.id === id))
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((item) => (isZh ? item!.nameZh : item!.name))
+                .join(' · ')
+            : t('performanceStylingDesc'),
+        note: isZh
+          ? '当前重点是姿态、宽体和空气动力套件。'
+          : 'Focus is on stance, widebody, and aero parts.',
+        spotlight:
+          'radial-gradient(circle at 50% 78%, rgba(255,255,255,0.14), transparent 24%), radial-gradient(circle at 50% 28%, rgba(255,255,255,0.08), transparent 18%)',
+        anchorClass: 'bottom-5 right-5',
+      };
+    }
+
+    return {
+      label: t('accentsDetail'),
+      title:
+        Object.values(accentOptions).filter(Boolean).length > 0
+          ? `${Object.values(accentOptions).filter(Boolean).length} ${t('accentsDetail')}`
+          : t('accentDetailsTitle'),
+      summary:
+        Object.entries(accentOptions)
+          .filter(([, enabled]) => enabled)
+          .map(([id]) => ACCENT_OPTIONS.find((item) => item.id === id))
+          .filter(Boolean)
+          .slice(0, 2)
+          .map((item) => (isZh ? item!.nameZh : item!.name))
+          .join(' · ') || t('accentDetailsDesc'),
+      note: isZh
+        ? '当前重点是徽章、饰条和点缀细节。'
+        : 'Focus is on trim, badges, and finishing details.',
+      spotlight:
+        'radial-gradient(circle at 50% 22%, rgba(255,255,255,0.14), transparent 20%), radial-gradient(circle at 82% 34%, rgba(255,255,255,0.12), transparent 16%)',
+      anchorClass: 'top-5 right-5',
+    };
+  }, [
+    accentOptions,
+    activeTab,
+    isZh,
+    selectedColor.description,
+    selectedColor.descriptionZh,
+    selectedColor.name,
+    selectedColor.nameZh,
+    selectedFinish.name,
+    selectedFinish.nameZh,
+    selectedMods,
+    selectedWheel.name,
+    selectedWheel.nameZh,
+    selectedWheelColor.name,
+    selectedWheelColor.nameZh,
+    t,
+    wheelSpec.size,
+    wheelSpec.spokeCount,
+  ]);
   const carBrands = useMemo(
     () => ['all', ...Array.from(new Set(CHINESE_CAR_MODELS.map((car) => car.brand)))],
     []
@@ -2314,8 +2408,30 @@ export default function CarModderConfigurator() {
                               (e.currentTarget as HTMLImageElement).src =
                                 selectedCar.localImage;
                             }}
-                          />
+                              />
                         )}
+                        <div
+                          className="pointer-events-none absolute inset-0"
+                          style={{ backgroundImage: previewFocus.spotlight }}
+                        />
+                        <div className="pointer-events-none absolute top-5 left-5">
+                          <div className="rounded-full border border-white/12 bg-black/35 px-3 py-1 text-[11px] font-medium tracking-[0.18em] text-slate-100 uppercase backdrop-blur-md">
+                            {previewFocus.label}
+                          </div>
+                        </div>
+                        <div
+                          className={`pointer-events-none absolute max-w-[260px] rounded-2xl border border-white/12 bg-black/35 p-4 backdrop-blur-md ${previewFocus.anchorClass}`}
+                        >
+                          <p className="text-sm font-semibold text-white">
+                            {previewFocus.title}
+                          </p>
+                          <p className="mt-1 text-xs leading-relaxed text-slate-200/85">
+                            {previewFocus.summary}
+                          </p>
+                          <p className="mt-3 text-[11px] leading-relaxed text-slate-300">
+                            {previewFocus.note}
+                          </p>
+                        </div>
                         <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:hover:opacity-100">
                           <div className="w-full p-6">
                             <h3 className="mb-2 line-clamp-2 max-w-full text-xl leading-tight font-semibold tracking-tight break-words">
@@ -2412,6 +2528,28 @@ export default function CarModderConfigurator() {
                               'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
                           }}
                         />
+                        <div
+                          className="pointer-events-none absolute inset-0"
+                          style={{ backgroundImage: previewFocus.spotlight }}
+                        />
+                        <div className="pointer-events-none absolute top-5 left-5">
+                          <div className="rounded-full border border-white/12 bg-black/35 px-3 py-1 text-[11px] font-medium tracking-[0.18em] text-slate-100 uppercase backdrop-blur-md">
+                            {previewFocus.label}
+                          </div>
+                        </div>
+                        <div
+                          className={`pointer-events-none absolute max-w-[260px] rounded-2xl border border-white/12 bg-black/35 p-4 backdrop-blur-md ${previewFocus.anchorClass}`}
+                        >
+                          <p className="text-sm font-semibold text-white">
+                            {previewFocus.title}
+                          </p>
+                          <p className="mt-1 text-xs leading-relaxed text-slate-200/85">
+                            {previewFocus.summary}
+                          </p>
+                          <p className="mt-3 text-[11px] leading-relaxed text-slate-300">
+                            {previewFocus.note}
+                          </p>
+                        </div>
                         <div className="absolute bottom-4 left-4 max-w-[85%] rounded-lg bg-black/45 px-4 py-2 backdrop-blur-sm">
                           <span className="line-clamp-2 text-sm leading-snug font-medium break-words">
                             {isZh ? selectedCar.nameZh : selectedCar.name}
