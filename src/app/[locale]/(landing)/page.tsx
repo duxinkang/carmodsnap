@@ -401,8 +401,8 @@ export default function CarModderLanding() {
               viewport={{ once: true }}
             >
               <BeforeAfterSlider
-                beforeImage="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&h=600&fit=crop"
-                afterImage="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=800&h=600&fit=crop"
+                beforeImage="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&h=600&fit=crop&q=80"
+                afterImage="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=800&h=600&fit=crop&q=80"
                 beforeLabel="Stock"
                 afterLabel="Matte Black Wrap"
                 aspectRatio="video"
@@ -426,8 +426,8 @@ export default function CarModderLanding() {
               viewport={{ once: true }}
             >
               <BeforeAfterSlider
-                beforeImage="https://images.unsplash.com/photo-1610450949368-7a322853c4bf?w=800&h=600&fit=crop"
-                afterImage="https://images.unsplash.com/photo-1493238792015-164e8568f09b?w=800&h=600&fit=crop"
+                beforeImage="https://images.unsplash.com/photo-1610450949368-7a322853c4bf?w=800&h=600&fit=crop&q=80"
+                afterImage="https://images.unsplash.com/photo-1493238792015-164e8568f09b?w=800&h=600&fit=crop&q=80"
                 beforeLabel="Stock Wheels"
                 afterLabel="Custom Forged Rims"
                 aspectRatio="video"
@@ -451,8 +451,8 @@ export default function CarModderLanding() {
               viewport={{ once: true }}
             >
               <BeforeAfterSlider
-                beforeImage="https://images.unsplash.com/photo-1552519507-cf0d5a6e5d0d?w=800&h=600&fit=crop"
-                afterImage="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&h=600&fit=crop"
+                beforeImage="https://images.unsplash.com/photo-1552519507-cf0d5a6e5d0d?w=800&h=600&fit=crop&q=80"
+                afterImage="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&h=600&fit=crop&q=80"
                 beforeLabel="Stock Body"
                 afterLabel="Aero Body Kit"
                 aspectRatio="video"
@@ -476,8 +476,8 @@ export default function CarModderLanding() {
               viewport={{ once: true }}
             >
               <BeforeAfterSlider
-                beforeImage="https://images.unsplash.com/photo-1611016186353-9af29c77880e?w=800&h=600&fit=crop"
-                afterImage="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop"
+                beforeImage="https://images.unsplash.com/photo-1611016186353-9af29c77880e?w=800&h=600&fit=crop&q=80"
+                afterImage="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop&q=80"
                 beforeLabel="Chrome Trim"
                 afterLabel="Gloss Black Delete"
                 aspectRatio="video"
