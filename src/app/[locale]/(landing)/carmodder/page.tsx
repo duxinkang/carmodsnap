@@ -1,36 +1,40 @@
 'use client';
 
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslations } from 'next-intl';
-import { useLocale } from 'next-intl';
-import { toast } from 'sonner';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-  Loader2,
-  Sparkles,
-  Download,
-  Image as ImageIcon,
-  Share2,
-  FileText,
-  RefreshCw,
-  Eye,
-  EyeOff,
+  Check,
   ChevronDown,
   ChevronUp,
-  Check,
   CircleCheckBig,
   CircleDashed,
-  Undo2,
+  Download,
+  Eye,
+  EyeOff,
+  FileText,
+  Image as ImageIcon,
+  Loader2,
   Redo2,
+  RefreshCw,
+  Share2,
+  Sparkles,
+  Undo2,
   WandSparkles,
 } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 
 import { Link } from '@/core/i18n/navigation';
 import { AITaskStatus } from '@/extensions/ai/types';
+import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
 import { Progress } from '@/shared/components/ui/progress';
-import { Switch } from '@/shared/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -38,10 +42,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
+import { Separator } from '@/shared/components/ui/separator';
+import { Switch } from '@/shared/components/ui/switch';
 import { useAppContext } from '@/shared/contexts/app';
 import { getUuid } from '@/shared/lib/hash';
-import { Separator } from '@/shared/components/ui/separator';
-import { Badge } from '@/shared/components/ui/badge';
+
 import { CustomCarInput, type CustomCarInputData } from './custom-car-input';
 
 const POLL_INTERVAL = 5000;
@@ -61,53 +66,332 @@ interface CarModel {
 
 const CHINESE_CAR_MODELS: CarModel[] = [
   // Honda
-  { id: 'honda-civic', name: 'Honda Civic', nameZh: '本田思域', brand: 'Honda', type: 'sedan', image: '/imgs/cars/honda-civic.jpg', localImage: '/imgs/cars/honda-civic.jpg', price: 150000 },
-  { id: 'honda-s2000', name: 'Honda S2000', nameZh: '本田 S2000', brand: 'Honda', type: 'roadster', image: '/imgs/cars/honda-s2000.jpg', localImage: '/imgs/cars/honda-s2000.jpg', price: 350000 },
+  {
+    id: 'honda-civic',
+    name: 'Honda Civic',
+    nameZh: '本田思域',
+    brand: 'Honda',
+    type: 'sedan',
+    image: '/imgs/cars/honda-civic.jpg',
+    localImage: '/imgs/cars/honda-civic.jpg',
+    price: 150000,
+  },
+  {
+    id: 'honda-s2000',
+    name: 'Honda S2000',
+    nameZh: '本田 S2000',
+    brand: 'Honda',
+    type: 'roadster',
+    image: '/imgs/cars/honda-s2000.jpg',
+    localImage: '/imgs/cars/honda-s2000.jpg',
+    price: 350000,
+  },
   // Toyota / Subaru
-  { id: 'toyota-86-brz', name: 'Toyota 86 / Subaru BRZ', nameZh: '丰田 86/斯巴鲁 BRZ', brand: 'Toyota/Subaru', type: 'coupe', image: '/imgs/cars/toyota-86-brz.jpg', localImage: '/imgs/cars/toyota-86-brz.jpg', price: 280000 },
-  { id: 'toyota-supra', name: 'Toyota Supra', nameZh: '丰田 Supra', brand: 'Toyota', type: 'sports', image: '/imgs/cars/toyota-supra.jpg', localImage: '/imgs/cars/toyota-supra.jpg', price: 600000 },
-  { id: 'toyota-ae86', name: 'Toyota AE86', nameZh: '丰田 AE86', brand: 'Toyota', type: 'coupe', image: '/imgs/cars/toyota-ae86.jpg', localImage: '/imgs/cars/toyota-ae86.jpg', price: 150000 },
-  { id: 'subaru-wrx', name: 'Subaru WRX / STI', nameZh: '斯巴鲁 WRX/STI', brand: 'Subaru', type: 'sedan', image: '/imgs/cars/subaru-wrx.jpg', localImage: '/imgs/cars/subaru-wrx.jpg', price: 350000 },
+  {
+    id: 'toyota-86-brz',
+    name: 'Toyota 86 / Subaru BRZ',
+    nameZh: '丰田 86/斯巴鲁 BRZ',
+    brand: 'Toyota/Subaru',
+    type: 'coupe',
+    image: '/imgs/cars/toyota-86-brz.jpg',
+    localImage: '/imgs/cars/toyota-86-brz.jpg',
+    price: 280000,
+  },
+  {
+    id: 'toyota-supra',
+    name: 'Toyota Supra',
+    nameZh: '丰田 Supra',
+    brand: 'Toyota',
+    type: 'sports',
+    image: '/imgs/cars/toyota-supra.jpg',
+    localImage: '/imgs/cars/toyota-supra.jpg',
+    price: 600000,
+  },
+  {
+    id: 'toyota-ae86',
+    name: 'Toyota AE86',
+    nameZh: '丰田 AE86',
+    brand: 'Toyota',
+    type: 'coupe',
+    image: '/imgs/cars/toyota-ae86.jpg',
+    localImage: '/imgs/cars/toyota-ae86.jpg',
+    price: 150000,
+  },
+  {
+    id: 'subaru-wrx',
+    name: 'Subaru WRX / STI',
+    nameZh: '斯巴鲁 WRX/STI',
+    brand: 'Subaru',
+    type: 'sedan',
+    image: '/imgs/cars/subaru-wrx.jpg',
+    localImage: '/imgs/cars/subaru-wrx.jpg',
+    price: 350000,
+  },
   // Volkswagen
-  { id: 'vw-golf', name: 'Volkswagen Golf', nameZh: '大众高尔夫', brand: 'Volkswagen', type: 'hatchback', image: '/imgs/cars/vw-golf.jpg', localImage: '/imgs/cars/vw-golf.jpg', price: 150000 },
-  { id: 'vw-beetle', name: 'Volkswagen Beetle', nameZh: '大众甲壳虫', brand: 'Volkswagen', type: 'hatchback', image: '/imgs/cars/vw-beetle.jpg', localImage: '/imgs/cars/vw-beetle.jpg', price: 200000 },
+  {
+    id: 'vw-golf',
+    name: 'Volkswagen Golf',
+    nameZh: '大众高尔夫',
+    brand: 'Volkswagen',
+    type: 'hatchback',
+    image: '/imgs/cars/vw-golf.jpg',
+    localImage: '/imgs/cars/vw-golf.jpg',
+    price: 150000,
+  },
+  {
+    id: 'vw-beetle',
+    name: 'Volkswagen Beetle',
+    nameZh: '大众甲壳虫',
+    brand: 'Volkswagen',
+    type: 'hatchback',
+    image: '/imgs/cars/vw-beetle.jpg',
+    localImage: '/imgs/cars/vw-beetle.jpg',
+    price: 200000,
+  },
   // Nissan
-  { id: 'nissan-gtr', name: 'Nissan Skyline GT-R', nameZh: '日产 GT-R', brand: 'Nissan', type: 'sports', image: '/imgs/cars/nissan-gtr.jpg', localImage: '/imgs/cars/nissan-gtr.jpg', price: 1500000 },
-  { id: 'nissan-silvia', name: 'Nissan Silvia (S13-S15)', nameZh: '日产 Silvia', brand: 'Nissan', type: 'coupe', image: '/imgs/cars/nissan-silvia.jpg', localImage: '/imgs/cars/nissan-silvia.jpg', price: 200000 },
-  { id: 'nissan-370z', name: 'Nissan 350Z / 370Z', nameZh: '日产 370Z', brand: 'Nissan', type: 'coupe', image: '/imgs/cars/nissan-370z.jpg', localImage: '/imgs/cars/nissan-370z.jpg', price: 350000 },
+  {
+    id: 'nissan-gtr',
+    name: 'Nissan Skyline GT-R',
+    nameZh: '日产 GT-R',
+    brand: 'Nissan',
+    type: 'sports',
+    image: '/imgs/cars/nissan-gtr.jpg',
+    localImage: '/imgs/cars/nissan-gtr.jpg',
+    price: 1500000,
+  },
+  {
+    id: 'nissan-silvia',
+    name: 'Nissan Silvia (S13-S15)',
+    nameZh: '日产 Silvia',
+    brand: 'Nissan',
+    type: 'coupe',
+    image: '/imgs/cars/nissan-silvia.jpg',
+    localImage: '/imgs/cars/nissan-silvia.jpg',
+    price: 200000,
+  },
+  {
+    id: 'nissan-370z',
+    name: 'Nissan 350Z / 370Z',
+    nameZh: '日产 370Z',
+    brand: 'Nissan',
+    type: 'coupe',
+    image: '/imgs/cars/nissan-370z.jpg',
+    localImage: '/imgs/cars/nissan-370z.jpg',
+    price: 350000,
+  },
   // Mazda
-  { id: 'mazda-mx5', name: 'Mazda MX-5 (Miata)', nameZh: '马自达 MX-5', brand: 'Mazda', type: 'roadster', image: '/imgs/cars/mazda-mx5.jpg', localImage: '/imgs/cars/mazda-mx5.jpg', price: 350000 },
-  { id: 'mazda-rx7', name: 'Mazda RX-7', nameZh: '马自达 RX-7', brand: 'Mazda', type: 'coupe', image: '/imgs/cars/mazda-rx7.jpg', localImage: '/imgs/cars/mazda-rx7.jpg', price: 500000 },
+  {
+    id: 'mazda-mx5',
+    name: 'Mazda MX-5 (Miata)',
+    nameZh: '马自达 MX-5',
+    brand: 'Mazda',
+    type: 'roadster',
+    image: '/imgs/cars/mazda-mx5.jpg',
+    localImage: '/imgs/cars/mazda-mx5.jpg',
+    price: 350000,
+  },
+  {
+    id: 'mazda-rx7',
+    name: 'Mazda RX-7',
+    nameZh: '马自达 RX-7',
+    brand: 'Mazda',
+    type: 'coupe',
+    image: '/imgs/cars/mazda-rx7.jpg',
+    localImage: '/imgs/cars/mazda-rx7.jpg',
+    price: 500000,
+  },
   // BMW
-  { id: 'bmw-3series', name: 'BMW 3 Series', nameZh: '宝马 3 系', brand: 'BMW', type: 'sedan', image: '/imgs/cars/bmw-3series.jpg', localImage: '/imgs/cars/bmw-3series.jpg', price: 300000 },
-  { id: 'bmw-m3', name: 'BMW M3 / M4', nameZh: '宝马 M3/M4', brand: 'BMW', type: 'sports', image: '/imgs/cars/bmw-m3.jpg', localImage: '/imgs/cars/bmw-m3.jpg', price: 800000 },
+  {
+    id: 'bmw-3series',
+    name: 'BMW 3 Series',
+    nameZh: '宝马 3 系',
+    brand: 'BMW',
+    type: 'sedan',
+    image: '/imgs/cars/bmw-3series.jpg',
+    localImage: '/imgs/cars/bmw-3series.jpg',
+    price: 300000,
+  },
+  {
+    id: 'bmw-m3',
+    name: 'BMW M3 / M4',
+    nameZh: '宝马 M3/M4',
+    brand: 'BMW',
+    type: 'sports',
+    image: '/imgs/cars/bmw-m3.jpg',
+    localImage: '/imgs/cars/bmw-m3.jpg',
+    price: 800000,
+  },
   // Ford
-  { id: 'ford-mustang', name: 'Ford Mustang', nameZh: '福特野马', brand: 'Ford', type: 'coupe', image: '/imgs/cars/ford-mustang.jpg', localImage: '/imgs/cars/ford-mustang.jpg', price: 400000 },
-  { id: 'ford-f150', name: 'Ford F-150 / Raptor', nameZh: '福特 F-150', brand: 'Ford', type: 'truck', image: '/imgs/cars/ford-f150.jpg', localImage: '/imgs/cars/ford-f150.jpg', price: 600000 },
+  {
+    id: 'ford-mustang',
+    name: 'Ford Mustang',
+    nameZh: '福特野马',
+    brand: 'Ford',
+    type: 'coupe',
+    image: '/imgs/cars/ford-mustang.jpg',
+    localImage: '/imgs/cars/ford-mustang.jpg',
+    price: 400000,
+  },
+  {
+    id: 'ford-f150',
+    name: 'Ford F-150 / Raptor',
+    nameZh: '福特 F-150',
+    brand: 'Ford',
+    type: 'truck',
+    image: '/imgs/cars/ford-f150.jpg',
+    localImage: '/imgs/cars/ford-f150.jpg',
+    price: 600000,
+  },
   // Mitsubishi
-  { id: 'mitsubishi-evo', name: 'Mitsubishi Lancer Evolution', nameZh: '三菱 EVO', brand: 'Mitsubishi', type: 'sedan', image: '/imgs/cars/mitsubishi-evo.jpg', localImage: '/imgs/cars/mitsubishi-evo.jpg', price: 450000 },
+  {
+    id: 'mitsubishi-evo',
+    name: 'Mitsubishi Lancer Evolution',
+    nameZh: '三菱 EVO',
+    brand: 'Mitsubishi',
+    type: 'sedan',
+    image: '/imgs/cars/mitsubishi-evo.jpg',
+    localImage: '/imgs/cars/mitsubishi-evo.jpg',
+    price: 450000,
+  },
   // Porsche
-  { id: 'porsche-911', name: 'Porsche 911', nameZh: '保时捷 911', brand: 'Porsche', type: 'sports', image: '/imgs/cars/porsche-911.jpg', localImage: '/imgs/cars/porsche-911.jpg', price: 1500000 },
+  {
+    id: 'porsche-911',
+    name: 'Porsche 911',
+    nameZh: '保时捷 911',
+    brand: 'Porsche',
+    type: 'sports',
+    image: '/imgs/cars/porsche-911.jpg',
+    localImage: '/imgs/cars/porsche-911.jpg',
+    price: 1500000,
+  },
   // Jeep / Suzuki / Land Rover
-  { id: 'jeep-wrangler', name: 'Jeep Wrangler', nameZh: '吉普牧马人', brand: 'Jeep', type: 'suv', image: '/imgs/cars/jeep-wrangler.jpg', localImage: '/imgs/cars/jeep-wrangler.jpg', price: 450000 },
-  { id: 'suzuki-jimny', name: 'Suzuki Jimny', nameZh: '铃木吉姆尼', brand: 'Suzuki', type: 'suv', image: '/imgs/cars/suzuki-jimny.jpg', localImage: '/imgs/cars/suzuki-jimny.jpg', price: 150000 },
-  { id: 'landrover-defender', name: 'Land Rover Defender', nameZh: '路虎卫士', brand: 'Land Rover', type: 'suv', image: '/imgs/cars/landrover-defender.jpg', localImage: '/imgs/cars/landrover-defender.jpg', price: 700000 },
+  {
+    id: 'jeep-wrangler',
+    name: 'Jeep Wrangler',
+    nameZh: '吉普牧马人',
+    brand: 'Jeep',
+    type: 'suv',
+    image: '/imgs/cars/jeep-wrangler.jpg',
+    localImage: '/imgs/cars/jeep-wrangler.jpg',
+    price: 450000,
+  },
+  {
+    id: 'suzuki-jimny',
+    name: 'Suzuki Jimny',
+    nameZh: '铃木吉姆尼',
+    brand: 'Suzuki',
+    type: 'suv',
+    image: '/imgs/cars/suzuki-jimny.jpg',
+    localImage: '/imgs/cars/suzuki-jimny.jpg',
+    price: 150000,
+  },
+  {
+    id: 'landrover-defender',
+    name: 'Land Rover Defender',
+    nameZh: '路虎卫士',
+    brand: 'Land Rover',
+    type: 'suv',
+    image: '/imgs/cars/landrover-defender.jpg',
+    localImage: '/imgs/cars/landrover-defender.jpg',
+    price: 700000,
+  },
   // Audi
-  { id: 'audi-a4', name: 'Audi A4 / S4 / RS4', nameZh: '奥迪 A4', brand: 'Audi', type: 'sedan', image: '/imgs/cars/audi-a4.jpg', localImage: '/imgs/cars/audi-a4.jpg', price: 350000 },
-  { id: 'audi-a5', name: 'Audi A5 / S5 / RS5', nameZh: '奥迪 A5', brand: 'Audi', type: 'coupe', image: '/imgs/cars/audi-a5.jpg', localImage: '/imgs/cars/audi-a5.jpg', price: 500000 },
+  {
+    id: 'audi-a4',
+    name: 'Audi A4 / S4 / RS4',
+    nameZh: '奥迪 A4',
+    brand: 'Audi',
+    type: 'sedan',
+    image: '/imgs/cars/audi-a4.jpg',
+    localImage: '/imgs/cars/audi-a4.jpg',
+    price: 350000,
+  },
+  {
+    id: 'audi-a5',
+    name: 'Audi A5 / S5 / RS5',
+    nameZh: '奥迪 A5',
+    brand: 'Audi',
+    type: 'coupe',
+    image: '/imgs/cars/audi-a5.jpg',
+    localImage: '/imgs/cars/audi-a5.jpg',
+    price: 500000,
+  },
   // Mercedes-Benz
-  { id: 'mercedes-cclass', name: 'Mercedes-Benz C-Class', nameZh: '奔驰 C 级', brand: 'Mercedes-Benz', type: 'sedan', image: '/imgs/cars/mercedes-cclass.jpg', localImage: '/imgs/cars/mercedes-cclass.jpg', price: 350000 },
+  {
+    id: 'mercedes-cclass',
+    name: 'Mercedes-Benz C-Class',
+    nameZh: '奔驰 C 级',
+    brand: 'Mercedes-Benz',
+    type: 'sedan',
+    image: '/imgs/cars/mercedes-cclass.jpg',
+    localImage: '/imgs/cars/mercedes-cclass.jpg',
+    price: 350000,
+  },
   // MINI
-  { id: 'mini-cooper', name: 'MINI Cooper', nameZh: 'MINI Cooper', brand: 'MINI', type: 'hatchback', image: '/imgs/cars/mini-cooper.jpg', localImage: '/imgs/cars/mini-cooper.jpg', price: 280000 },
+  {
+    id: 'mini-cooper',
+    name: 'MINI Cooper',
+    nameZh: 'MINI Cooper',
+    brand: 'MINI',
+    type: 'hatchback',
+    image: '/imgs/cars/mini-cooper.jpg',
+    localImage: '/imgs/cars/mini-cooper.jpg',
+    price: 280000,
+  },
   // Chevrolet / Dodge
-  { id: 'chevy-camaro', name: 'Chevrolet Camaro', nameZh: '雪佛兰科迈罗', brand: 'Chevrolet', type: 'coupe', image: '/imgs/cars/chevy-camaro.jpg', localImage: '/imgs/cars/chevy-camaro.jpg', price: 400000 },
-  { id: 'dodge-challenger', name: 'Dodge Challenger', nameZh: '道奇挑战者', brand: 'Dodge', type: 'coupe', image: '/imgs/cars/dodge-challenger.jpg', localImage: '/imgs/cars/dodge-challenger.jpg', price: 450000 },
+  {
+    id: 'chevy-camaro',
+    name: 'Chevrolet Camaro',
+    nameZh: '雪佛兰科迈罗',
+    brand: 'Chevrolet',
+    type: 'coupe',
+    image: '/imgs/cars/chevy-camaro.jpg',
+    localImage: '/imgs/cars/chevy-camaro.jpg',
+    price: 400000,
+  },
+  {
+    id: 'dodge-challenger',
+    name: 'Dodge Challenger',
+    nameZh: '道奇挑战者',
+    brand: 'Dodge',
+    type: 'coupe',
+    image: '/imgs/cars/dodge-challenger.jpg',
+    localImage: '/imgs/cars/dodge-challenger.jpg',
+    price: 450000,
+  },
   // Lexus
-  { id: 'lexus-is', name: 'Lexus IS', nameZh: '雷克萨斯 IS', brand: 'Lexus', type: 'sedan', image: '/imgs/cars/lexus-is.jpg', localImage: '/imgs/cars/lexus-is.jpg', price: 350000 },
+  {
+    id: 'lexus-is',
+    name: 'Lexus IS',
+    nameZh: '雷克萨斯 IS',
+    brand: 'Lexus',
+    type: 'sedan',
+    image: '/imgs/cars/lexus-is.jpg',
+    localImage: '/imgs/cars/lexus-is.jpg',
+    price: 350000,
+  },
   // Tesla
-  { id: 'tesla-model3', name: 'Tesla Model 3', nameZh: '特斯拉 Model 3', brand: 'Tesla', type: 'sedan', image: '/imgs/cars/tesla-model3.jpg', localImage: '/imgs/cars/tesla-model3.jpg', price: 280000 },
+  {
+    id: 'tesla-model3',
+    name: 'Tesla Model 3',
+    nameZh: '特斯拉 Model 3',
+    brand: 'Tesla',
+    type: 'sedan',
+    image: '/imgs/cars/tesla-model3.jpg',
+    localImage: '/imgs/cars/tesla-model3.jpg',
+    price: 280000,
+  },
   // Infiniti
-  { id: 'infiniti-g35', name: 'Infiniti G35 / G37', nameZh: '英菲尼迪 G35', brand: 'Infiniti', type: 'sedan', image: '/imgs/cars/infiniti-g35.jpg', localImage: '/imgs/cars/infiniti-g35.jpg', price: 250000 },
+  {
+    id: 'infiniti-g35',
+    name: 'Infiniti G35 / G37',
+    nameZh: '英菲尼迪 G35',
+    brand: 'Infiniti',
+    type: 'sedan',
+    image: '/imgs/cars/infiniti-g35.jpg',
+    localImage: '/imgs/cars/infiniti-g35.jpg',
+    price: 250000,
+  },
 ];
 
 type WheelConcavity = 'low' | 'mid' | 'deep';
@@ -147,7 +431,12 @@ interface PresetPack {
 
 const WHEEL_SIZES = [17, 18, 19, 20];
 const SPOKE_COUNTS = [5, 6, 7, 8, 10, 12];
-const WHEEL_CONCAVITY_OPTIONS: { id: WheelConcavity; name: string; nameZh: string; extraCost: number }[] = [
+const WHEEL_CONCAVITY_OPTIONS: {
+  id: WheelConcavity;
+  name: string;
+  nameZh: string;
+  extraCost: number;
+}[] = [
   { id: 'low', name: 'Low', nameZh: '浅凹', extraCost: 0 },
   { id: 'mid', name: 'Medium', nameZh: '中凹', extraCost: 800 },
   { id: 'deep', name: 'Deep', nameZh: '深凹', extraCost: 1500 },
@@ -168,61 +457,426 @@ const WHEEL_SIZE_EXTRA_COST: Record<number, number> = {
 };
 
 const WHEEL_STYLES: WheelStyle[] = [
-  { id: 'stock', name: 'Stock Wheels', nameZh: '原厂轮毂', description: 'Keep original factory wheels', descriptionZh: '保持原厂轮毂样式', price: 0, tags: ['daily'], defaultSpokeCount: 10, defaultConcavity: 'low' },
-  { id: 'split5', name: 'Split-5 Sport', nameZh: '五辐分叉运动', description: 'Balanced street performance style', descriptionZh: '街道性能均衡风格', price: 7000, tags: ['sport', 'street'], defaultSpokeCount: 5, defaultConcavity: 'mid' },
-  { id: 'mesh-rs', name: 'Mesh RS', nameZh: '网格 RS', description: 'Dense mesh for premium stance', descriptionZh: '密辐网格豪华姿态', price: 9500, tags: ['luxury', 'show'], defaultSpokeCount: 12, defaultConcavity: 'mid' },
-  { id: 'forged-y', name: 'Forged Y-Spoke', nameZh: 'Y 辐锻造', description: 'Light forged wheel for quick response', descriptionZh: '轻量锻造提升响应', price: 15000, tags: ['track', 'forged'], defaultSpokeCount: 10, defaultConcavity: 'mid' },
-  { id: 'te37-style', name: '6-Spoke Track', nameZh: '六辐赛道', description: 'Classic six spoke motorsport look', descriptionZh: '经典六辐竞技风格', price: 12000, tags: ['track', 'sport'], defaultSpokeCount: 6, defaultConcavity: 'deep' },
-  { id: 'turbofan', name: 'Turbo Fan', nameZh: '涡轮风扇盘', description: 'Retro aerodynamic fan face', descriptionZh: '复古空气动力学轮面', price: 8000, tags: ['retro', 'show'], defaultSpokeCount: 7, defaultConcavity: 'low' },
-  { id: 'monoblock', name: 'Luxury Monoblock', nameZh: '豪华一体盘', description: 'Large monoblock luxury finish', descriptionZh: '大尺寸豪华一体盘', price: 13800, tags: ['luxury'], defaultSpokeCount: 5, defaultConcavity: 'mid' },
-  { id: 'drift-x', name: 'Drift X', nameZh: '漂移 X 辐', description: 'Aggressive drift style layout', descriptionZh: '激进漂移风格布局', price: 9800, tags: ['drift', 'sport'], defaultSpokeCount: 6, defaultConcavity: 'deep' },
-  { id: 'rally-star', name: 'Rally Star', nameZh: '拉力星型', description: 'High durability rally wheel look', descriptionZh: '耐用拉力风外观', price: 9200, tags: ['rally', 'street'], defaultSpokeCount: 5, defaultConcavity: 'low' },
-  { id: 'concave-v', name: 'Concave V', nameZh: 'V 辐深凹', description: 'Deep concave V-spoke profile', descriptionZh: 'V 辐深凹轮面', price: 12800, tags: ['show', 'sport'], defaultSpokeCount: 10, defaultConcavity: 'deep' },
-  { id: 'blade-10', name: 'Blade 10', nameZh: '刀锋十辐', description: 'Sharp blade-like ten spokes', descriptionZh: '锋利刀锋十辐设计', price: 10500, tags: ['sport'], defaultSpokeCount: 10, defaultConcavity: 'mid' },
-  { id: 'classic-mesh', name: 'Classic Mesh', nameZh: '经典网格', description: 'Timeless old-school mesh style', descriptionZh: '经典老派网格风格', price: 8600, tags: ['retro', 'luxury'], defaultSpokeCount: 12, defaultConcavity: 'low' },
-  { id: 'gt-arc', name: 'GT Arc', nameZh: 'GT 弧线辐', description: 'GT-inspired arc spoke geometry', descriptionZh: 'GT 灵感弧线辐条', price: 11800, tags: ['sport', 'track'], defaultSpokeCount: 8, defaultConcavity: 'mid' },
-  { id: 'aero-disc', name: 'Aero Disc', nameZh: '空气动力盘', description: 'Disc-like aero cover styling', descriptionZh: '盘式空气动力学风格', price: 9900, tags: ['ev', 'show'], defaultSpokeCount: 5, defaultConcavity: 'low' },
-  { id: 'wire-lux', name: 'Wire Lux', nameZh: '复古钢丝豪华', description: 'Modernized wire wheel feel', descriptionZh: '现代化钢丝轮质感', price: 13200, tags: ['luxury', 'retro'], defaultSpokeCount: 12, defaultConcavity: 'low' },
-  { id: 'forged-h', name: 'Forged H', nameZh: 'H 辐锻造', description: 'Rigid forged H-spoke shape', descriptionZh: '高刚性 H 辐锻造结构', price: 16200, tags: ['forged', 'track'], defaultSpokeCount: 8, defaultConcavity: 'deep' },
-  { id: 'street-8', name: 'Street 8', nameZh: '街道八辐', description: 'Clean everyday eight spoke wheel', descriptionZh: '干净利落的八辐日常风', price: 7600, tags: ['daily', 'street'], defaultSpokeCount: 8, defaultConcavity: 'mid' },
-  { id: 'stance-pro', name: 'Stance Pro', nameZh: '姿态派 Pro', description: 'Ultra low-offset stance look', descriptionZh: '低趴姿态派风格', price: 14200, tags: ['show', 'stance'], defaultSpokeCount: 10, defaultConcavity: 'deep' },
+  {
+    id: 'stock',
+    name: 'Stock Wheels',
+    nameZh: '原厂轮毂',
+    description: 'Keep original factory wheels',
+    descriptionZh: '保持原厂轮毂样式',
+    price: 0,
+    tags: ['daily'],
+    defaultSpokeCount: 10,
+    defaultConcavity: 'low',
+  },
+  {
+    id: 'split5',
+    name: 'Split-5 Sport',
+    nameZh: '五辐分叉运动',
+    description: 'Balanced street performance style',
+    descriptionZh: '街道性能均衡风格',
+    price: 7000,
+    tags: ['sport', 'street'],
+    defaultSpokeCount: 5,
+    defaultConcavity: 'mid',
+  },
+  {
+    id: 'mesh-rs',
+    name: 'Mesh RS',
+    nameZh: '网格 RS',
+    description: 'Dense mesh for premium stance',
+    descriptionZh: '密辐网格豪华姿态',
+    price: 9500,
+    tags: ['luxury', 'show'],
+    defaultSpokeCount: 12,
+    defaultConcavity: 'mid',
+  },
+  {
+    id: 'forged-y',
+    name: 'Forged Y-Spoke',
+    nameZh: 'Y 辐锻造',
+    description: 'Light forged wheel for quick response',
+    descriptionZh: '轻量锻造提升响应',
+    price: 15000,
+    tags: ['track', 'forged'],
+    defaultSpokeCount: 10,
+    defaultConcavity: 'mid',
+  },
+  {
+    id: 'te37-style',
+    name: '6-Spoke Track',
+    nameZh: '六辐赛道',
+    description: 'Classic six spoke motorsport look',
+    descriptionZh: '经典六辐竞技风格',
+    price: 12000,
+    tags: ['track', 'sport'],
+    defaultSpokeCount: 6,
+    defaultConcavity: 'deep',
+  },
+  {
+    id: 'turbofan',
+    name: 'Turbo Fan',
+    nameZh: '涡轮风扇盘',
+    description: 'Retro aerodynamic fan face',
+    descriptionZh: '复古空气动力学轮面',
+    price: 8000,
+    tags: ['retro', 'show'],
+    defaultSpokeCount: 7,
+    defaultConcavity: 'low',
+  },
+  {
+    id: 'monoblock',
+    name: 'Luxury Monoblock',
+    nameZh: '豪华一体盘',
+    description: 'Large monoblock luxury finish',
+    descriptionZh: '大尺寸豪华一体盘',
+    price: 13800,
+    tags: ['luxury'],
+    defaultSpokeCount: 5,
+    defaultConcavity: 'mid',
+  },
+  {
+    id: 'drift-x',
+    name: 'Drift X',
+    nameZh: '漂移 X 辐',
+    description: 'Aggressive drift style layout',
+    descriptionZh: '激进漂移风格布局',
+    price: 9800,
+    tags: ['drift', 'sport'],
+    defaultSpokeCount: 6,
+    defaultConcavity: 'deep',
+  },
+  {
+    id: 'rally-star',
+    name: 'Rally Star',
+    nameZh: '拉力星型',
+    description: 'High durability rally wheel look',
+    descriptionZh: '耐用拉力风外观',
+    price: 9200,
+    tags: ['rally', 'street'],
+    defaultSpokeCount: 5,
+    defaultConcavity: 'low',
+  },
+  {
+    id: 'concave-v',
+    name: 'Concave V',
+    nameZh: 'V 辐深凹',
+    description: 'Deep concave V-spoke profile',
+    descriptionZh: 'V 辐深凹轮面',
+    price: 12800,
+    tags: ['show', 'sport'],
+    defaultSpokeCount: 10,
+    defaultConcavity: 'deep',
+  },
+  {
+    id: 'blade-10',
+    name: 'Blade 10',
+    nameZh: '刀锋十辐',
+    description: 'Sharp blade-like ten spokes',
+    descriptionZh: '锋利刀锋十辐设计',
+    price: 10500,
+    tags: ['sport'],
+    defaultSpokeCount: 10,
+    defaultConcavity: 'mid',
+  },
+  {
+    id: 'classic-mesh',
+    name: 'Classic Mesh',
+    nameZh: '经典网格',
+    description: 'Timeless old-school mesh style',
+    descriptionZh: '经典老派网格风格',
+    price: 8600,
+    tags: ['retro', 'luxury'],
+    defaultSpokeCount: 12,
+    defaultConcavity: 'low',
+  },
+  {
+    id: 'gt-arc',
+    name: 'GT Arc',
+    nameZh: 'GT 弧线辐',
+    description: 'GT-inspired arc spoke geometry',
+    descriptionZh: 'GT 灵感弧线辐条',
+    price: 11800,
+    tags: ['sport', 'track'],
+    defaultSpokeCount: 8,
+    defaultConcavity: 'mid',
+  },
+  {
+    id: 'aero-disc',
+    name: 'Aero Disc',
+    nameZh: '空气动力盘',
+    description: 'Disc-like aero cover styling',
+    descriptionZh: '盘式空气动力学风格',
+    price: 9900,
+    tags: ['ev', 'show'],
+    defaultSpokeCount: 5,
+    defaultConcavity: 'low',
+  },
+  {
+    id: 'wire-lux',
+    name: 'Wire Lux',
+    nameZh: '复古钢丝豪华',
+    description: 'Modernized wire wheel feel',
+    descriptionZh: '现代化钢丝轮质感',
+    price: 13200,
+    tags: ['luxury', 'retro'],
+    defaultSpokeCount: 12,
+    defaultConcavity: 'low',
+  },
+  {
+    id: 'forged-h',
+    name: 'Forged H',
+    nameZh: 'H 辐锻造',
+    description: 'Rigid forged H-spoke shape',
+    descriptionZh: '高刚性 H 辐锻造结构',
+    price: 16200,
+    tags: ['forged', 'track'],
+    defaultSpokeCount: 8,
+    defaultConcavity: 'deep',
+  },
+  {
+    id: 'street-8',
+    name: 'Street 8',
+    nameZh: '街道八辐',
+    description: 'Clean everyday eight spoke wheel',
+    descriptionZh: '干净利落的八辐日常风',
+    price: 7600,
+    tags: ['daily', 'street'],
+    defaultSpokeCount: 8,
+    defaultConcavity: 'mid',
+  },
+  {
+    id: 'stance-pro',
+    name: 'Stance Pro',
+    nameZh: '姿态派 Pro',
+    description: 'Ultra low-offset stance look',
+    descriptionZh: '低趴姿态派风格',
+    price: 14200,
+    tags: ['show', 'stance'],
+    defaultSpokeCount: 10,
+    defaultConcavity: 'deep',
+  },
 ];
 
 const PAINT_COLORS = [
-  { id: 'midnight-black', name: 'Midnight Black', nameZh: '午夜黑', color: '#0a0a0a', description: 'Deep mysterious black', descriptionZh: '深邃神秘的黑色', price: 0 },
-  { id: 'pearl-white', name: 'Pearl White', nameZh: '珍珠白', color: '#f5f5f5', description: 'Elegant pure white', descriptionZh: '优雅纯净的白色', price: 0 },
-  { id: 'racing-red', name: 'Racing Red', nameZh: '赛道红', color: '#c41e3a', description: 'Passionate vibrant red', descriptionZh: '激情澎湃的红色', price: 0 },
-  { id: 'ocean-blue', name: 'Ocean Blue', nameZh: '海洋蓝', color: '#0066cc', description: 'Deep tranquil blue', descriptionZh: '深邃宁静的蓝色', price: 0 },
-  { id: 'forest-green', name: 'Forest Green', nameZh: '森林绿', color: '#228b22', description: 'Natural fresh green', descriptionZh: '自然清新的绿色', price: 0 },
-  { id: 'sunset-orange', name: 'Sunset Orange', nameZh: '日落橙', color: '#ff6b35', description: 'Energetic vibrant orange', descriptionZh: '活力四射的橙色', price: 3000 },
-  { id: 'royal-purple', name: 'Royal Purple', nameZh: '皇家紫', color: '#6b3fa0', description: 'Noble elegant purple', descriptionZh: '高贵典雅的紫色', price: 3000 },
-  { id: 'titanium-gray', name: 'Titanium Gray', nameZh: '钛金灰', color: '#4a5568', description: 'Tech-inspired gray', descriptionZh: '科技感十足的灰色', price: 0 },
-  { id: 'champagne-gold', name: 'Champagne Gold', nameZh: '香槟金', color: '#d4af37', description: 'Luxurious atmospheric gold', descriptionZh: '奢华大气的金色', price: 5000 },
-  { id: 'matte-black', name: 'Matte Black', nameZh: '哑光黑', color: '#1a1a1a', description: 'Low-key understated matte black', descriptionZh: '低调内敛的哑光黑', price: 4000 },
+  {
+    id: 'midnight-black',
+    name: 'Midnight Black',
+    nameZh: '午夜黑',
+    color: '#0a0a0a',
+    description: 'Deep mysterious black',
+    descriptionZh: '深邃神秘的黑色',
+    price: 0,
+  },
+  {
+    id: 'pearl-white',
+    name: 'Pearl White',
+    nameZh: '珍珠白',
+    color: '#f5f5f5',
+    description: 'Elegant pure white',
+    descriptionZh: '优雅纯净的白色',
+    price: 0,
+  },
+  {
+    id: 'racing-red',
+    name: 'Racing Red',
+    nameZh: '赛道红',
+    color: '#c41e3a',
+    description: 'Passionate vibrant red',
+    descriptionZh: '激情澎湃的红色',
+    price: 0,
+  },
+  {
+    id: 'ocean-blue',
+    name: 'Ocean Blue',
+    nameZh: '海洋蓝',
+    color: '#0066cc',
+    description: 'Deep tranquil blue',
+    descriptionZh: '深邃宁静的蓝色',
+    price: 0,
+  },
+  {
+    id: 'forest-green',
+    name: 'Forest Green',
+    nameZh: '森林绿',
+    color: '#228b22',
+    description: 'Natural fresh green',
+    descriptionZh: '自然清新的绿色',
+    price: 0,
+  },
+  {
+    id: 'sunset-orange',
+    name: 'Sunset Orange',
+    nameZh: '日落橙',
+    color: '#ff6b35',
+    description: 'Energetic vibrant orange',
+    descriptionZh: '活力四射的橙色',
+    price: 3000,
+  },
+  {
+    id: 'royal-purple',
+    name: 'Royal Purple',
+    nameZh: '皇家紫',
+    color: '#6b3fa0',
+    description: 'Noble elegant purple',
+    descriptionZh: '高贵典雅的紫色',
+    price: 3000,
+  },
+  {
+    id: 'titanium-gray',
+    name: 'Titanium Gray',
+    nameZh: '钛金灰',
+    color: '#4a5568',
+    description: 'Tech-inspired gray',
+    descriptionZh: '科技感十足的灰色',
+    price: 0,
+  },
+  {
+    id: 'champagne-gold',
+    name: 'Champagne Gold',
+    nameZh: '香槟金',
+    color: '#d4af37',
+    description: 'Luxurious atmospheric gold',
+    descriptionZh: '奢华大气的金色',
+    price: 5000,
+  },
+  {
+    id: 'matte-black',
+    name: 'Matte Black',
+    nameZh: '哑光黑',
+    color: '#1a1a1a',
+    description: 'Low-key understated matte black',
+    descriptionZh: '低调内敛的哑光黑',
+    price: 4000,
+  },
 ];
 
 const FINISH_TYPES = [
-  { id: 'gloss', name: 'Gloss Metallic', nameZh: '金属亮光', description: 'High-gloss metallic paint', descriptionZh: '高光泽度金属漆', price: 0 },
-  { id: 'matte', name: 'Matte Wrap', nameZh: '哑光贴膜', description: 'Matte body wrap film', descriptionZh: '哑光车身膜', price: 8000 },
-  { id: 'satin', name: 'Satin Pearl', nameZh: '缎面珍珠', description: 'Satin pearl paint', descriptionZh: '缎面珍珠漆', price: 6000 },
-  { id: 'chrome', name: 'Chrome', nameZh: '镀铬', description: 'Chrome effect', descriptionZh: '镀铬效果', price: 15000 },
-  { id: 'carbon', name: 'Carbon Fiber', nameZh: '碳纤维', description: 'Carbon fiber texture', descriptionZh: '碳纤维纹理', price: 20000 },
+  {
+    id: 'gloss',
+    name: 'Gloss Metallic',
+    nameZh: '金属亮光',
+    description: 'High-gloss metallic paint',
+    descriptionZh: '高光泽度金属漆',
+    price: 0,
+  },
+  {
+    id: 'matte',
+    name: 'Matte Wrap',
+    nameZh: '哑光贴膜',
+    description: 'Matte body wrap film',
+    descriptionZh: '哑光车身膜',
+    price: 8000,
+  },
+  {
+    id: 'satin',
+    name: 'Satin Pearl',
+    nameZh: '缎面珍珠',
+    description: 'Satin pearl paint',
+    descriptionZh: '缎面珍珠漆',
+    price: 6000,
+  },
+  {
+    id: 'chrome',
+    name: 'Chrome',
+    nameZh: '镀铬',
+    description: 'Chrome effect',
+    descriptionZh: '镀铬效果',
+    price: 15000,
+  },
+  {
+    id: 'carbon',
+    name: 'Carbon Fiber',
+    nameZh: '碳纤维',
+    description: 'Carbon fiber texture',
+    descriptionZh: '碳纤维纹理',
+    price: 20000,
+  },
 ];
 
 const MODIFICATION_OPTIONS = [
-  { id: 'lowered', name: 'Lowered Suspension', nameZh: '降低车身', description: 'Sport stance, lower center of gravity', descriptionZh: '运动姿态，降低重心', price: 5000 },
-  { id: 'widebody', name: 'Widebody Kit', nameZh: '宽体套件', description: 'Wider track, aggressive look', descriptionZh: '更宽的轮距，更激进的外观', price: 15000 },
-  { id: 'spoiler', name: 'Rear Spoiler', nameZh: '尾翼', description: 'Add downforce, sport style', descriptionZh: '增加下压力，运动风格', price: 3000 },
-  { id: 'diffuser', name: 'Rear Diffuser', nameZh: '扩散器', description: 'Optimize aerodynamics', descriptionZh: '优化空气动力学', price: 4000 },
-  { id: 'side-skirts', name: 'Side Skirts', nameZh: '侧裙', description: 'Lower visual center of gravity', descriptionZh: '降低视觉重心', price: 2500 },
-  { id: 'front-lip', name: 'Front Lip', nameZh: '前唇', description: 'Enhance front sportiness', descriptionZh: '增强前部运动感', price: 2000 },
+  {
+    id: 'lowered',
+    name: 'Lowered Suspension',
+    nameZh: '降低车身',
+    description: 'Sport stance, lower center of gravity',
+    descriptionZh: '运动姿态，降低重心',
+    price: 5000,
+  },
+  {
+    id: 'widebody',
+    name: 'Widebody Kit',
+    nameZh: '宽体套件',
+    description: 'Wider track, aggressive look',
+    descriptionZh: '更宽的轮距，更激进的外观',
+    price: 15000,
+  },
+  {
+    id: 'spoiler',
+    name: 'Rear Spoiler',
+    nameZh: '尾翼',
+    description: 'Add downforce, sport style',
+    descriptionZh: '增加下压力，运动风格',
+    price: 3000,
+  },
+  {
+    id: 'diffuser',
+    name: 'Rear Diffuser',
+    nameZh: '扩散器',
+    description: 'Optimize aerodynamics',
+    descriptionZh: '优化空气动力学',
+    price: 4000,
+  },
+  {
+    id: 'side-skirts',
+    name: 'Side Skirts',
+    nameZh: '侧裙',
+    description: 'Lower visual center of gravity',
+    descriptionZh: '降低视觉重心',
+    price: 2500,
+  },
+  {
+    id: 'front-lip',
+    name: 'Front Lip',
+    nameZh: '前唇',
+    description: 'Enhance front sportiness',
+    descriptionZh: '增强前部运动感',
+    price: 2000,
+  },
 ];
 
 const ACCENT_OPTIONS = [
-  { id: 'chrome-delete', name: 'Chrome Delete', nameZh: '镀铬删除', description: 'Remove chrome trim', descriptionZh: '去除镀铬装饰', price: 1500 },
-  { id: 'carbon-roof', name: 'Carbon Roof', nameZh: '碳纤维车顶', description: 'Carbon fiber roof', descriptionZh: '碳纤维车顶', price: 8000 },
-  { id: 'racing-stripes', name: 'Racing Stripes', nameZh: '赛车条纹', description: 'Racing stripe decals', descriptionZh: '赛车条纹', price: 2000 },
-  { id: 'custom-badge', name: 'Custom Badge', nameZh: '定制徽章', description: 'Custom emblem', descriptionZh: '定制徽章', price: 1000 },
+  {
+    id: 'chrome-delete',
+    name: 'Chrome Delete',
+    nameZh: '镀铬删除',
+    description: 'Remove chrome trim',
+    descriptionZh: '去除镀铬装饰',
+    price: 1500,
+  },
+  {
+    id: 'carbon-roof',
+    name: 'Carbon Roof',
+    nameZh: '碳纤维车顶',
+    description: 'Carbon fiber roof',
+    descriptionZh: '碳纤维车顶',
+    price: 8000,
+  },
+  {
+    id: 'racing-stripes',
+    name: 'Racing Stripes',
+    nameZh: '赛车条纹',
+    description: 'Racing stripe decals',
+    descriptionZh: '赛车条纹',
+    price: 2000,
+  },
+  {
+    id: 'custom-badge',
+    name: 'Custom Badge',
+    nameZh: '定制徽章',
+    description: 'Custom emblem',
+    descriptionZh: '定制徽章',
+    price: 1000,
+  },
 ];
 
 const PRESET_PACKS: PresetPack[] = [
@@ -235,7 +889,12 @@ const PRESET_PACKS: PresetPack[] = [
     wheelId: 'split5',
     colorId: 'racing-red',
     finishId: 'gloss',
-    wheelSpec: { size: 18, spokeCount: 5, colorId: 'gunmetal', concavity: 'mid' },
+    wheelSpec: {
+      size: 18,
+      spokeCount: 5,
+      colorId: 'gunmetal',
+      concavity: 'mid',
+    },
     mods: ['lowered', 'front-lip'],
     accents: ['chrome-delete'],
   },
@@ -248,7 +907,12 @@ const PRESET_PACKS: PresetPack[] = [
     wheelId: 'stance-pro',
     colorId: 'matte-black',
     finishId: 'matte',
-    wheelSpec: { size: 19, spokeCount: 10, colorId: 'satin-black', concavity: 'deep' },
+    wheelSpec: {
+      size: 19,
+      spokeCount: 10,
+      colorId: 'satin-black',
+      concavity: 'deep',
+    },
     mods: ['widebody', 'side-skirts', 'front-lip'],
     accents: ['chrome-delete', 'carbon-roof'],
   },
@@ -261,7 +925,12 @@ const PRESET_PACKS: PresetPack[] = [
     wheelId: 'forged-y',
     colorId: 'pearl-white',
     finishId: 'gloss',
-    wheelSpec: { size: 19, spokeCount: 10, colorId: 'bronze', concavity: 'mid' },
+    wheelSpec: {
+      size: 19,
+      spokeCount: 10,
+      colorId: 'bronze',
+      concavity: 'mid',
+    },
     mods: ['lowered', 'spoiler', 'diffuser'],
     accents: ['custom-badge'],
   },
@@ -300,7 +969,12 @@ const PRESET_PACKS: PresetPack[] = [
     wheelId: 'classic-mesh',
     colorId: 'ocean-blue',
     finishId: 'satin',
-    wheelSpec: { size: 17, spokeCount: 12, colorId: 'silver', concavity: 'low' },
+    wheelSpec: {
+      size: 17,
+      spokeCount: 12,
+      colorId: 'silver',
+      concavity: 'low',
+    },
     mods: ['side-skirts'],
     accents: ['custom-badge'],
   },
@@ -326,7 +1000,12 @@ const PRESET_PACKS: PresetPack[] = [
     wheelId: 'aero-disc',
     colorId: 'titanium-gray',
     finishId: 'gloss',
-    wheelSpec: { size: 19, spokeCount: 5, colorId: 'gunmetal', concavity: 'low' },
+    wheelSpec: {
+      size: 19,
+      spokeCount: 5,
+      colorId: 'gunmetal',
+      concavity: 'low',
+    },
     mods: ['side-skirts', 'front-lip'],
     accents: ['chrome-delete'],
   },
@@ -415,18 +1094,22 @@ function extractImageUrls(result: any): string[] {
   if (!output) return [];
   if (typeof output === 'string') return [output];
   if (Array.isArray(output)) {
-    return output.flatMap((item) => {
-      if (!item) return [];
-      if (typeof item === 'string') return [item];
-      if (typeof item === 'object') {
-        const candidate = item.url ?? item.uri ?? item.image ?? item.src ?? item.imageUrl;
-        return typeof candidate === 'string' ? [candidate] : [];
-      }
-      return [];
-    }).filter(Boolean);
+    return output
+      .flatMap((item) => {
+        if (!item) return [];
+        if (typeof item === 'string') return [item];
+        if (typeof item === 'object') {
+          const candidate =
+            item.url ?? item.uri ?? item.image ?? item.src ?? item.imageUrl;
+          return typeof candidate === 'string' ? [candidate] : [];
+        }
+        return [];
+      })
+      .filter(Boolean);
   }
   if (typeof output === 'object') {
-    const candidate = output.url ?? output.uri ?? output.image ?? output.src ?? output.imageUrl;
+    const candidate =
+      output.url ?? output.uri ?? output.image ?? output.src ?? output.imageUrl;
     if (typeof candidate === 'string') return [candidate];
   }
   return [];
@@ -442,12 +1125,26 @@ function buildAccentMap(ids: string[]): Record<string, boolean> {
 function normalizeWheelSpec(spec?: Partial<WheelSpec>): WheelSpec {
   return {
     size: WHEEL_SIZES.includes(spec?.size ?? 0) ? (spec?.size as number) : 18,
-    spokeCount: SPOKE_COUNTS.includes(spec?.spokeCount ?? 0) ? (spec?.spokeCount as number) : 8,
-    colorId: WHEEL_COLORS.some((item) => item.id === spec?.colorId) ? (spec?.colorId as string) : 'satin-black',
-    concavity: WHEEL_CONCAVITY_OPTIONS.some((item) => item.id === spec?.concavity)
+    spokeCount: SPOKE_COUNTS.includes(spec?.spokeCount ?? 0)
+      ? (spec?.spokeCount as number)
+      : 8,
+    colorId: WHEEL_COLORS.some((item) => item.id === spec?.colorId)
+      ? (spec?.colorId as string)
+      : 'satin-black',
+    concavity: WHEEL_CONCAVITY_OPTIONS.some(
+      (item) => item.id === spec?.concavity
+    )
       ? (spec?.concavity as WheelConcavity)
       : 'mid',
   };
+}
+
+function getWheelThumbnail(id: string) {
+  return `/imgs/carmodder/wheels/${id}.png`;
+}
+
+function getModThumbnail(id: string) {
+  return `/imgs/carmodder/mods/${id}.png`;
 }
 
 export default function CarModderConfigurator() {
@@ -455,19 +1152,27 @@ export default function CarModderConfigurator() {
   const locale = useLocale();
   const isZh = locale === 'zh';
 
-  const [selectedCar, setSelectedCar] = useState<CarModel>(CHINESE_CAR_MODELS[0]);
-  const [selectedWheel, setSelectedWheel] = useState<WheelStyle>(WHEEL_STYLES[0]);
-  const [wheelSpec, setWheelSpec] = useState<WheelSpec>(() => normalizeWheelSpec({
-    size: 18,
-    spokeCount: WHEEL_STYLES[0].defaultSpokeCount,
-    colorId: 'satin-black',
-    concavity: WHEEL_STYLES[0].defaultConcavity,
-  }));
+  const [selectedCar, setSelectedCar] = useState<CarModel>(
+    CHINESE_CAR_MODELS[0]
+  );
+  const [selectedWheel, setSelectedWheel] = useState<WheelStyle>(
+    WHEEL_STYLES[0]
+  );
+  const [wheelSpec, setWheelSpec] = useState<WheelSpec>(() =>
+    normalizeWheelSpec({
+      size: 18,
+      spokeCount: WHEEL_STYLES[0].defaultSpokeCount,
+      colorId: 'satin-black',
+      concavity: WHEEL_STYLES[0].defaultConcavity,
+    })
+  );
   const [selectedColor, setSelectedColor] = useState(PAINT_COLORS[0]);
   const [selectedFinish, setSelectedFinish] = useState(FINISH_TYPES[0]);
   const [selectedMods, setSelectedMods] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('paint');
-  const [accentOptions, setAccentOptions] = useState<Record<string, boolean>>(buildAccentMap([]));
+  const [accentOptions, setAccentOptions] = useState<Record<string, boolean>>(
+    buildAccentMap([])
+  );
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
   const [showAdvancedWheels, setShowAdvancedWheels] = useState(false);
 
@@ -477,38 +1182,50 @@ export default function CarModderConfigurator() {
   const [activeShot, setActiveShot] = useState<ShowcaseShotType>('panorama');
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [generationStartTime, setGenerationStartTime] = useState<number | null>(null);
-  const [downloadingImageId, setDownloadingImageId] = useState<string | null>(null);
+  const [generationStartTime, setGenerationStartTime] = useState<number | null>(
+    null
+  );
+  const [downloadingImageId, setDownloadingImageId] = useState<string | null>(
+    null
+  );
   const [isMounted, setIsMounted] = useState(false);
   const [testMode, setTestMode] = useState(false);
   const [showAllCars, setShowAllCars] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [compareMode, setCompareMode] = useState(false);
   const [comparePosition, setComparePosition] = useState(52);
-  const [historyState, setHistoryState] = useState<{ entries: BuildSnapshot[]; index: number }>({
+  const [historyState, setHistoryState] = useState<{
+    entries: BuildSnapshot[];
+    index: number;
+  }>({
     entries: [],
     index: -1,
   });
   const [historyReady, setHistoryReady] = useState(false);
   const applyingSnapshotRef = useRef(false);
 
-  const handleCustomCarSubmit = useCallback((data: CustomCarInputData) => {
-    const customCar = {
-      id: `custom-${Date.now()}`,
-      name: `${data.brand} ${data.model}`,
-      nameZh: `${data.brand} ${data.model}`,
-      brand: data.brand,
-      type: data.type,
-      image: data.imageUrl || 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop',
-      localImage: data.imageUrl || '/imgs/cars/honda-civic.jpg',
-      price: 300000,
-      customInput: data,
-    };
-    setSelectedCar(customCar);
-    setActivePresetId(null);
-    setShowCustomInput(false);
-    toast.success(t('carAdded'));
-  }, [t]);
+  const handleCustomCarSubmit = useCallback(
+    (data: CustomCarInputData) => {
+      const customCar = {
+        id: `custom-${Date.now()}`,
+        name: `${data.brand} ${data.model}`,
+        nameZh: `${data.brand} ${data.model}`,
+        brand: data.brand,
+        type: data.type,
+        image:
+          data.imageUrl ||
+          'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=600&fit=crop',
+        localImage: data.imageUrl || '/imgs/cars/honda-civic.jpg',
+        price: 300000,
+        customInput: data,
+      };
+      setSelectedCar(customCar);
+      setActivePresetId(null);
+      setShowCustomInput(false);
+      toast.success(t('carAdded'));
+    },
+    [t]
+  );
 
   const { user, setIsShowSignModal, fetchUserCredits } = useAppContext();
 
@@ -525,15 +1242,30 @@ export default function CarModderConfigurator() {
   const applySnapshot = useCallback((snapshot: BuildSnapshot) => {
     applyingSnapshotRef.current = true;
     setSelectedCar(snapshot.selectedCar);
-    setSelectedWheel(WHEEL_STYLES.find((w) => w.id === snapshot.selectedWheelId) ?? WHEEL_STYLES[0]);
-    setSelectedColor(PAINT_COLORS.find((item) => item.id === snapshot.selectedColorId) ?? PAINT_COLORS[0]);
-    setSelectedFinish(FINISH_TYPES.find((item) => item.id === snapshot.selectedFinishId) ?? FINISH_TYPES[0]);
-    setSelectedMods(snapshot.selectedMods.filter((id) => MODIFICATION_OPTIONS.some((m) => m.id === id)));
-    setAccentOptions(buildAccentMap(
-      Object.entries(snapshot.accentOptions)
-        .filter(([, enabled]) => enabled)
-        .map(([id]) => id)
-    ));
+    setSelectedWheel(
+      WHEEL_STYLES.find((w) => w.id === snapshot.selectedWheelId) ??
+        WHEEL_STYLES[0]
+    );
+    setSelectedColor(
+      PAINT_COLORS.find((item) => item.id === snapshot.selectedColorId) ??
+        PAINT_COLORS[0]
+    );
+    setSelectedFinish(
+      FINISH_TYPES.find((item) => item.id === snapshot.selectedFinishId) ??
+        FINISH_TYPES[0]
+    );
+    setSelectedMods(
+      snapshot.selectedMods.filter((id) =>
+        MODIFICATION_OPTIONS.some((m) => m.id === id)
+      )
+    );
+    setAccentOptions(
+      buildAccentMap(
+        Object.entries(snapshot.accentOptions)
+          .filter(([, enabled]) => enabled)
+          .map(([id]) => id)
+      )
+    );
     setWheelSpec(normalizeWheelSpec(snapshot.wheelSpec));
     setActivePresetId(snapshot.activePresetId);
     setTimeout(() => {
@@ -541,25 +1273,28 @@ export default function CarModderConfigurator() {
     }, 0);
   }, []);
 
-  const createSnapshot = useCallback((): BuildSnapshot => ({
-    selectedCar,
-    selectedWheelId: selectedWheel.id,
-    selectedColorId: selectedColor.id,
-    selectedFinishId: selectedFinish.id,
-    selectedMods,
-    accentOptions,
-    wheelSpec: normalizeWheelSpec(wheelSpec),
-    activePresetId,
-  }), [
-    selectedCar,
-    selectedWheel,
-    selectedColor,
-    selectedFinish,
-    selectedMods,
-    accentOptions,
-    wheelSpec,
-    activePresetId,
-  ]);
+  const createSnapshot = useCallback(
+    (): BuildSnapshot => ({
+      selectedCar,
+      selectedWheelId: selectedWheel.id,
+      selectedColorId: selectedColor.id,
+      selectedFinishId: selectedFinish.id,
+      selectedMods,
+      accentOptions,
+      wheelSpec: normalizeWheelSpec(wheelSpec),
+      activePresetId,
+    }),
+    [
+      selectedCar,
+      selectedWheel,
+      selectedColor,
+      selectedFinish,
+      selectedMods,
+      accentOptions,
+      wheelSpec,
+      activePresetId,
+    ]
+  );
 
   useEffect(() => {
     if (!isMounted) return;
@@ -570,12 +1305,17 @@ export default function CarModderConfigurator() {
         if (Array.isArray(parsed) && parsed.length > 0) {
           const normalized = parsed.slice(-10).map((item) => ({
             ...item,
-            selectedMods: Array.isArray(item.selectedMods) ? item.selectedMods : [],
+            selectedMods: Array.isArray(item.selectedMods)
+              ? item.selectedMods
+              : [],
             accentOptions: item.accentOptions ?? buildAccentMap([]),
             wheelSpec: normalizeWheelSpec(item.wheelSpec),
             activePresetId: item.activePresetId ?? null,
           }));
-          setHistoryState({ entries: normalized, index: normalized.length - 1 });
+          setHistoryState({
+            entries: normalized,
+            index: normalized.length - 1,
+          });
           applySnapshot(normalized[normalized.length - 1]);
         }
       }
@@ -606,7 +1346,10 @@ export default function CarModderConfigurator() {
   useEffect(() => {
     if (!isMounted || !historyReady) return;
     try {
-      window.localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(historyState.entries));
+      window.localStorage.setItem(
+        HISTORY_STORAGE_KEY,
+        JSON.stringify(historyState.entries)
+      );
     } catch (error) {
       console.error('保存历史记录失败:', error);
     }
@@ -618,7 +1361,9 @@ export default function CarModderConfigurator() {
   const toggleMod = (modId: string) => {
     setActivePresetId(null);
     setSelectedMods((prev) =>
-      prev.includes(modId) ? prev.filter((id) => id !== modId) : [...prev, modId]
+      prev.includes(modId)
+        ? prev.filter((id) => id !== modId)
+        : [...prev, modId]
     );
   };
 
@@ -638,26 +1383,43 @@ export default function CarModderConfigurator() {
   const handleWheelStyleSelect = useCallback((wheel: WheelStyle) => {
     setActivePresetId(null);
     setSelectedWheel(wheel);
-    setWheelSpec((prev) => normalizeWheelSpec({
-      ...prev,
-      spokeCount: wheel.defaultSpokeCount,
-      concavity: wheel.defaultConcavity,
-    }));
+    setWheelSpec((prev) =>
+      normalizeWheelSpec({
+        ...prev,
+        spokeCount: wheel.defaultSpokeCount,
+        concavity: wheel.defaultConcavity,
+      })
+    );
   }, []);
 
-  const applyPreset = useCallback((preset: PresetPack) => {
-    const wheel = WHEEL_STYLES.find((item) => item.id === preset.wheelId) ?? WHEEL_STYLES[0];
-    const color = PAINT_COLORS.find((item) => item.id === preset.colorId) ?? PAINT_COLORS[0];
-    const finish = FINISH_TYPES.find((item) => item.id === preset.finishId) ?? FINISH_TYPES[0];
-    setSelectedWheel(wheel);
-    setSelectedColor(color);
-    setSelectedFinish(finish);
-    setSelectedMods(preset.mods.filter((id) => MODIFICATION_OPTIONS.some((mod) => mod.id === id)));
-    setAccentOptions(buildAccentMap(preset.accents));
-    setWheelSpec(normalizeWheelSpec(preset.wheelSpec));
-    setActivePresetId(preset.id);
-    toast.success(t('presetApplied', { name: isZh ? preset.nameZh : preset.name }));
-  }, [isZh, t]);
+  const applyPreset = useCallback(
+    (preset: PresetPack) => {
+      const wheel =
+        WHEEL_STYLES.find((item) => item.id === preset.wheelId) ??
+        WHEEL_STYLES[0];
+      const color =
+        PAINT_COLORS.find((item) => item.id === preset.colorId) ??
+        PAINT_COLORS[0];
+      const finish =
+        FINISH_TYPES.find((item) => item.id === preset.finishId) ??
+        FINISH_TYPES[0];
+      setSelectedWheel(wheel);
+      setSelectedColor(color);
+      setSelectedFinish(finish);
+      setSelectedMods(
+        preset.mods.filter((id) =>
+          MODIFICATION_OPTIONS.some((mod) => mod.id === id)
+        )
+      );
+      setAccentOptions(buildAccentMap(preset.accents));
+      setWheelSpec(normalizeWheelSpec(preset.wheelSpec));
+      setActivePresetId(preset.id);
+      toast.success(
+        t('presetApplied', { name: isZh ? preset.nameZh : preset.name })
+      );
+    },
+    [isZh, t]
+  );
 
   const handleUndo = useCallback(() => {
     setHistoryState((prev) => {
@@ -703,19 +1465,27 @@ export default function CarModderConfigurator() {
   const buildPrompt = useCallback(() => {
     const parts: string[] = [];
 
-    parts.push(`${isZh ? selectedCar.nameZh : selectedCar.name} (${selectedCar.brand})`);
-    parts.push(`${t('paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name} (${isZh ? selectedFinish.nameZh : selectedFinish.name}${t('paintFinish')})`);
-    const wheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
-    const concavity = WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity) ?? WHEEL_CONCAVITY_OPTIONS[1];
+    parts.push(
+      `${isZh ? selectedCar.nameZh : selectedCar.name} (${selectedCar.brand})`
+    );
+    parts.push(
+      `${t('paint')}: ${isZh ? selectedColor.nameZh : selectedColor.name} (${isZh ? selectedFinish.nameZh : selectedFinish.name}${t('paintFinish')})`
+    );
+    const wheelColor =
+      WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ??
+      WHEEL_COLORS[0];
+    const concavity =
+      WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity) ??
+      WHEEL_CONCAVITY_OPTIONS[1];
     parts.push(
       `${t('wheels')}: ${isZh ? selectedWheel.nameZh : selectedWheel.name}, ${wheelSpec.size}" ` +
-      `${isZh ? wheelColor.nameZh : wheelColor.name}, ${wheelSpec.spokeCount}${t('spokeUnit')}, ` +
-      `${isZh ? concavity.nameZh : concavity.name} ${t('concavity')}`
+        `${isZh ? wheelColor.nameZh : wheelColor.name}, ${wheelSpec.spokeCount}${t('spokeUnit')}, ` +
+        `${isZh ? concavity.nameZh : concavity.name} ${t('concavity')}`
     );
 
     const activeMods = selectedMods
       .map((id) => MODIFICATION_OPTIONS.find((m) => m.id === id))
-      .map(m => isZh ? m?.nameZh : m?.name)
+      .map((m) => (isZh ? m?.nameZh : m?.name))
       .filter(Boolean);
     if (activeMods.length > 0) {
       parts.push(`${t('modifications_')}: ${activeMods.join('、')}`);
@@ -724,7 +1494,7 @@ export default function CarModderConfigurator() {
     const activeAccents = Object.entries(accentOptions)
       .filter(([_, enabled]) => enabled)
       .map(([id]) => ACCENT_OPTIONS.find((a) => a.id === id))
-      .map(a => isZh ? a?.nameZh : a?.name)
+      .map((a) => (isZh ? a?.nameZh : a?.name))
       .filter(Boolean);
     if (activeAccents.length > 0) {
       parts.push(`${t('details')}: ${activeAccents.join('、')}`);
@@ -733,14 +1503,27 @@ export default function CarModderConfigurator() {
     if (activePresetId) {
       const preset = PRESET_PACKS.find((item) => item.id === activePresetId);
       if (preset) {
-        parts.push(`${t('stylePreset')}: ${isZh ? preset.nameZh : preset.name}`);
+        parts.push(
+          `${t('stylePreset')}: ${isZh ? preset.nameZh : preset.name}`
+        );
       }
     }
 
     parts.push(t('promptSuffix'));
 
     return parts.join(', ');
-  }, [selectedCar, selectedColor, selectedFinish, selectedWheel, selectedMods, accentOptions, wheelSpec, activePresetId, isZh, t]);
+  }, [
+    selectedCar,
+    selectedColor,
+    selectedFinish,
+    selectedWheel,
+    selectedMods,
+    accentOptions,
+    wheelSpec,
+    activePresetId,
+    isZh,
+    t,
+  ]);
 
   const prompt = useMemo(() => buildPrompt(), [buildPrompt]);
 
@@ -761,7 +1544,10 @@ export default function CarModderConfigurator() {
     if (isValidQwenRef(urlRef)) return urlRef;
     if (isValidQwenRef(dataUrlRef)) return dataUrlRef;
     return undefined;
-  }, [selectedCar.customInput?.imageDataUrl, selectedCar.customInput?.imageUrl]);
+  }, [
+    selectedCar.customInput?.imageDataUrl,
+    selectedCar.customInput?.imageUrl,
+  ]);
 
   const buildCompactPrompt = useCallback(() => {
     const wheelColor =
@@ -1000,43 +1786,40 @@ export default function CarModderConfigurator() {
     t,
   ]);
 
-  const applyShowcaseTask = useCallback(
-    (task: ShowcaseTaskResp) => {
-      const parsedResult = parseTaskResult(task.taskInfo ?? null);
-      const imageUrls = extractImageUrls(parsedResult);
+  const applyShowcaseTask = useCallback((task: ShowcaseTaskResp) => {
+    const parsedResult = parseTaskResult(task.taskInfo ?? null);
+    const imageUrls = extractImageUrls(parsedResult);
 
-      setShowcaseStates((prev) => {
-        const base = prev[task.shotType];
-        const next: ShowcaseShotState = {
-          ...base,
-          status:
-            task.status === 'failed'
-              ? AITaskStatus.FAILED
-              : (task.status as ShotStatus),
-          taskId: task.id ?? null,
-          error: task.message || null,
+    setShowcaseStates((prev) => {
+      const base = prev[task.shotType];
+      const next: ShowcaseShotState = {
+        ...base,
+        status:
+          task.status === 'failed'
+            ? AITaskStatus.FAILED
+            : (task.status as ShotStatus),
+        taskId: task.id ?? null,
+        error: task.message || null,
+      };
+
+      if (imageUrls.length > 0) {
+        next.image = {
+          id: `${task.id || getUuid()}-${task.shotType}`,
+          url: imageUrls[0],
+          prompt: task.prompt,
         };
+      }
 
-        if (imageUrls.length > 0) {
-          next.image = {
-            id: `${task.id || getUuid()}-${task.shotType}`,
-            url: imageUrls[0],
-            prompt: task.prompt,
-          };
-        }
+      if (task.status === AITaskStatus.SUCCESS || task.status === 'failed') {
+        next.taskId = null;
+      }
 
-        if (task.status === AITaskStatus.SUCCESS || task.status === 'failed') {
-          next.taskId = null;
-        }
-
-        return {
-          ...prev,
-          [task.shotType]: next,
-        };
-      });
-    },
-    []
-  );
+      return {
+        ...prev,
+        [task.shotType]: next,
+      };
+    });
+  }, []);
 
   const requestShowcaseGeneration = useCallback(
     async ({
@@ -1106,8 +1889,18 @@ export default function CarModderConfigurator() {
     }
 
     setShowcaseStates({
-      panorama: { image: null, status: AITaskStatus.PENDING, taskId: null, error: null },
-      closeup: { image: null, status: AITaskStatus.PENDING, taskId: null, error: null },
+      panorama: {
+        image: null,
+        status: AITaskStatus.PENDING,
+        taskId: null,
+        error: null,
+      },
+      closeup: {
+        image: null,
+        status: AITaskStatus.PENDING,
+        taskId: null,
+        error: null,
+      },
     });
     setActiveShot('panorama');
     setIsGenerating(true);
@@ -1118,7 +1911,8 @@ export default function CarModderConfigurator() {
       const data = await requestShowcaseGeneration();
       data.tasks.forEach((task) => applyShowcaseTask(task));
       const panoramaSuccess = data.tasks.some(
-        (item) => item.shotType === 'panorama' && item.status === AITaskStatus.SUCCESS
+        (item) =>
+          item.shotType === 'panorama' && item.status === AITaskStatus.SUCCESS
       );
       if (!panoramaSuccess) {
         setActiveShot('closeup');
@@ -1158,7 +1952,10 @@ export default function CarModderConfigurator() {
         }
         return undefined;
       })();
-      const data = await requestShowcaseGeneration({ retryShotType: shotType, bundleId });
+      const data = await requestShowcaseGeneration({
+        retryShotType: shotType,
+        bundleId,
+      });
       data.tasks.forEach((task) => applyShowcaseTask(task));
       await fetchUserCredits();
     } catch (error: any) {
@@ -1179,7 +1976,9 @@ export default function CarModderConfigurator() {
     if (!image.url) return;
     try {
       setDownloadingImageId(image.id);
-      const resp = await fetch(`/api/proxy/file?url=${encodeURIComponent(image.url)}`);
+      const resp = await fetch(
+        `/api/proxy/file?url=${encodeURIComponent(image.url)}`
+      );
       if (!resp.ok) throw new Error('获取图片失败');
       const blob = await resp.blob();
       const blobUrl = URL.createObjectURL(blob);
@@ -1201,7 +2000,9 @@ export default function CarModderConfigurator() {
 
   const handleShare = () => {
     const carName = isZh ? selectedCar.nameZh : selectedCar.name;
-    const wheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
+    const wheelColor =
+      WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ??
+      WHEEL_COLORS[0];
     const activeModsText = selectedMods
       .map((id) => MODIFICATION_OPTIONS.find((item) => item.id === id))
       .filter((item): item is (typeof MODIFICATION_OPTIONS)[number] => !!item)
@@ -1225,71 +2026,96 @@ export default function CarModderConfigurator() {
         url: window.location.href,
       });
     } else {
-      navigator.clipboard.writeText(`${window.location.href}\n\n${shareDescription}`);
+      navigator.clipboard.writeText(
+        `${window.location.href}\n\n${shareDescription}`
+      );
       toast.success(t('linkCopied'));
     }
   };
 
-  const getShotStatusLabel = useCallback((status: ShotStatus) => {
-    switch (status) {
-      case 'idle':
-        return t('idle');
-      case AITaskStatus.PENDING:
-        return t('waitingModel');
-      case AITaskStatus.PROCESSING:
-        return t('generatingImage');
-      case AITaskStatus.SUCCESS:
-        return t('generationComplete');
-      case AITaskStatus.FAILED:
-        return t('generationFailed');
-      default:
-        return '';
-    }
-  }, [t]);
+  const getShotStatusLabel = useCallback(
+    (status: ShotStatus) => {
+      switch (status) {
+        case 'idle':
+          return t('idle');
+        case AITaskStatus.PENDING:
+          return t('waitingModel');
+        case AITaskStatus.PROCESSING:
+          return t('generatingImage');
+        case AITaskStatus.SUCCESS:
+          return t('generationComplete');
+        case AITaskStatus.FAILED:
+          return t('generationFailed');
+        default:
+          return '';
+      }
+    },
+    [t]
+  );
 
   const totalBuildCost = useMemo(() => {
     let basePrice = selectedCar.price;
     basePrice += selectedWheel.price;
     basePrice += WHEEL_SIZE_EXTRA_COST[wheelSpec.size] ?? 0;
-    basePrice += WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId)?.extraCost ?? 0;
-    basePrice += WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity)?.extraCost ?? 0;
+    basePrice +=
+      WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId)?.extraCost ??
+      0;
+    basePrice +=
+      WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity)
+        ?.extraCost ?? 0;
     basePrice += selectedColor.price;
     basePrice += selectedFinish.price;
     basePrice += selectedMods.reduce((sum, modId) => {
-      const mod = MODIFICATION_OPTIONS.find(m => m.id === modId);
+      const mod = MODIFICATION_OPTIONS.find((m) => m.id === modId);
       return sum + (mod?.price || 0);
     }, 0);
     basePrice += Object.entries(accentOptions)
       .filter(([_, enabled]) => enabled)
       .reduce((sum, [accentId]) => {
-        const accent = ACCENT_OPTIONS.find(a => a.id === accentId);
+        const accent = ACCENT_OPTIONS.find((a) => a.id === accentId);
         return sum + (accent?.price || 0);
       }, 0);
     return basePrice;
-  }, [selectedCar, selectedWheel, selectedColor, selectedFinish, selectedMods, accentOptions, wheelSpec]);
+  }, [
+    selectedCar,
+    selectedWheel,
+    selectedColor,
+    selectedFinish,
+    selectedMods,
+    accentOptions,
+    wheelSpec,
+  ]);
 
   const formatPrice = (price: number) => {
     const inK = price / 1000;
-    const rounded = Number.isInteger(inK) ? String(inK) : inK.toFixed(1).replace(/\.0$/, '');
+    const rounded = Number.isInteger(inK)
+      ? String(inK)
+      : inK.toFixed(1).replace(/\.0$/, '');
     const currencySymbol = isZh ? '¥' : '$';
     return `${currencySymbol}${rounded}k`;
   };
 
-  const selectedWheelColor = WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ?? WHEEL_COLORS[0];
-  const selectedConcavity = WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity) ?? WHEEL_CONCAVITY_OPTIONS[1];
+  const selectedWheelColor =
+    WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ??
+    WHEEL_COLORS[0];
+  const selectedConcavity =
+    WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity) ??
+    WHEEL_CONCAVITY_OPTIONS[1];
   const wheelSpecExtraCost =
     (WHEEL_SIZE_EXTRA_COST[wheelSpec.size] ?? 0) +
     selectedWheelColor.extraCost +
     selectedConcavity.extraCost;
   const canUndo = historyState.index > 0;
-  const canRedo = historyState.index >= 0 && historyState.index < historyState.entries.length - 1;
+  const canRedo =
+    historyState.index >= 0 &&
+    historyState.index < historyState.entries.length - 1;
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#131022] text-white font-[family-name:var(--font-sans)]">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#131022] font-[family-name:var(--font-sans)] text-white">
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(71,37,244,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(71,37,244,0.05)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_40%,black_45%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(71,37,244,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(71,37,244,0.05)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_40%,black_45%,transparent_100%)] bg-[size:100px_100px]" />
         <div className="absolute -top-20 -left-16 h-[420px] w-[420px] rounded-full bg-[#4725f4]/18 blur-[110px]" />
-        <div className="absolute -bottom-24 -right-16 h-[520px] w-[520px] rounded-full bg-[#7c5cff]/16 blur-[130px]" />
+        <div className="absolute -right-16 -bottom-24 h-[520px] w-[520px] rounded-full bg-[#7c5cff]/16 blur-[130px]" />
       </div>
       <AnimatePresence>
         {showCustomInput && (
@@ -1298,7 +2124,7 @@ export default function CarModderConfigurator() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+              className="max-h-[90vh] w-full max-w-2xl overflow-y-auto shadow-2xl"
             >
               <CustomCarInput
                 onSubmit={handleCustomCarSubmit}
@@ -1312,171 +2138,72 @@ export default function CarModderConfigurator() {
       <main className="relative z-10 pt-16 pb-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
-            {/* Left Sidebar - Car Info */}
-            <motion.div 
-              className="lg:col-span-3 space-y-6"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <div className="space-y-6">
-                <motion.div 
-                  className="bg-[#1c1833]/90 rounded-2xl p-6 border border-white/10 shadow-lg"
-                  whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <h2 className="mb-3 max-w-full break-words text-2xl font-semibold leading-tight tracking-tight text-white">
-                    {isZh ? selectedCar.nameZh : selectedCar.name}
-                  </h2>
-                  <div className="mb-6 flex items-center gap-3">
-                    <motion.span 
-                      className="px-4 py-1 bg-gradient-to-r from-[#4725f4] to-[#7c5cff] rounded-full text-xs font-medium shadow-[0_0_10px_rgba(99,102,241,0.4)] text-white"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {t('awd')}
-                    </motion.span>
-                    <span className="min-w-0 break-words text-sm text-gray-400">
-                      {selectedCar.brand} {selectedCar.type === 'sedan' ? t('sedan') : t('suv')}
-                    </span>
-                  </div>
-                  <div className="mb-4">
-                    <h3 className="text-gray-400 text-sm mb-2 uppercase tracking-wider">{t('totalBuildCost')}</h3>
-                    <motion.p 
-                      className="text-3xl font-bold text-[#4725f4]"
-                      key={totalBuildCost}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {formatPrice(totalBuildCost)}
-                    </motion.p>
-                  </div>
-                  <Separator className="bg-border my-4" />
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400 text-sm">{t('basePrice')}</span>
-                    <span className="text-sm font-medium">{formatPrice(selectedCar.price)}</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-gray-400 text-sm">{t('modCost')}</span>
-                    <span className="text-sm font-medium text-[#4725f4]">+{formatPrice(totalBuildCost - selectedCar.price)}</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 mt-4">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      disabled={!canUndo}
-                      onClick={handleUndo}
-                      className="bg-[#1c1833]/90 border border-white/10"
-                    >
-                      <Undo2 className="w-4 h-4 mr-2" />
-                      {t('undo')}
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      disabled={!canRedo}
-                      onClick={handleRedo}
-                      className="bg-[#1c1833]/90 border border-white/10"
-                    >
-                      <Redo2 className="w-4 h-4 mr-2" />
-                      {t('redo')}
-                    </Button>
-                  </div>
-                </motion.div>
-
-                <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
-                  <CardHeader className="pb-3 bg-[#1c1833]/90 border-b border-white/10">
-                    <CardTitle className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('configDetails')}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3 p-6">
-                    <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-white/10"
-                      whileHover={{ x: 5 }}
-                    >
-                      <span className="text-gray-400 text-sm">{t('baseModel')}</span>
-                      <span className="font-medium">{formatPrice(selectedCar.price)}</span>
-                    </motion.div>
-                    <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-white/10"
-                      whileHover={{ x: 5 }}
-                    >
-                      <span className="text-gray-400 text-sm">{t('wheels')}</span>
-                      <span className="font-medium">{formatPrice(selectedWheel.price)}</span>
-                    </motion.div>
-                    <motion.div
-                      className="flex justify-between items-center py-3 border-b border-white/10"
-                      whileHover={{ x: 5 }}
-                    >
-                      <span className="text-gray-400 text-sm">
-                        {`${t('spec')} ${wheelSpec.size}" / ${wheelSpec.spokeCount}${t('spokeUnit')}`}
-                      </span>
-                      <span className="text-sm text-[#4725f4]">
-                        +{formatPrice(wheelSpecExtraCost)}
-                      </span>
-                    </motion.div>
-                    <motion.div 
-                      className="flex justify-between items-center py-3 border-b border-white/10"
-                      whileHover={{ x: 5 }}
-                    >
-                      <span className="text-gray-400 text-sm">{t('paint')}</span>
-                      <span className="font-medium">{formatPrice(selectedColor.price + selectedFinish.price)}</span>
-                    </motion.div>
-                    {selectedMods.length > 0 && (
-                      <div className="py-3 border-b border-white/10">
-                        <span className="text-gray-400 text-sm block mb-3 uppercase tracking-wider">{t('modKit')}</span>
-                        {selectedMods.map((id) => {
-                          const mod = MODIFICATION_OPTIONS.find((m) => m.id === id);
-                          return mod ? (
-                            <motion.div 
-                              key={id} 
-                              className="flex justify-between items-center py-2"
-                              whileHover={{ x: 5 }}
-                            >
-                              <span className="text-sm">{isZh ? mod.nameZh : mod.name}</span>
-                              <span className="text-sm text-[#4725f4]">+{formatPrice(mod.price)}</span>
-                            </motion.div>
-                          ) : null;
-                        })}
-                      </div>
-                    )}
-                    {Object.entries(accentOptions).some(([_, enabled]) => enabled) && (
-                      <div className="py-3">
-                        <span className="text-gray-400 text-sm block mb-3 uppercase tracking-wider">{t('accentsDetail')}</span>
-                        {Object.entries(accentOptions)
-                          .filter(([_, enabled]) => enabled)
-                          .map(([id]) => {
-                            const accent = ACCENT_OPTIONS.find((a) => a.id === id);
-                            return accent ? (
-                              <motion.div 
-                                key={id} 
-                                className="flex justify-between items-center py-2"
-                                whileHover={{ x: 5 }}
-                              >
-                                <span className="text-sm">{isZh ? accent.nameZh : accent.name}</span>
-                                <span className="text-sm text-[#4725f4]">+{formatPrice(accent.price)}</span>
-                              </motion.div>
-                            ) : null;
-                          })}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.div>
-
             {/* Center - Car Preview */}
-            <motion.div 
-              className="lg:col-span-5 space-y-6"
+            <motion.div
+              className="space-y-6 lg:col-span-8"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Card className="bg-[#1c1833]/90 border-white/10 overflow-hidden shadow-xl">
+              <Card className="overflow-hidden border-white/10 bg-[#1c1833]/90 shadow-xl">
+                <CardHeader className="border-b border-white/10 bg-[linear-gradient(135deg,rgba(71,37,244,0.16),rgba(28,24,51,0.96))] p-5 sm:p-6">
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge className="border-0 bg-[#4725f4]/18 px-3 py-1 text-[11px] font-semibold text-[#c9bcff]">
+                          {t('generateShowcase')}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="border-white/12 bg-white/[0.04] text-slate-200/85"
+                        >
+                          {selectedCar.brand}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className="border-white/12 bg-white/[0.04] text-slate-200/85"
+                        >
+                          {selectedCar.type === 'sedan' ? t('sedan') : t('suv')}
+                        </Badge>
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+                          {isZh ? selectedCar.nameZh : selectedCar.name}
+                        </h1>
+                        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-200/85 sm:text-base">
+                          {t('ultimateConfiguratorDescription')}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 sm:min-w-[300px]">
+                      <div className="rounded-2xl border border-white/12 bg-white/[0.05] px-4 py-3">
+                        <p className="text-[11px] font-medium tracking-[0.18em] text-slate-300 uppercase">
+                          {t('totalBuildCost')}
+                        </p>
+                        <p className="mt-2 text-2xl font-semibold text-white">
+                          {formatPrice(totalBuildCost)}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-white/12 bg-white/[0.05] px-4 py-3">
+                        <p className="text-[11px] font-medium tracking-[0.18em] text-slate-300 uppercase">
+                          {t('generationProgress')}
+                        </p>
+                        <p className="mt-2 text-sm font-medium text-slate-100">
+                          {isGenerating
+                            ? `${progress}%`
+                            : getShotStatusLabel(
+                                showcaseStates[activeShot].status || 'idle'
+                              )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
                 <CardContent className="p-0">
                   <div className="relative">
                     {activeImage ? (
                       <motion.div
-                        className="aspect-[16/9] bg-[#131022] relative rounded-xl overflow-hidden"
+                        className="relative min-h-[360px] overflow-hidden bg-[#131022] sm:min-h-[420px] lg:min-h-[520px] xl:min-h-[560px]"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
@@ -1484,7 +2211,7 @@ export default function CarModderConfigurator() {
                         <img
                           src={selectedCar.localImage}
                           alt={`${isZh ? selectedCar.nameZh : selectedCar.name} before`}
-                          className="absolute inset-0 w-full h-full object-cover"
+                          className="absolute inset-0 h-full w-full object-cover"
                           onError={(e) => {
                             (e.currentTarget as HTMLImageElement).src =
                               'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1280&h=720&fit=crop';
@@ -1527,14 +2254,14 @@ export default function CarModderConfigurator() {
                           />
                         )}
                         <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-100 transition-opacity duration-300 sm:opacity-0 sm:hover:opacity-100">
-                          <div className="p-6 w-full">
-                            <h3 className="mb-2 line-clamp-2 max-w-full break-words text-xl font-semibold leading-tight tracking-tight">
+                          <div className="w-full p-6">
+                            <h3 className="mb-2 line-clamp-2 max-w-full text-xl leading-tight font-semibold tracking-tight break-words">
                               {isZh ? selectedCar.nameZh : selectedCar.name}{' '}
                               {activeShot === 'panorama'
                                 ? t('shotPanorama')
                                 : t('shotCloseup')}
                             </h3>
-                            <p className="mb-4 line-clamp-3 max-w-full break-words text-sm leading-relaxed text-gray-400">
+                            <p className="mb-4 line-clamp-3 max-w-full text-sm leading-relaxed break-words text-slate-200/85">
                               {activeImage.prompt || prompt}
                             </p>
                             <div className="flex flex-wrap gap-2">
@@ -1543,13 +2270,13 @@ export default function CarModderConfigurator() {
                                 variant="secondary"
                                 onClick={() => handleDownloadImage(activeImage)}
                                 disabled={downloadingImageId === activeImage.id}
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                                className="bg-white/10 backdrop-blur-sm hover:bg-white/20"
                               >
                                 {downloadingImageId === activeImage.id ? (
-                                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 ) : (
                                   <>
-                                    <Download className="w-4 h-4 mr-2" />
+                                    <Download className="mr-2 h-4 w-4" />
                                     {t('download')}
                                   </>
                                 )}
@@ -1558,26 +2285,28 @@ export default function CarModderConfigurator() {
                                 size="sm"
                                 variant="secondary"
                                 onClick={handleShare}
-                                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                                className="bg-white/10 backdrop-blur-sm hover:bg-white/20"
                               >
-                                <Share2 className="w-4 h-4 mr-2" />
+                                <Share2 className="mr-2 h-4 w-4" />
                                 {t('share')}
                               </Button>
                               {activeShot === 'panorama' && (
                                 <Button
                                   size="sm"
                                   variant="secondary"
-                                  onClick={() => setCompareMode((prev) => !prev)}
-                                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+                                  onClick={() =>
+                                    setCompareMode((prev) => !prev)
+                                  }
+                                  className="bg-white/10 backdrop-blur-sm hover:bg-white/20"
                                 >
                                   {compareMode ? (
                                     <>
-                                      <EyeOff className="w-4 h-4 mr-2" />
+                                      <EyeOff className="mr-2 h-4 w-4" />
                                       {t('hideCompare')}
                                     </>
                                   ) : (
                                     <>
-                                      <Eye className="w-4 h-4 mr-2" />
+                                      <Eye className="mr-2 h-4 w-4" />
                                       {t('compare')}
                                     </>
                                   )}
@@ -1587,8 +2316,8 @@ export default function CarModderConfigurator() {
                           </div>
                         </div>
                         {activeShot === 'panorama' && compareMode && (
-                          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[75%] bg-black/45 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
-                            <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+                          <div className="absolute bottom-4 left-1/2 w-[75%] -translate-x-1/2 rounded-lg border border-white/10 bg-black/45 px-3 py-2 backdrop-blur-md">
+                            <div className="mb-2 flex items-center justify-between text-xs text-slate-300">
                               <span>{t('before')}</span>
                               <span>{t('after')}</span>
                             </div>
@@ -1608,20 +2337,20 @@ export default function CarModderConfigurator() {
                       </motion.div>
                     ) : (
                       <motion.div
-                        className="aspect-[16/9] bg-[#131022] relative flex items-center justify-center overflow-hidden"
+                        className="relative flex min-h-[360px] items-center justify-center overflow-hidden bg-[#131022] sm:min-h-[420px] lg:min-h-[520px] xl:min-h-[560px]"
                         whileHover={{ scale: 1.02 }}
                       >
                         <img
                           src={selectedCar.localImage}
                           alt={isZh ? selectedCar.nameZh : selectedCar.name}
-                          className="w-full h-full object-cover opacity-70 transition-opacity duration-300 hover:opacity-90"
+                          className="h-full w-full object-cover opacity-70 transition-opacity duration-300 hover:opacity-90"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =
                               'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
                           }}
                         />
                         <div className="absolute bottom-4 left-4 max-w-[85%] rounded-lg bg-black/45 px-4 py-2 backdrop-blur-sm">
-                          <span className="line-clamp-2 break-words text-sm font-medium leading-snug">
+                          <span className="line-clamp-2 text-sm leading-snug font-medium break-words">
                             {isZh ? selectedCar.nameZh : selectedCar.name}
                           </span>
                         </div>
@@ -1657,7 +2386,7 @@ export default function CarModderConfigurator() {
                                   ? t('shotPanorama')
                                   : t('shotCloseup')}
                               </div>
-                              <div className="mt-1 text-[11px] text-gray-400">
+                              <div className="mt-1 text-[11px] text-slate-300">
                                 {getShotStatusLabel(shot.status)}
                               </div>
                             </button>
@@ -1683,33 +2412,41 @@ export default function CarModderConfigurator() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
-                <CardHeader className="bg-[#1c1833]/90 border-b border-white/10 p-5">
+              <Card className="overflow-hidden border-white/10 bg-[#1c1833]/90 shadow-lg">
+                <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-5">
                   <CardTitle className="text-lg font-semibold tracking-tight">
                     {t('presetPacksTitle')}
                   </CardTitle>
-                  <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('presetPacksDesc')}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-200/85">
+                    {t('presetPacksDesc')}
+                  </p>
                 </CardHeader>
-                <CardContent className="p-5 space-y-4">
+                <CardContent className="space-y-4 p-5">
                   <div className="space-y-2">
-                    <p className="text-xs uppercase tracking-wider text-gray-400">
+                    <p className="text-xs tracking-wider text-slate-300 uppercase">
                       {t('recommendedForThisCar')}
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3">
                       {recommendedPresets.map((preset) => (
                         <Button
                           key={preset.id}
-                          variant={activePresetId === preset.id ? 'default' : 'secondary'}
-                          className={`justify-start h-auto py-3 px-3 ${
+                          variant={
+                            activePresetId === preset.id
+                              ? 'default'
+                              : 'secondary'
+                          }
+                          className={`h-auto justify-start px-3 py-3 ${
                             activePresetId === preset.id
                               ? 'bg-gradient-to-r from-[#4725f4] to-[#7c5cff] text-white'
-                              : 'bg-[#1c1833]/90 border border-white/10'
+                              : 'border border-white/10 bg-[#1c1833]/90'
                           }`}
                           onClick={() => applyPreset(preset)}
                         >
                           <div className="min-w-0 text-left">
-                            <div className="line-clamp-1 break-words text-sm font-semibold">{isZh ? preset.nameZh : preset.name}</div>
-                            <div className="line-clamp-2 break-words text-xs leading-relaxed opacity-80">
+                            <div className="line-clamp-1 text-sm font-semibold break-words">
+                              {isZh ? preset.nameZh : preset.name}
+                            </div>
+                            <div className="line-clamp-2 text-xs leading-relaxed break-words opacity-80">
                               {isZh ? preset.descriptionZh : preset.description}
                             </div>
                           </div>
@@ -1718,7 +2455,7 @@ export default function CarModderConfigurator() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-xs uppercase tracking-wider text-gray-400">
+                    <p className="text-xs tracking-wider text-slate-300 uppercase">
                       {t('allPacks')}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -1726,11 +2463,17 @@ export default function CarModderConfigurator() {
                         <Button
                           key={preset.id}
                           size="sm"
-                          variant={activePresetId === preset.id ? 'default' : 'outline'}
-                          className={activePresetId === preset.id ? 'bg-[#4725f4] text-white' : ''}
+                          variant={
+                            activePresetId === preset.id ? 'default' : 'outline'
+                          }
+                          className={
+                            activePresetId === preset.id
+                              ? 'bg-[#4725f4] text-white'
+                              : ''
+                          }
                           onClick={() => applyPreset(preset)}
                         >
-                          <WandSparkles className="w-3.5 h-3.5 mr-1.5" />
+                          <WandSparkles className="mr-1.5 h-3.5 w-3.5" />
                           {isZh ? preset.nameZh : preset.name}
                         </Button>
                       ))}
@@ -1741,16 +2484,21 @@ export default function CarModderConfigurator() {
 
               {/* Car Selection */}
               <div>
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">{t('selectCarModel')}</h3>
-                  <Badge variant="outline" className="text-gray-400 border-white/10">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-sm font-medium tracking-wider text-slate-300 uppercase">
+                    {t('selectCarModel')}
+                  </h3>
+                  <Badge
+                    variant="outline"
+                    className="border-white/10 text-slate-300"
+                  >
                     {CHINESE_CAR_MODELS.length} {t('carModelsCount')}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
                   {/* 自定义车型按钮 */}
                   <motion.div
-                    className="relative rounded-xl overflow-hidden cursor-pointer border-2 border-dashed border-white/10/60 hover:border-[#4725f4] transition-all"
+                    className="relative cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-white/15 transition-all hover:border-[#4725f4]"
                     onClick={() => setShowCustomInput(true)}
                     whileHover={{ scale: 1.05, y: -5 }}
                     whileTap={{ scale: 0.95 }}
@@ -1758,23 +2506,36 @@ export default function CarModderConfigurator() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                   >
-                    <div className="aspect-[4/3] bg-[#1c1833]/90 flex flex-col items-center justify-center gap-2">
-                      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                        <span className="text-2xl font-light text-gray-400">+</span>
+                    <div className="flex aspect-[4/3] flex-col items-center justify-center gap-2 bg-[#1c1833]/90">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+                        <span className="text-2xl font-light text-slate-300">
+                          +
+                        </span>
                       </div>
-                      <p className="text-xs font-medium text-gray-400">{t('customCar')}</p>
+                      <p className="text-xs font-medium text-slate-300">
+                        {t('customCar')}
+                      </p>
                     </div>
                     <div className="border-t border-white/10 bg-[#1c1833]/90 p-3">
-                      <p className="text-xs text-gray-500 mb-1">{t('custom')}</p>
-                      <p className="line-clamp-2 break-words text-sm font-medium leading-snug">{t('inputYourCar')}</p>
-                      <p className="mt-1 line-clamp-1 text-xs text-[#4725f4]">{t('freeTrial')}</p>
+                      <p className="mb-1 text-xs text-slate-400">
+                        {t('custom')}
+                      </p>
+                      <p className="line-clamp-2 text-sm leading-snug font-medium break-words">
+                        {t('inputYourCar')}
+                      </p>
+                      <p className="mt-1 line-clamp-1 text-xs text-[#4725f4]">
+                        {t('freeTrial')}
+                      </p>
                     </div>
                   </motion.div>
 
-                  {(showAllCars ? CHINESE_CAR_MODELS : CHINESE_CAR_MODELS.slice(0, 3)).map((car) => (
+                  {(showAllCars
+                    ? CHINESE_CAR_MODELS
+                    : CHINESE_CAR_MODELS.slice(0, 3)
+                  ).map((car) => (
                     <motion.div
                       key={car.id}
-                      className={`relative rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${selectedCar.id === car.id ? 'border-[#4725f4] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-white/10/60'}`}
+                      className={`relative cursor-pointer overflow-hidden rounded-xl border-2 transition-all ${selectedCar.id === car.id ? 'border-[#4725f4] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-white/15'}`}
                       onClick={() => {
                         setActivePresetId(null);
                         setSelectedCar(car);
@@ -1785,19 +2546,20 @@ export default function CarModderConfigurator() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
                     >
-                      <div className="aspect-[4/3] bg-[#1c1833]/90 relative overflow-hidden">
+                      <div className="relative aspect-[4/3] overflow-hidden bg-[#1c1833]/90">
                         <motion.img
                           src={car.image}
                           alt={isZh ? car.nameZh : car.name}
-                          className="w-full h-full object-cover"
+                          className="h-full w-full object-cover"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&h=150&fit=crop';
+                            (e.target as HTMLImageElement).src =
+                              'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&h=150&fit=crop';
                           }}
                           whileHover={{ scale: 1.1 }}
                         />
                         {selectedCar.id === car.id && (
-                          <motion.div 
-                            className="absolute inset-0 bg-[#4725f4]/20 backdrop-blur-sm flex items-center justify-center"
+                          <motion.div
+                            className="absolute inset-0 flex items-center justify-center bg-[#4725f4]/20 backdrop-blur-sm"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.3 }}
@@ -1807,29 +2569,36 @@ export default function CarModderConfigurator() {
                         )}
                       </div>
                       <div className="border-t border-white/10 bg-[#1c1833]/90 p-3">
-                        <p className="text-xs text-gray-500 mb-1">{car.brand}</p>
-                        <p className="line-clamp-2 break-words text-sm font-medium leading-snug">{isZh ? car.nameZh : car.name}</p>
-                        <p className="mt-1 text-xs text-[#4725f4]">{formatPrice(car.price)}</p>
+                        <p className="mb-1 text-xs text-slate-400">
+                          {car.brand}
+                        </p>
+                        <p className="line-clamp-2 text-sm leading-snug font-medium break-words">
+                          {isZh ? car.nameZh : car.name}
+                        </p>
+                        <p className="mt-1 text-xs text-[#4725f4]">
+                          {formatPrice(car.price)}
+                        </p>
                       </div>
                     </motion.div>
                   ))}
                 </div>
-                <div className="flex justify-center mt-4">
+                <div className="mt-4 flex justify-center">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowAllCars(!showAllCars)}
-                    className="min-h-11 max-w-full break-words text-center text-gray-400 hover:bg-white/10 hover:text-white"
+                    className="min-h-11 max-w-full text-center break-words text-slate-300 hover:bg-white/10 hover:text-white"
                   >
                     {showAllCars ? (
                       <>
-                        <ChevronUp className="w-4 h-4 mr-2" />
+                        <ChevronUp className="mr-2 h-4 w-4" />
                         {t('collapse')}
                       </>
                     ) : (
                       <>
-                        <ChevronDown className="w-4 h-4 mr-2" />
-                        {t('viewAll')} {CHINESE_CAR_MODELS.length} {t('carModelsCount')}
+                        <ChevronDown className="mr-2 h-4 w-4" />
+                        {t('viewAll')} {CHINESE_CAR_MODELS.length}{' '}
+                        {t('carModelsCount')}
                       </>
                     )}
                   </Button>
@@ -1838,7 +2607,7 @@ export default function CarModderConfigurator() {
 
               {/* Generation Progress */}
               {isGenerating && (
-                <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg">
+                <Card className="border-white/10 bg-[#1c1833]/90 shadow-lg">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -1846,36 +2615,50 @@ export default function CarModderConfigurator() {
                   >
                     <CardContent className="space-y-4 p-6">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium">{t('generationProgress')}</span>
-                        <span className="text-[#4725f4] font-medium">{progress}%</span>
+                        <span className="font-medium">
+                          {t('generationProgress')}
+                        </span>
+                        <span className="font-medium text-[#4725f4]">
+                          {progress}%
+                        </span>
                       </div>
-                      <Progress value={progress} className="h-3 bg-border rounded-full overflow-hidden">
-                        <motion.div 
-                          className="h-full bg-gradient-to-r from-[#4725f4] to-[#7c5cff] rounded-full"
+                      <Progress
+                        value={progress}
+                        className="bg-border h-3 overflow-hidden rounded-full"
+                      >
+                        <motion.div
+                          className="h-full rounded-full bg-gradient-to-r from-[#4725f4] to-[#7c5cff]"
                           style={{ width: `${progress}%` }}
                           initial={{ width: 0 }}
                           animate={{ width: `${progress}%` }}
-                          transition={{ duration: 0.5, ease: "easeOut" }}
+                          transition={{ duration: 0.5, ease: 'easeOut' }}
                         />
                       </Progress>
                       <motion.div
-                        className="space-y-1 text-xs text-gray-400"
+                        className="space-y-1 text-xs text-slate-300"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.3 }}
                       >
                         {SHOT_TYPES.map((shotType) => (
-                          <p key={shotType} className="flex items-center justify-between">
+                          <p
+                            key={shotType}
+                            className="flex items-center justify-between"
+                          >
                             <span>
                               {shotType === 'panorama'
                                 ? t('shotPanorama')
                                 : t('shotCloseup')}
                             </span>
-                            <span>{getShotStatusLabel(showcaseStates[shotType].status)}</span>
+                            <span>
+                              {getShotStatusLabel(
+                                showcaseStates[shotType].status
+                              )}
+                            </span>
                           </p>
                         ))}
                       </motion.div>
-                      <div className="flex justify-center mt-2">
+                      <div className="mt-2 flex justify-center">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -1883,9 +2666,9 @@ export default function CarModderConfigurator() {
                             resetTaskState();
                             setShowcaseStates(getInitialShowcaseStates());
                           }}
-                          className="text-gray-400 hover:text-white"
+                          className="text-slate-300 hover:text-white"
                         >
-                          <RefreshCw className="w-4 h-4 mr-2" />
+                          <RefreshCw className="mr-2 h-4 w-4" />
                           {t('cancelGenerate')}
                         </Button>
                       </div>
@@ -1896,373 +2679,683 @@ export default function CarModderConfigurator() {
             </motion.div>
 
             {/* Right Sidebar - Modification Options */}
-            <motion.div 
-              className="lg:col-span-4 space-y-6"
+            <motion.div
+              className="space-y-6 lg:sticky lg:top-24 lg:col-span-4 lg:self-start"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
               <div className="space-y-6">
-                {/* Tab Navigation */}
-                <motion.div 
-                  className="flex gap-2 overflow-x-auto rounded-xl border border-white/10 bg-[#1c1833]/90 p-1"
+                <motion.div
+                  className="rounded-3xl border border-white/10 bg-[#1c1833]/92 p-6 shadow-[0_24px_60px_-36px_rgba(0,0,0,0.95)]"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45 }}
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] font-medium tracking-[0.18em] text-slate-300 uppercase">
+                        {t('configDetails')}
+                      </p>
+                      <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">
+                        {isZh ? selectedCar.nameZh : selectedCar.name}
+                      </h2>
+                    </div>
+                    <Badge className="border-0 bg-[#4725f4]/16 text-[#d4cbff]">
+                      {selectedCar.brand}
+                    </Badge>
+                  </div>
+                  <div className="mt-5 grid grid-cols-2 gap-3">
+                    <div className="rounded-2xl border border-white/12 bg-white/[0.05] px-4 py-3">
+                      <p className="text-[11px] font-medium tracking-[0.14em] text-slate-300 uppercase">
+                        {t('basePrice')}
+                      </p>
+                      <p className="mt-2 text-lg font-semibold text-white">
+                        {formatPrice(selectedCar.price)}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-white/12 bg-white/[0.05] px-4 py-3">
+                      <p className="text-[11px] font-medium tracking-[0.14em] text-slate-300 uppercase">
+                        {t('modCost')}
+                      </p>
+                      <p className="mt-2 text-lg font-semibold text-[#b7a8ff]">
+                        +{formatPrice(totalBuildCost - selectedCar.price)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-5 space-y-3">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-3 text-sm">
+                      <span className="text-slate-300">{t('wheels')}</span>
+                      <span className="text-white">
+                        {isZh ? selectedWheel.nameZh : selectedWheel.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-white/10 pb-3 text-sm">
+                      <span className="text-slate-300">{t('paint')}</span>
+                      <span className="text-white">
+                        {isZh ? selectedColor.nameZh : selectedColor.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-white/10 pb-3 text-sm">
+                      <span className="text-slate-300">{t('spec')}</span>
+                      <span className="text-white">
+                        {wheelSpec.size}" / {wheelSpec.spokeCount}
+                        {t('spokeUnit')}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-300">
+                        {t('totalBuildCost')}
+                      </span>
+                      <span className="text-lg font-semibold text-white">
+                        {formatPrice(totalBuildCost)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-5 grid grid-cols-2 gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled={!canUndo}
+                      onClick={handleUndo}
+                      className="min-h-11 border border-white/12 bg-white/[0.05] text-slate-100 hover:bg-white/[0.08]"
+                    >
+                      <Undo2 className="mr-2 h-4 w-4" />
+                      {t('undo')}
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled={!canRedo}
+                      onClick={handleRedo}
+                      className="min-h-11 border border-white/12 bg-white/[0.05] text-slate-100 hover:bg-white/[0.08]"
+                    >
+                      <Redo2 className="mr-2 h-4 w-4" />
+                      {t('redo')}
+                    </Button>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  className="rounded-3xl border border-white/10 bg-[#1c1833]/92 p-4 shadow-[0_20px_50px_-34px_rgba(0,0,0,0.9)]"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
                 >
-                  {['paint', 'wheels', 'mods', 'accents'].map((tab) => (
-                    <motion.button
-                      key={tab}
-                      className={`min-h-11 min-w-[88px] flex-1 rounded-lg px-3 py-2 text-center text-xs font-semibold tracking-wide transition-all sm:px-4 sm:py-3 sm:text-sm ${activeTab === tab ? 'border border-white/10 bg-[#1c1833]/90 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
-                      onClick={() => setActiveTab(tab)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
+                  <div className="mb-4 flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[11px] font-medium tracking-[0.18em] text-slate-300 uppercase">
+                        Configurator
+                      </p>
+                      <h3 className="mt-2 text-xl font-semibold tracking-tight text-white">
+                        Build Controls
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-slate-200/80">
+                        Tune paint, stance, aero, and final details without
+                        leaving the preview.
+                      </p>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className="border-white/12 bg-white/[0.04] text-slate-200/85"
                     >
-                      {tab === 'paint' && t('paint')}
-                      {tab === 'wheels' && t('wheels')}
-                      {tab === 'mods' && t('modifications_')}
-                      {tab === 'accents' && t('accentsDetail')}
-                    </motion.button>
-                  ))}
-                </motion.div>
+                      {activeTab === 'paint'
+                        ? t('paint')
+                        : activeTab === 'wheels'
+                          ? t('wheels')
+                          : activeTab === 'mods'
+                            ? t('modifications_')
+                            : t('accentsDetail')}
+                    </Badge>
+                  </div>
 
-                {/* Paint Options */}
-                {activeTab === 'paint' && (
-                  <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-6">
-                      <CardTitle className="text-lg font-semibold tracking-tight text-white">{t('paintLabTitle')}</CardTitle>
-                      <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('paintLabDesc')}</p>
-                    </CardHeader>
-                    <CardContent className="space-y-8 p-6">
-                      {/* Finish Type */}
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-400 mb-4 uppercase tracking-wider">{t('finishType')}</h3>
-                        <div className="flex flex-wrap gap-3">
-                          {FINISH_TYPES.map((finish) => (
-                            <motion.button
-                              key={finish.id}
-                              className={`min-h-11 rounded-xl border px-4 py-2 text-sm transition-all ${selectedFinish.id === finish.id ? 'border-transparent bg-gradient-to-r from-[#4725f4] to-[#7c5cff] text-white shadow-[0_0_15px_rgba(99,102,241,0.35)]' : 'border-white/10 bg-[#1c1833]/90 text-white hover:border-[#4725f4]/40'}`}
-                              onClick={() => {
-                                setActivePresetId(null);
-                                setSelectedFinish(finish);
-                              }}
-                              whileHover={{ scale: 1.03, y: -2 }}
-                              whileTap={{ scale: 0.97 }}
-                            >
-                              {isZh ? finish.nameZh : finish.name}
-                              {finish.price > 0 && (
-                                <span className="ml-2 text-xs font-medium">+{formatPrice(finish.price)}</span>
-                              )}
-                            </motion.button>
-                          ))}
-                        </div>
-                      </div>
+                  <div className="space-y-3">
+                    {[
+                      {
+                        id: 'paint',
+                        icon: ImageIcon,
+                        title: t('paint'),
+                        summary: `${isZh ? selectedColor.nameZh : selectedColor.name} · ${isZh ? selectedFinish.nameZh : selectedFinish.name}`,
+                      },
+                      {
+                        id: 'wheels',
+                        icon: CircleDashed,
+                        title: t('wheels'),
+                        summary: `${isZh ? selectedWheel.nameZh : selectedWheel.name} · ${wheelSpec.size}"`,
+                      },
+                      {
+                        id: 'mods',
+                        icon: Sparkles,
+                        title: t('modifications_'),
+                        summary:
+                          selectedMods.length > 0
+                            ? `${selectedMods.length} ${t('modifications_')}`
+                            : t('performanceStylingDesc'),
+                      },
+                      {
+                        id: 'accents',
+                        icon: WandSparkles,
+                        title: t('accentsDetail'),
+                        summary:
+                          Object.values(accentOptions).filter(Boolean).length >
+                          0
+                            ? `${Object.values(accentOptions).filter(Boolean).length} ${t('accentsDetail')}`
+                            : t('accentDetailsDesc'),
+                      },
+                    ].map((section) => {
+                      const Icon = section.icon;
+                      const isOpen = activeTab === section.id;
 
-                      {/* Manufacturer Colors */}
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-400 mb-4 uppercase tracking-wider">{t('manufacturerColors')}</h3>
-                        <div className="grid grid-cols-4 gap-4 sm:grid-cols-5">
-                          {PAINT_COLORS.map((color) => (
-                            <motion.div
-                              key={color.id}
-                              className={`relative cursor-pointer group ${selectedColor.id === color.id ? 'ring-2 ring-[#4725f4] ring-offset-2 ring-offset-card' : ''}`}
-                              onClick={() => {
-                                setActivePresetId(null);
-                                setSelectedColor(color);
-                              }}
-                              whileHover={{ scale: 1.15, y: -5 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              <div
-                                className="w-12 h-12 rounded-full shadow-lg border-2 border-white/10 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-                                style={{ backgroundColor: color.color }}
-                              />
-                              <div className="absolute -bottom-12 left-1/2 max-w-[94px] -translate-x-1/2 rounded-lg border border-white/10 bg-[#1c1833]/90 px-2 py-1 text-center text-[10px] leading-tight opacity-0 transition-opacity group-hover:opacity-100">
-                                {isZh ? color.nameZh : color.name}
-                                {color.price > 0 && (
-                                  <span className="ml-1 text-[#4725f4]">+{formatPrice(color.price)}</span>
-                                )}
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </motion.div>
-                </Card>
-                )}
-
-                {/* Wheel Options */}
-                {activeTab === 'wheels' && (
-                  <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-6">
-                      <CardTitle className="text-lg font-semibold tracking-tight text-white">{t('wheelSelectorTitle')}</CardTitle>
-                      <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('wheelSelectorDesc')}</p>
-                    </CardHeader>
-                    <CardContent className="space-y-5 p-6">
-                      <div className="grid grid-cols-1 gap-3 max-h-[360px] overflow-y-auto pr-1">
-                        {WHEEL_STYLES.map((wheel) => (
-                          <motion.div
-                            key={wheel.id}
-                            className={`p-4 rounded-xl cursor-pointer transition-all border ${selectedWheel.id === wheel.id ? 'border-[#4725f4] bg-[#1c1833]/90 shadow-[0_0_15px_rgba(99,102,241,0.2)]' : 'border-white/10 hover:border-white/10 bg-[#1c1833]/90'}`}
-                            onClick={() => handleWheelStyleSelect(wheel)}
-                            whileHover={{ scale: 1.02, y: -2 }}
-                            whileTap={{ scale: 0.98 }}
+                      return (
+                        <div
+                          key={section.id}
+                          className={`overflow-hidden rounded-2xl border transition-all ${
+                            isOpen
+                              ? 'border-[#4725f4]/40 bg-[linear-gradient(180deg,rgba(71,37,244,0.12),rgba(255,255,255,0.02))]'
+                              : 'border-white/10 bg-white/[0.03]'
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab(section.id)}
+                            className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition-colors hover:bg-white/[0.03]"
                           >
-                            <div className="flex items-start gap-4">
-                              <motion.div 
-                                className="w-12 h-12 rounded-full bg-[#1c1833]/90 flex items-center justify-center border border-white/10 shrink-0"
-                                whileHover={{ rotate: 10 }}
+                            <div className="flex min-w-0 items-center gap-3">
+                              <div
+                                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+                                  isOpen
+                                    ? 'bg-[#4725f4]/18 text-[#c8bbff]'
+                                    : 'bg-white/[0.05] text-slate-200/85'
+                                }`}
                               >
-                                <CircleDashed className="h-4 w-4 text-[#4725f4]" />
-                              </motion.div>
-                              <div className="flex-1 min-w-0">
-                                <div className="mb-1 flex items-center justify-between gap-2">
-                                  <h4 className="line-clamp-1 min-w-0 break-words text-sm font-semibold text-white">{isZh ? wheel.nameZh : wheel.name}</h4>
-                                  {wheel.price > 0 && (
-                                    <motion.span 
-                                      className="text-xs font-medium text-[#4725f4] shrink-0"
-                                      whileHover={{ scale: 1.1 }}
-                                    >
-                                      +{formatPrice(wheel.price)}
-                                    </motion.span>
-                                  )}
+                                <Icon className="h-5 w-5" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm font-semibold text-white">
+                                  {section.title}
+                                </p>
+                                <p className="line-clamp-1 text-xs text-slate-300">
+                                  {section.summary}
+                                </p>
+                              </div>
+                            </div>
+                            {isOpen ? (
+                              <ChevronUp className="h-4 w-4 text-slate-300" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4 text-slate-300" />
+                            )}
+                          </button>
+
+                          {isOpen && (
+                            <div className="border-t border-white/10 px-4 py-5">
+                              {section.id === 'paint' && (
+                                <div className="space-y-8">
+                                  <div>
+                                    <div className="mb-4 flex items-center justify-between gap-3">
+                                      <h4 className="text-sm font-medium tracking-wider text-slate-300 uppercase">
+                                        {t('finishType')}
+                                      </h4>
+                                      <span className="text-xs text-slate-300">
+                                        {isZh
+                                          ? selectedFinish.nameZh
+                                          : selectedFinish.name}
+                                      </span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-3">
+                                      {FINISH_TYPES.map((finish) => (
+                                        <motion.button
+                                          key={finish.id}
+                                          className={`min-h-11 rounded-2xl border px-4 py-2 text-sm transition-all ${
+                                            selectedFinish.id === finish.id
+                                              ? 'border-transparent bg-gradient-to-r from-[#4725f4] to-[#7c5cff] text-white shadow-[0_0_15px_rgba(99,102,241,0.35)]'
+                                              : 'border-white/10 bg-white/[0.04] text-white hover:border-[#4725f4]/40'
+                                          }`}
+                                          onClick={() => {
+                                            setActivePresetId(null);
+                                            setSelectedFinish(finish);
+                                          }}
+                                          whileHover={{ scale: 1.03, y: -2 }}
+                                          whileTap={{ scale: 0.97 }}
+                                        >
+                                          {isZh ? finish.nameZh : finish.name}
+                                          {finish.price > 0 && (
+                                            <span className="ml-2 text-xs font-medium">
+                                              +{formatPrice(finish.price)}
+                                            </span>
+                                          )}
+                                        </motion.button>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    <div className="mb-4 flex items-center justify-between gap-3">
+                                      <h4 className="text-sm font-medium tracking-wider text-slate-300 uppercase">
+                                        {t('manufacturerColors')}
+                                      </h4>
+                                      <div className="flex items-center gap-2 text-xs text-slate-300">
+                                        <span
+                                          className="h-3 w-3 rounded-full border border-white/20"
+                                          style={{
+                                            backgroundColor:
+                                              selectedColor.color,
+                                          }}
+                                        />
+                                        <span>
+                                          {isZh
+                                            ? selectedColor.nameZh
+                                            : selectedColor.name}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="grid grid-cols-5 gap-4 sm:grid-cols-6">
+                                      {PAINT_COLORS.map((color) => (
+                                        <motion.div
+                                          key={color.id}
+                                          className={`group relative cursor-pointer ${
+                                            selectedColor.id === color.id
+                                              ? 'ring-2 ring-[#4725f4] ring-offset-2 ring-offset-[#1c1833]'
+                                              : ''
+                                          } rounded-full`}
+                                          onClick={() => {
+                                            setActivePresetId(null);
+                                            setSelectedColor(color);
+                                          }}
+                                          whileHover={{ scale: 1.12, y: -4 }}
+                                          whileTap={{ scale: 0.95 }}
+                                        >
+                                          <div
+                                            className="h-12 w-12 rounded-full border-2 border-white/10 shadow-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                                            style={{
+                                              backgroundColor: color.color,
+                                            }}
+                                          />
+                                          <div className="absolute -bottom-12 left-1/2 z-10 max-w-[96px] -translate-x-1/2 rounded-lg border border-white/10 bg-[#17132a]/95 px-2 py-1 text-center text-[10px] leading-tight opacity-0 transition-opacity group-hover:opacity-100">
+                                            {isZh ? color.nameZh : color.name}
+                                          </div>
+                                        </motion.div>
+                                      ))}
+                                    </div>
+                                  </div>
                                 </div>
-                                <p className="line-clamp-2 break-words text-xs leading-relaxed text-gray-400">{isZh ? wheel.descriptionZh : wheel.description}</p>
-                                <div className="flex flex-wrap gap-1 mt-2">
-                                  {wheel.tags.slice(0, 3).map((tag) => (
-                                    <Badge key={tag} variant="outline" className="text-[10px] border-white/10 text-gray-400">
-                                      {tag}
-                                    </Badge>
+                              )}
+
+                              {section.id === 'wheels' && (
+                                <div className="space-y-5">
+                                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                                    <div className="flex items-start gap-4">
+                                      <div className="relative h-18 w-18 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[#141122]">
+                                        <img
+                                          src={getWheelThumbnail(
+                                            selectedWheel.id
+                                          )}
+                                          alt={
+                                            isZh
+                                              ? selectedWheel.nameZh
+                                              : selectedWheel.name
+                                          }
+                                          className="h-full w-full object-cover"
+                                          loading="lazy"
+                                          onError={(e) => {
+                                            e.currentTarget.src =
+                                              selectedCar.localImage;
+                                          }}
+                                        />
+                                      </div>
+                                      <div className="flex-1">
+                                        <p className="text-sm font-semibold text-white">
+                                          {isZh
+                                            ? selectedWheel.nameZh
+                                            : selectedWheel.name}
+                                        </p>
+                                        <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                                          {isZh
+                                            ? selectedWheel.descriptionZh
+                                            : selectedWheel.description}
+                                        </p>
+                                        <div className="mt-3 flex items-center justify-between gap-3">
+                                          <div className="text-xs text-slate-300">
+                                            {wheelSpec.size}" ·{' '}
+                                            {wheelSpec.spokeCount}
+                                            {t('spokeUnit')}
+                                          </div>
+                                          <span className="text-sm font-semibold text-[#b7a8ff]">
+                                            +{formatPrice(selectedWheel.price)}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="grid max-h-[320px] grid-cols-1 gap-3 overflow-y-auto pr-1">
+                                    {WHEEL_STYLES.map((wheel) => (
+                                      <motion.div
+                                        key={wheel.id}
+                                        className={`cursor-pointer rounded-2xl border p-4 transition-all ${
+                                          selectedWheel.id === wheel.id
+                                            ? 'border-[#4725f4] bg-[#4725f4]/10 shadow-[0_0_15px_rgba(99,102,241,0.2)]'
+                                            : 'border-white/10 bg-white/[0.03] hover:border-white/20'
+                                        }`}
+                                        onClick={() =>
+                                          handleWheelStyleSelect(wheel)
+                                        }
+                                        whileHover={{ scale: 1.02, y: -2 }}
+                                        whileTap={{ scale: 0.98 }}
+                                      >
+                                        <div className="flex items-start gap-4">
+                                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[#141122]">
+                                            <img
+                                              src={getWheelThumbnail(wheel.id)}
+                                              alt={
+                                                isZh ? wheel.nameZh : wheel.name
+                                              }
+                                              className="h-full w-full object-cover"
+                                              loading="lazy"
+                                              onError={(e) => {
+                                                e.currentTarget.src =
+                                                  selectedCar.localImage;
+                                              }}
+                                            />
+                                          </div>
+                                          <div className="min-w-0 flex-1">
+                                            <div className="mb-1 flex items-center justify-between gap-2">
+                                              <h4 className="line-clamp-1 min-w-0 text-sm font-semibold break-words text-white">
+                                                {isZh
+                                                  ? wheel.nameZh
+                                                  : wheel.name}
+                                              </h4>
+                                              <span className="shrink-0 text-xs font-medium text-[#b7a8ff]">
+                                                +{formatPrice(wheel.price)}
+                                              </span>
+                                            </div>
+                                            <p className="line-clamp-2 text-xs leading-relaxed break-words text-slate-300">
+                                              {isZh
+                                                ? wheel.descriptionZh
+                                                : wheel.description}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </motion.div>
+                                    ))}
+                                  </div>
+
+                                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() =>
+                                        setShowAdvancedWheels((prev) => !prev)
+                                      }
+                                      className="min-h-11 w-full justify-between px-0 text-slate-100 hover:bg-transparent"
+                                    >
+                                      <span className="pr-2 text-left text-sm leading-snug">
+                                        {t('advancedWheelSpec')}
+                                      </span>
+                                      {showAdvancedWheels ? (
+                                        <ChevronUp className="h-4 w-4" />
+                                      ) : (
+                                        <ChevronDown className="h-4 w-4" />
+                                      )}
+                                    </Button>
+                                    {showAdvancedWheels && (
+                                      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                        <div className="space-y-1">
+                                          <p className="text-xs text-slate-300">
+                                            {t('wheelSize')}
+                                          </p>
+                                          <Select
+                                            value={String(wheelSpec.size)}
+                                            onValueChange={(value) =>
+                                              updateWheelSpec({
+                                                size: Number(value),
+                                              })
+                                            }
+                                          >
+                                            <SelectTrigger className="w-full">
+                                              <SelectValue
+                                                placeholder={t('selectSize')}
+                                              />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              {WHEEL_SIZES.map((size) => (
+                                                <SelectItem
+                                                  key={size}
+                                                  value={String(size)}
+                                                >
+                                                  {size}" (
+                                                  {WHEEL_SIZE_EXTRA_COST[size] >
+                                                  0
+                                                    ? `+${formatPrice(WHEEL_SIZE_EXTRA_COST[size])}`
+                                                    : t('base')}
+                                                  )
+                                                </SelectItem>
+                                              ))}
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+                                        <div className="space-y-1">
+                                          <p className="text-xs text-slate-300">
+                                            {t('wheelSpokes')}
+                                          </p>
+                                          <Select
+                                            value={String(wheelSpec.spokeCount)}
+                                            onValueChange={(value) =>
+                                              updateWheelSpec({
+                                                spokeCount: Number(value),
+                                              })
+                                            }
+                                          >
+                                            <SelectTrigger className="w-full">
+                                              <SelectValue
+                                                placeholder={t('selectSpokes')}
+                                              />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              {SPOKE_COUNTS.map((count) => (
+                                                <SelectItem
+                                                  key={count}
+                                                  value={String(count)}
+                                                >
+                                                  {count} {t('spokeUnit')}
+                                                </SelectItem>
+                                              ))}
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+                                        <div className="space-y-1">
+                                          <p className="text-xs text-slate-300">
+                                            {t('wheelColor')}
+                                          </p>
+                                          <Select
+                                            value={wheelSpec.colorId}
+                                            onValueChange={(value) =>
+                                              updateWheelSpec({
+                                                colorId: value,
+                                              })
+                                            }
+                                          >
+                                            <SelectTrigger className="w-full">
+                                              <SelectValue
+                                                placeholder={t('selectColor')}
+                                              />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              {WHEEL_COLORS.map((color) => (
+                                                <SelectItem
+                                                  key={color.id}
+                                                  value={color.id}
+                                                >
+                                                  {isZh
+                                                    ? color.nameZh
+                                                    : color.name}{' '}
+                                                  {color.extraCost > 0
+                                                    ? `(+${formatPrice(color.extraCost)})`
+                                                    : ''}
+                                                </SelectItem>
+                                              ))}
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+                                        <div className="space-y-1">
+                                          <p className="text-xs text-slate-300">
+                                            {t('wheelConcavity')}
+                                          </p>
+                                          <Select
+                                            value={wheelSpec.concavity}
+                                            onValueChange={(value) =>
+                                              updateWheelSpec({
+                                                concavity:
+                                                  value as WheelConcavity,
+                                              })
+                                            }
+                                          >
+                                            <SelectTrigger className="w-full">
+                                              <SelectValue
+                                                placeholder={t(
+                                                  'selectConcavity'
+                                                )}
+                                              />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              {WHEEL_CONCAVITY_OPTIONS.map(
+                                                (item) => (
+                                                  <SelectItem
+                                                    key={item.id}
+                                                    value={item.id}
+                                                  >
+                                                    {isZh
+                                                      ? item.nameZh
+                                                      : item.name}{' '}
+                                                    {item.extraCost > 0
+                                                      ? `(+${formatPrice(item.extraCost)})`
+                                                      : ''}
+                                                  </SelectItem>
+                                                )
+                                              )}
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              {section.id === 'mods' && (
+                                <div className="grid grid-cols-1 gap-3">
+                                  {MODIFICATION_OPTIONS.map((mod) => (
+                                    <motion.button
+                                      key={mod.id}
+                                      type="button"
+                                      className={`flex items-start justify-between gap-3 rounded-2xl border p-4 text-left transition-all ${
+                                        selectedMods.includes(mod.id)
+                                          ? 'border-[#4725f4]/45 bg-[#4725f4]/10'
+                                          : 'border-white/10 bg-white/[0.03] hover:border-white/20'
+                                      }`}
+                                      onClick={() => toggleMod(mod.id)}
+                                      whileHover={{ y: -2 }}
+                                      whileTap={{ scale: 0.99 }}
+                                    >
+                                      <div className="flex min-w-0 gap-4">
+                                        <div className="relative h-18 w-18 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[#141122]">
+                                          <img
+                                            src={getModThumbnail(mod.id)}
+                                            alt={isZh ? mod.nameZh : mod.name}
+                                            className="h-full w-full object-cover"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                              e.currentTarget.src =
+                                                selectedCar.localImage;
+                                            }}
+                                          />
+                                        </div>
+                                        <div className="min-w-0">
+                                          <div className="flex items-center gap-2">
+                                            <div
+                                              className={`flex h-5 w-5 items-center justify-center rounded-full border ${
+                                                selectedMods.includes(mod.id)
+                                                  ? 'border-[#4725f4] bg-[#4725f4] text-white'
+                                                  : 'border-white/15 text-transparent'
+                                              }`}
+                                            >
+                                              <Check className="h-3 w-3" />
+                                            </div>
+                                            <p className="text-sm leading-snug font-medium break-words text-white">
+                                              {isZh ? mod.nameZh : mod.name}
+                                            </p>
+                                          </div>
+                                          <p className="mt-2 text-xs leading-relaxed break-words text-slate-300">
+                                            {isZh
+                                              ? mod.descriptionZh
+                                              : mod.description}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <span className="shrink-0 text-sm font-medium text-[#b7a8ff]">
+                                        +{formatPrice(mod.price)}
+                                      </span>
+                                    </motion.button>
                                   ))}
                                 </div>
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-
-                      <div className="pt-2 border-t border-white/10">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setShowAdvancedWheels((prev) => !prev)}
-                          className="min-h-11 w-full justify-between"
-                        >
-                          <span className="pr-2 text-left text-sm leading-snug">{t('advancedWheelSpec')}</span>
-                          {showAdvancedWheels ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                        </Button>
-                        {showAdvancedWheels && (
-                          <div className="mt-3 space-y-3">
-                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                              <div className="space-y-1">
-                                <p className="text-xs text-gray-400">{t('wheelSize')}</p>
-                                <Select
-                                  value={String(wheelSpec.size)}
-                                  onValueChange={(value) => updateWheelSpec({ size: Number(value) })}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={t('selectSize')} />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {WHEEL_SIZES.map((size) => (
-                                      <SelectItem key={size} value={String(size)}>
-                                        {size}" ({WHEEL_SIZE_EXTRA_COST[size] > 0 ? `+${formatPrice(WHEEL_SIZE_EXTRA_COST[size])}` : t('base')})
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              <div className="space-y-1">
-                                <p className="text-xs text-gray-400">{t('wheelSpokes')}</p>
-                                <Select
-                                  value={String(wheelSpec.spokeCount)}
-                                  onValueChange={(value) => updateWheelSpec({ spokeCount: Number(value) })}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={t('selectSpokes')} />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {SPOKE_COUNTS.map((count) => (
-                                      <SelectItem key={count} value={String(count)}>
-                                        {count} {t('spokeUnit')}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                              <div className="space-y-1">
-                                <p className="text-xs text-gray-400">{t('wheelColor')}</p>
-                                <Select
-                                  value={wheelSpec.colorId}
-                                  onValueChange={(value) => updateWheelSpec({ colorId: value })}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={t('selectColor')} />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {WHEEL_COLORS.map((color) => (
-                                      <SelectItem key={color.id} value={color.id}>
-                                        {isZh ? color.nameZh : color.name} {color.extraCost > 0 ? `(+${formatPrice(color.extraCost)})` : ''}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              <div className="space-y-1">
-                                <p className="text-xs text-gray-400">{t('wheelConcavity')}</p>
-                                <Select
-                                  value={wheelSpec.concavity}
-                                  onValueChange={(value) => updateWheelSpec({ concavity: value as WheelConcavity })}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={t('selectConcavity')} />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {WHEEL_CONCAVITY_OPTIONS.map((item) => (
-                                      <SelectItem key={item.id} value={item.id}>
-                                        {isZh ? item.nameZh : item.name} {item.extraCost > 0 ? `(+${formatPrice(item.extraCost)})` : ''}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </motion.div>
-                </Card>
-                )}
-
-                {/* Modification Options */}
-                {activeTab === 'mods' && (
-                  <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-6">
-                      <CardTitle className="text-lg font-semibold tracking-tight text-white">{t('performanceStylingTitle')}</CardTitle>
-                      <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('performanceStylingDesc')}</p>
-                    </CardHeader>
-                    <CardContent className="space-y-3 p-6">
-                      {MODIFICATION_OPTIONS.map((mod) => (
-                        <motion.div 
-                          key={mod.id} 
-                          className="flex items-start justify-between gap-3 border-b border-white/10 py-4"
-                          whileHover={{ x: 5 }}
-                        >
-                          <motion.div 
-                            className="flex min-w-0 items-start gap-4"
-                            onClick={() => toggleMod(mod.id)}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <motion.div 
-                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center cursor-pointer ${selectedMods.includes(mod.id) ? 'bg-gradient-to-r from-[#4725f4] to-[#7c5cff] border-[#4725f4] shadow-[0_0_10px_rgba(99,102,241,0.4)]' : 'border-white/10'}`}
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                            >
-                              {selectedMods.includes(mod.id) && (
-                                <motion.div
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  transition={{ duration: 0.2 }}
-                                >
-                                  <Check className="h-3 w-3 text-white" />
-                                </motion.div>
                               )}
-                            </motion.div>
-                            <div className="min-w-0">
-                              <p className="break-words text-sm font-medium leading-snug text-white">{isZh ? mod.nameZh : mod.name}</p>
-                              <p className="mt-1 break-words text-xs leading-relaxed text-gray-400">{isZh ? mod.descriptionZh : mod.description}</p>
+
+                              {section.id === 'accents' && (
+                                <div className="grid grid-cols-1 gap-3">
+                                  {ACCENT_OPTIONS.map((accent) => (
+                                    <div
+                                      key={accent.id}
+                                      className="flex items-start justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+                                    >
+                                      <div className="min-w-0">
+                                        <p className="text-sm leading-snug font-medium break-words text-white">
+                                          {isZh ? accent.nameZh : accent.name}
+                                        </p>
+                                        <p className="mt-1 text-xs leading-relaxed break-words text-slate-300">
+                                          {isZh
+                                            ? accent.descriptionZh
+                                            : accent.description}
+                                        </p>
+                                      </div>
+                                      <div className="flex shrink-0 items-center gap-3">
+                                        <span className="text-sm font-medium text-[#b7a8ff]">
+                                          +{formatPrice(accent.price)}
+                                        </span>
+                                        <Switch
+                                          checked={accentOptions[accent.id]}
+                                          onCheckedChange={() =>
+                                            toggleAccent(accent.id)
+                                          }
+                                          className="data-[state=checked]:bg-[#4725f4]"
+                                        />
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
-                          </motion.div>
-                          <motion.span 
-                            className="shrink-0 pt-0.5 text-sm font-medium text-[#4725f4]"
-                            whileHover={{ scale: 1.1 }}
-                          >
-                            +{formatPrice(mod.price)}
-                          </motion.span>
-                        </motion.div>
-                      ))}
-                    </CardContent>
-                  </motion.div>
-                </Card>
-                )}
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
 
-                {/* Accent Options */}
-                {activeTab === 'accents' && (
-                  <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-6">
-                      <CardTitle className="text-lg font-semibold tracking-tight text-white">{t('accentDetailsTitle')}</CardTitle>
-                      <p className="mt-1 text-sm leading-relaxed text-gray-400">{t('accentDetailsDesc')}</p>
-                    </CardHeader>
-                    <CardContent className="space-y-4 p-6">
-                      {ACCENT_OPTIONS.map((accent) => (
-                        <motion.div 
-                          key={accent.id} 
-                          className="flex items-start justify-between gap-3 border-b border-white/10 py-4"
-                          whileHover={{ x: 5 }}
-                        >
-                          <div className="min-w-0">
-                            <p className="break-words text-sm font-medium leading-snug text-white">{isZh ? accent.nameZh : accent.name}</p>
-                            <p className="mt-1 break-words text-xs leading-relaxed text-gray-400">{isZh ? accent.descriptionZh : accent.description}</p>
-                          </div>
-                          <div className="flex shrink-0 items-center gap-3">
-                            <motion.span 
-                              className="text-sm font-medium text-[#4725f4]"
-                              whileHover={{ scale: 1.1 }}
-                            >
-                              +{formatPrice(accent.price)}
-                            </motion.span>
-                            <Switch
-                              checked={accentOptions[accent.id]}
-                              onCheckedChange={() => toggleAccent(accent.id)}
-                              className="data-[state=checked]:bg-[#4725f4]"
-                            />
-                          </div>
-                        </motion.div>
-                      ))}
-                    </CardContent>
-                  </motion.div>
-                </Card>
-                )}
-
-                <Card className="bg-[#1c1833]/90 border-white/10 shadow-lg overflow-hidden">
-                  <CardHeader className="bg-[#1c1833]/90 border-b border-white/10 p-5">
+                <Card className="overflow-hidden border-white/10 bg-[#1c1833]/90 shadow-lg">
+                  <CardHeader className="border-b border-white/10 bg-[#1c1833]/90 p-5">
                     <CardTitle className="text-base font-semibold">
                       {t('recentConfigsTitle')}
                     </CardTitle>
-                    <p className="text-xs leading-relaxed text-gray-400">
+                    <p className="text-xs leading-relaxed text-slate-200/85">
                       {t('recentConfigsDesc')}
                     </p>
                   </CardHeader>
-                  <CardContent className="p-5 space-y-2">
+                  <CardContent className="space-y-2 p-5">
                     <Select
-                      value={historyState.index >= 0 ? String(historyState.index) : undefined}
+                      value={
+                        historyState.index >= 0
+                          ? String(historyState.index)
+                          : undefined
+                      }
                       onValueChange={(value) => {
                         const idx = Number(value);
                         const snapshot = historyState.entries[idx];
@@ -2276,8 +3369,17 @@ export default function CarModderConfigurator() {
                       </SelectTrigger>
                       <SelectContent>
                         {historyState.entries.map((entry, idx) => (
-                          <SelectItem key={`${entry.selectedCar.id}-${idx}`} value={String(idx)}>
-                            {isZh ? entry.selectedCar.nameZh : entry.selectedCar.name} · {entry.wheelSpec.size}" · {idx === historyState.index ? t('current') : `${t('step')} ${idx + 1}`}
+                          <SelectItem
+                            key={`${entry.selectedCar.id}-${idx}`}
+                            value={String(idx)}
+                          >
+                            {isZh
+                              ? entry.selectedCar.nameZh
+                              : entry.selectedCar.name}{' '}
+                            · {entry.wheelSpec.size}" ·{' '}
+                            {idx === historyState.index
+                              ? t('current')
+                              : `${t('step')} ${idx + 1}`}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -2293,18 +3395,18 @@ export default function CarModderConfigurator() {
                     transition={{ duration: 0.5, delay: 0.2 }}
                   >
                     <Button
-                      className="min-h-12 w-full bg-gradient-to-r from-[#4725f4] to-[#7c5cff] py-5 text-base font-bold text-white shadow-[0_0_20px_rgba(99,102,241,0.35)] transition-all duration-300 hover:from-[#361bb8] hover:to-[#5b2de1]"
+                      className="min-h-[52px] w-full bg-gradient-to-r from-[#4725f4] to-[#7c5cff] py-5 text-base font-bold text-white shadow-[0_0_24px_rgba(99,102,241,0.35)] transition-all duration-300 hover:from-[#361bb8] hover:to-[#5b2de1]"
                       onClick={handleGenerate}
                       disabled={isGenerating}
                     >
                       {isGenerating ? (
                         <>
-                          <Loader2 className="w-5 h-5 animate-spin mr-3" />
+                          <Loader2 className="mr-3 h-5 w-5 animate-spin" />
                           {t('generating')}
                         </>
                       ) : (
                         <>
-                          <Sparkles className="w-5 h-5 mr-3" />
+                          <Sparkles className="mr-3 h-5 w-5" />
                           {t('generateShowcase')}
                         </>
                       )}
@@ -2319,10 +3421,10 @@ export default function CarModderConfigurator() {
                     >
                       <Button
                         variant="secondary"
-                        className="min-h-11 w-full break-words border border-white/10 bg-[#1c1833]/90 py-3 text-center font-medium transition-all duration-300 hover:bg-white/10"
+                        className="min-h-11 w-full border border-white/10 bg-[#1c1833]/90 py-3 text-center font-medium break-words text-slate-100 transition-all duration-300 hover:bg-white/10"
                         onClick={handleShare}
                       >
-                        <Share2 className="w-4 h-4 mr-2" />
+                        <Share2 className="mr-2 h-4 w-4" />
                         {t('share')}
                       </Button>
                     </motion.div>
@@ -2334,29 +3436,30 @@ export default function CarModderConfigurator() {
                     >
                       <Button
                         variant="secondary"
-                        className="min-h-11 w-full break-words border border-white/10 bg-[#1c1833]/90 py-3 text-center font-medium transition-all duration-300 hover:bg-white/10"
+                        className="min-h-11 w-full border border-white/10 bg-[#1c1833]/90 py-3 text-center font-medium break-words text-slate-100 transition-all duration-300 hover:bg-white/10"
                       >
-                        <FileText className="w-4 h-4 mr-2" />
+                        <FileText className="mr-2 h-4 w-4" />
                         {t('quote')}
                       </Button>
                     </motion.div>
                   </div>
-                  <motion.div 
-                    className="text-center mt-2"
+                  <motion.div
+                    className="mt-2 text-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
                   >
-                    <p className="mx-auto max-w-[260px] text-xs leading-relaxed text-gray-500 sm:max-w-none">
+                    <p className="mx-auto max-w-[260px] text-xs leading-relaxed text-slate-300 sm:max-w-none">
                       {t('creditsRequired', { credits: costCredits })}
-                      {user && ` ${t('remaining', { credits: remainingCredits })}`}
+                      {user &&
+                        ` ${t('remaining', { credits: remainingCredits })}`}
                     </p>
                   </motion.div>
                 </div>
               </div>
             </motion.div>
           </div>
-          <div className="mt-10 rounded-xl border border-white/10 bg-[#1c1833]/70 p-4 text-xs leading-relaxed text-gray-400">
+          <div className="mt-10 rounded-xl border border-white/10 bg-[#1c1833]/70 p-4 text-xs leading-relaxed text-slate-300">
             {isZh ? (
               <p>
                 声明：页面中提及的汽车品牌、车型名称与商标仅用于识别和兼容性说明。CarModSnap
@@ -2375,7 +3478,6 @@ export default function CarModderConfigurator() {
         </div>
       </main>
     </div>
-  
   );
 }
 
