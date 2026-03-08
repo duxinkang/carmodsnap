@@ -14,6 +14,7 @@ import {
   CarouselPrevious,
 } from '@/shared/components/ui/carousel';
 import { BeforeAfterSlider } from '@/shared/components/ui/before-after-slider';
+import { beforeAfterItems } from '@/shared/config/before-after';
 
 export default function CarModderLanding() {
   const t = useTranslations('pages.carmodder');
@@ -113,11 +114,10 @@ export default function CarModderLanding() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start"
             >
-              <Link href="/carmodder" className="w-full sm:w-auto">
-                <motion.button
-                  className="group relative w-full overflow-hidden rounded-full bg-[#4725f4] px-8 py-4 text-base font-bold text-white transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(71,37,244,0.4)] sm:w-auto"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link
+                  href="/carmodder"
+                  className="group relative block w-full overflow-hidden rounded-full bg-[#4725f4] px-8 py-4 text-base font-bold text-white transition-all hover:shadow-[0_0_30px_rgba(71,37,244,0.4)] sm:w-auto"
                 >
                   <div className="absolute inset-0 translate-y-full bg-white/20 transition-transform duration-300 group-hover:translate-y-0"></div>
                   <span className="relative flex items-center justify-center gap-2">
@@ -126,8 +126,8 @@ export default function CarModderLanding() {
                       tune
                     </span>
                   </span>
-                </motion.button>
-              </Link>
+                </Link>
+              </motion.div>
 
               <motion.button
                 className="flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-transparent px-8 py-4 text-base font-medium text-white transition-colors hover:bg-white/5 sm:w-auto"
@@ -393,105 +393,29 @@ export default function CarModderLanding() {
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {/* Wrap Color Transformation */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <BeforeAfterSlider
-                beforeImage="https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&h=600&fit=crop&q=80"
-                afterImage="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=800&h=600&fit=crop&q=80"
-                beforeLabel="Stock"
-                afterLabel="Matte Black Wrap"
-                aspectRatio="video"
-              />
-              <div className="mt-6">
-                <h3 className="text-xl font-bold text-white">
-                  Matte Black Wrap Transformation
-                </h3>
-                <p className="mt-2 text-gray-400">
-                  Complete color change with premium matte finish.
-                  Drag the slider to see the dramatic difference.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Wheel Upgrade */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <BeforeAfterSlider
-                beforeImage="https://images.unsplash.com/photo-1610450949368-7a322853c4bf?w=800&h=600&fit=crop&q=80"
-                afterImage="https://images.unsplash.com/photo-1493238792015-164e8568f09b?w=800&h=600&fit=crop&q=80"
-                beforeLabel="Stock Wheels"
-                afterLabel="Custom Forged Rims"
-                aspectRatio="video"
-              />
-              <div className="mt-6">
-                <h3 className="text-xl font-bold text-white">
-                  Custom Forged Wheel Upgrade
-                </h3>
-                <p className="mt-2 text-gray-400">
-                  See how the right wheels can completely transform
-                  your car's stance and presence.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Body Kit Transformation */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <BeforeAfterSlider
-                beforeImage="https://images.unsplash.com/photo-1552519507-cf0d5a6e5d0d?w=800&h=600&fit=crop&q=80"
-                afterImage="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&h=600&fit=crop&q=80"
-                beforeLabel="Stock Body"
-                afterLabel="Aero Body Kit"
-                aspectRatio="video"
-              />
-              <div className="mt-6">
-                <h3 className="text-xl font-bold text-white">
-                  Full Aero Body Kit
-                </h3>
-                <p className="mt-2 text-gray-400">
-                  Front lip, side skirts, rear diffuser –
-                  experience the full aggressive treatment.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Chrome Delete */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              viewport={{ once: true }}
-            >
-              <BeforeAfterSlider
-                beforeImage="https://images.unsplash.com/photo-1611016186353-9af29c77880e?w=800&h=600&fit=crop&q=80"
-                afterImage="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop&q=80"
-                beforeLabel="Chrome Trim"
-                afterLabel="Gloss Black Delete"
-                aspectRatio="video"
-              />
-              <div className="mt-6">
-                <h3 className="text-xl font-bold text-white">
-                  Chrome Delete & Window Tint
-                </h3>
-                <p className="mt-2 text-gray-400">
-                  Subtle but impactful modification that adds
-                  a premium, aggressive look.
-                </p>
-              </div>
-            </motion.div>
+            {beforeAfterItems.map((item, index) => (
+              <motion.div
+                key={item.slug}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: index % 2 === 0 ? 0 : 0.1 }}
+                viewport={{ once: true }}
+              >
+                <BeforeAfterSlider
+                  beforeImage={item.beforeImage}
+                  afterImage={item.afterImage}
+                  beforeFallbackImage={item.beforeFallbackImage}
+                  afterFallbackImage={item.afterFallbackImage}
+                  beforeLabel={item.beforeLabel}
+                  afterLabel={item.afterLabel}
+                  aspectRatio="video"
+                />
+                <div className="mt-6">
+                  <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                  <p className="mt-2 text-gray-400">{item.description}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           <motion.div
@@ -501,15 +425,16 @@ export default function CarModderLanding() {
             viewport={{ once: true }}
             className="mt-16 text-center"
           >
-            <Link href="/carmodder">
-              <button className="group relative overflow-hidden rounded-full bg-[#4725f4] px-8 py-4 text-base font-bold text-white transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(71,37,244,0.4)]">
-                <span className="relative flex items-center justify-center gap-2">
-                  Create Your Transformation
-                  <span className="material-icons transition-transform group-hover:translate-x-1">
-                    arrow_forward
-                  </span>
+            <Link
+              href="/carmodder"
+              className="group relative inline-flex overflow-hidden rounded-full bg-[#4725f4] px-8 py-4 text-base font-bold text-white transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(71,37,244,0.4)]"
+            >
+              <span className="relative flex items-center justify-center gap-2">
+                Create Your Transformation
+                <span className="material-icons transition-transform group-hover:translate-x-1">
+                  arrow_forward
                 </span>
-              </button>
+              </span>
             </Link>
           </motion.div>
         </div>

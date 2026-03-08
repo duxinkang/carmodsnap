@@ -3,7 +3,6 @@ import {
   FalProvider,
   GeminiProvider,
   KieProvider,
-  NanoBananaProvider,
   QwenProvider,
   ReplicateProvider,
 } from '@/extensions/ai';
@@ -53,16 +52,6 @@ export function getAIManagerWithConfigs(configs: Configs) {
         apiKey: configs.qwen_api_key,
         baseUrl: configs.qwen_base_url,
         customStorage: configs.qwen_custom_storage === 'true',
-      })
-    );
-  }
-
-  if (configs.nanobanana_api_key) {
-    aiManager.addProvider(
-      new NanoBananaProvider({
-        apiKey: configs.nanobanana_api_key,
-        baseUrl: configs.nanobanana_base_url,
-        customStorage: configs.nanobanana_custom_storage === 'true',
       })
     );
   }

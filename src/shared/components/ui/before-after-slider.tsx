@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/shared/lib/utils';
 
 interface BeforeAfterSliderProps {
   beforeImage: string;
   afterImage: string;
+  beforeFallbackImage?: string;
+  afterFallbackImage?: string;
   beforeLabel?: string;
   afterLabel?: string;
   className?: string;
@@ -15,6 +17,8 @@ interface BeforeAfterSliderProps {
 export function BeforeAfterSlider({
   beforeImage,
   afterImage,
+  beforeFallbackImage,
+  afterFallbackImage,
   beforeLabel = 'Before',
   afterLabel = 'After',
   className,
@@ -22,7 +26,17 @@ export function BeforeAfterSlider({
 }: BeforeAfterSliderProps) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
+  const [beforeSrc, setBeforeSrc] = useState(beforeImage);
+  const [afterSrc, setAfterSrc] = useState(afterImage);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setBeforeSrc(beforeImage);
+  }, [beforeImage]);
+
+  useEffect(() => {
+    setAfterSrc(afterImage);
+  }, [afterImage]);
 
   const updateSliderPosition = useCallback((clientX: number) => {
     if (!containerRef.current) return;
@@ -82,10 +96,15 @@ export function BeforeAfterSlider({
       {/* After Image (Background) */}
       <div className="absolute inset-0 h-full w-full">
         <img
-          src={afterImage}
+          src={afterSrc}
           alt="After"
           className="h-full w-full object-cover"
           draggable={false}
+          onError={() => {
+            if (afterFallbackImage && afterSrc !== afterFallbackImage) {
+              setAfterSrc(afterFallbackImage);
+            }
+          }}
         />
         <div className="absolute top-4 right-4 rounded-md bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
           {afterLabel}
@@ -98,10 +117,15 @@ export function BeforeAfterSlider({
         style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
       >
         <img
-          src={beforeImage}
+          src={beforeSrc}
           alt="Before"
           className="h-full w-full object-cover"
           draggable={false}
+          onError={() => {
+            if (beforeFallbackImage && beforeSrc !== beforeFallbackImage) {
+              setBeforeSrc(beforeFallbackImage);
+            }
+          }}
         />
         <div className="absolute top-4 left-4 rounded-md bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
           {beforeLabel}
