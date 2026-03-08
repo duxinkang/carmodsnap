@@ -16,10 +16,12 @@ import {
   Loader2,
   Redo2,
   RefreshCw,
+  Search,
   Share2,
   Sparkles,
   Undo2,
   WandSparkles,
+  X,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -1147,6 +1149,45 @@ function getModThumbnail(id: string) {
   return `/imgs/carmodder/mods/${id}.png`;
 }
 
+function getFinishPreviewStyle(finishId: string, color: string) {
+  switch (finishId) {
+    case 'gloss':
+      return {
+        backgroundImage: `linear-gradient(135deg, rgba(255,255,255,0.34), rgba(255,255,255,0.02) 36%, rgba(0,0,0,0.14) 62%, ${color} 100%)`,
+      };
+    case 'matte':
+      return {
+        backgroundImage: `linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02) 30%, rgba(0,0,0,0.28) 100%), repeating-linear-gradient(145deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 6px), linear-gradient(180deg, ${color}, ${color})`,
+      };
+    case 'satin':
+      return {
+        backgroundImage: `linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.03) 40%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, ${color}, ${color})`,
+      };
+    case 'chrome':
+      return {
+        backgroundImage:
+          'linear-gradient(120deg, #fafafa 0%, #cfd4dc 16%, #7d8592 32%, #eceff3 48%, #7d8592 64%, #c9d0da 82%, #ffffff 100%)',
+      };
+    case 'carbon':
+      return {
+        backgroundImage:
+          'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01) 40%, rgba(0,0,0,0.28) 100%), repeating-linear-gradient(45deg, #2f3136 0px, #2f3136 6px, #181a1e 6px, #181a1e 12px), repeating-linear-gradient(-45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 6px, transparent 6px, transparent 12px)',
+      };
+    default:
+      return {
+        backgroundColor: color,
+      };
+  }
+}
+
+function getColorCardStyle(color: string, finishId: string) {
+  const finishStyle = getFinishPreviewStyle(finishId, color);
+  return {
+    backgroundColor: color,
+    ...finishStyle,
+  };
+}
+
 export default function CarModderConfigurator() {
   const t = useTranslations('pages.carmodder');
   const locale = useLocale();
@@ -1192,6 +1233,8 @@ export default function CarModderConfigurator() {
   const [testMode, setTestMode] = useState(false);
   const [showAllCars, setShowAllCars] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [carSearch, setCarSearch] = useState('');
+  const [activeBrandFilter, setActiveBrandFilter] = useState('all');
   const [compareMode, setCompareMode] = useState(false);
   const [comparePosition, setComparePosition] = useState(52);
   const [historyState, setHistoryState] = useState<{
@@ -2109,6 +2152,26 @@ export default function CarModderConfigurator() {
   const canRedo =
     historyState.index >= 0 &&
     historyState.index < historyState.entries.length - 1;
+  const carBrands = useMemo(
+    () => ['all', ...Array.from(new Set(CHINESE_CAR_MODELS.map((car) => car.brand)))],
+    []
+  );
+  const filteredCars = useMemo(() => {
+    const keyword = carSearch.trim().toLowerCase();
+
+    return CHINESE_CAR_MODELS.filter((car) => {
+      const matchesBrand =
+        activeBrandFilter === 'all' || car.brand === activeBrandFilter;
+      const matchesSearch =
+        keyword.length === 0 ||
+        `${car.name} ${car.nameZh} ${car.brand} ${car.type}`
+          .toLowerCase()
+          .includes(keyword);
+
+      return matchesBrand && matchesSearch;
+    });
+  }, [activeBrandFilter, carSearch]);
+  const visibleCars = showAllCars ? filteredCars : filteredCars.slice(0, 6);
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#131022] font-[family-name:var(--font-sans)] text-white">
@@ -2483,70 +2546,148 @@ export default function CarModderConfigurator() {
               </Card>
 
               {/* Car Selection */}
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-sm font-medium tracking-wider text-slate-300 uppercase">
-                    {t('selectCarModel')}
-                  </h3>
-                  <Badge
-                    variant="outline"
-                    className="border-white/10 text-slate-300"
-                  >
-                    {CHINESE_CAR_MODELS.length} {t('carModelsCount')}
-                  </Badge>
+              <div className="rounded-3xl border border-white/10 bg-[#1c1833]/92 p-5 shadow-[0_20px_50px_-34px_rgba(0,0,0,0.9)] sm:p-6">
+                <div className="mb-5 flex flex-col gap-4">
+                  <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                      <p className="text-[11px] font-medium tracking-[0.18em] text-slate-300 uppercase">
+                        Vehicle Catalog
+                      </p>
+                      <h3 className="mt-2 text-xl font-semibold tracking-tight text-white">
+                        {t('selectCarModel')}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-slate-200/80">
+                        {isZh
+                          ? '按品牌和关键词筛选车型，然后继续做轮毂、漆面和套件配置。'
+                          : 'Filter by brand and keyword, then continue with wheels, paint, and aero setup.'}
+                      </p>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className="w-fit border-white/10 bg-white/[0.04] text-slate-300"
+                    >
+                      {filteredCars.length} {t('carModelsCount')}
+                    </Badge>
+                  </div>
+
+                  <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
+                    <div className="relative">
+                      <Search className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-slate-300" />
+                      <input
+                        value={carSearch}
+                        onChange={(event) => {
+                          setCarSearch(event.target.value);
+                          setShowAllCars(false);
+                        }}
+                        placeholder={
+                          isZh
+                            ? '搜索车型、品牌，例如 Honda、Supra、BMW'
+                            : 'Search model or brand, e.g. Honda, Supra, BMW'
+                        }
+                        className="h-12 w-full rounded-2xl border border-white/10 bg-white/[0.04] pr-12 pl-11 text-sm text-white outline-none transition-colors placeholder:text-slate-400 focus:border-[#4725f4]/50"
+                      />
+                      {carSearch && (
+                        <button
+                          type="button"
+                          onClick={() => setCarSearch('')}
+                          className="absolute top-1/2 right-3 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white"
+                          aria-label={isZh ? '清除搜索' : 'Clear search'}
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                    <Button
+                      variant="secondary"
+                      className="min-h-12 border border-white/10 bg-white/[0.04] px-4 text-slate-100 hover:bg-white/[0.08]"
+                      onClick={() => setShowCustomInput(true)}
+                    >
+                      <span className="mr-2 text-lg leading-none">+</span>
+                      {t('customCar')}
+                    </Button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {carBrands.map((brand) => {
+                      const isActive = activeBrandFilter === brand;
+                      return (
+                        <button
+                          key={brand}
+                          type="button"
+                          onClick={() => {
+                            setActiveBrandFilter(brand);
+                            setShowAllCars(false);
+                          }}
+                          className={`rounded-full border px-4 py-2 text-xs font-medium transition-colors ${
+                            isActive
+                              ? 'border-[#4725f4]/40 bg-[#4725f4]/12 text-white'
+                              : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/20 hover:text-white'
+                          }`}
+                        >
+                          {brand === 'all'
+                            ? isZh
+                              ? '全部品牌'
+                              : 'All Brands'
+                            : brand}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   {/* 自定义车型按钮 */}
                   <motion.div
-                    className="relative cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-white/15 transition-all hover:border-[#4725f4]"
+                    className="relative cursor-pointer overflow-hidden rounded-2xl border border-dashed border-white/15 bg-white/[0.03] transition-all hover:border-[#4725f4]"
                     onClick={() => setShowCustomInput(true)}
-                    whileHover={{ scale: 1.05, y: -5 }}
+                    whileHover={{ y: -4 }}
                     whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
                   >
-                    <div className="flex aspect-[4/3] flex-col items-center justify-center gap-2 bg-[#1c1833]/90">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+                    <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_top,rgba(71,37,244,0.22),rgba(255,255,255,0.03)_55%,rgba(0,0,0,0.06))]">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
                         <span className="text-2xl font-light text-slate-300">
                           +
                         </span>
                       </div>
-                      <p className="text-xs font-medium text-slate-300">
+                      <p className="text-sm font-medium text-slate-200">
                         {t('customCar')}
                       </p>
                     </div>
-                    <div className="border-t border-white/10 bg-[#1c1833]/90 p-3">
+                    <div className="border-t border-white/10 bg-[#1c1833]/90 p-4">
                       <p className="mb-1 text-xs text-slate-400">
                         {t('custom')}
                       </p>
-                      <p className="line-clamp-2 text-sm leading-snug font-medium break-words">
+                      <p className="line-clamp-2 text-sm leading-snug font-medium break-words text-white">
                         {t('inputYourCar')}
                       </p>
-                      <p className="mt-1 line-clamp-1 text-xs text-[#4725f4]">
+                      <p className="mt-2 line-clamp-1 text-xs text-[#b7a8ff]">
                         {t('freeTrial')}
                       </p>
                     </div>
                   </motion.div>
 
-                  {(showAllCars
-                    ? CHINESE_CAR_MODELS
-                    : CHINESE_CAR_MODELS.slice(0, 3)
-                  ).map((car) => (
+                  {visibleCars.map((car) => (
                     <motion.div
                       key={car.id}
-                      className={`relative cursor-pointer overflow-hidden rounded-xl border-2 transition-all ${selectedCar.id === car.id ? 'border-[#4725f4] shadow-[0_0_20px_rgba(99,102,241,0.4)]' : 'border-transparent hover:border-white/15'}`}
+                      className={`relative cursor-pointer overflow-hidden rounded-2xl border transition-all ${
+                        selectedCar.id === car.id
+                          ? 'border-[#4725f4] bg-[#4725f4]/10 shadow-[0_0_20px_rgba(99,102,241,0.22)]'
+                          : 'border-white/10 bg-white/[0.03] hover:border-white/20'
+                      }`}
                       onClick={() => {
                         setActivePresetId(null);
                         setSelectedCar(car);
                       }}
-                      whileHover={{ scale: 1.05, y: -5 }}
+                      whileHover={{ y: -4 }}
                       whileTap={{ scale: 0.95 }}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4 }}
                     >
-                      <div className="relative aspect-[4/3] overflow-hidden bg-[#1c1833]/90">
+                      <div className="relative aspect-[16/10] overflow-hidden bg-[#1c1833]/90">
                         <motion.img
                           src={car.image}
                           alt={isZh ? car.nameZh : car.name}
@@ -2555,8 +2696,14 @@ export default function CarModderConfigurator() {
                             (e.target as HTMLImageElement).src =
                               'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&h=150&fit=crop';
                           }}
-                          whileHover={{ scale: 1.1 }}
+                          whileHover={{ scale: 1.06 }}
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#131022]/88 via-transparent to-transparent" />
+                        <div className="absolute top-3 left-3">
+                          <Badge className="border-0 bg-black/35 text-[10px] text-white backdrop-blur-sm">
+                            {car.brand}
+                          </Badge>
+                        </div>
                         {selectedCar.id === car.id && (
                           <motion.div
                             className="absolute inset-0 flex items-center justify-center bg-[#4725f4]/20 backdrop-blur-sm"
@@ -2568,40 +2715,74 @@ export default function CarModderConfigurator() {
                           </motion.div>
                         )}
                       </div>
-                      <div className="border-t border-white/10 bg-[#1c1833]/90 p-3">
-                        <p className="mb-1 text-xs text-slate-400">
-                          {car.brand}
-                        </p>
-                        <p className="line-clamp-2 text-sm leading-snug font-medium break-words">
-                          {isZh ? car.nameZh : car.name}
-                        </p>
-                        <p className="mt-1 text-xs text-[#4725f4]">
-                          {formatPrice(car.price)}
-                        </p>
+                      <div className="border-t border-white/10 bg-[#1c1833]/90 p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="line-clamp-2 text-sm leading-snug font-medium break-words text-white">
+                              {isZh ? car.nameZh : car.name}
+                            </p>
+                            <p className="mt-1 text-xs text-slate-400">
+                              {car.type}
+                            </p>
+                          </div>
+                          <span className="shrink-0 text-xs font-medium text-[#b7a8ff]">
+                            {formatPrice(car.price)}
+                          </span>
+                        </div>
+                        <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 text-xs text-slate-300">
+                          <span>{car.brand}</span>
+                          <span>
+                            {car.type === 'sedan'
+                              ? t('sedan')
+                              : car.type === 'suv'
+                                ? t('suv')
+                                : car.type}
+                          </span>
+                        </div>
                       </div>
                     </motion.div>
                   ))}
                 </div>
-                <div className="mt-4 flex justify-center">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowAllCars(!showAllCars)}
-                    className="min-h-11 max-w-full text-center break-words text-slate-300 hover:bg-white/10 hover:text-white"
-                  >
-                    {showAllCars ? (
-                      <>
-                        <ChevronUp className="mr-2 h-4 w-4" />
-                        {t('collapse')}
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="mr-2 h-4 w-4" />
-                        {t('viewAll')} {CHINESE_CAR_MODELS.length}{' '}
-                        {t('carModelsCount')}
-                      </>
-                    )}
-                  </Button>
+
+                {filteredCars.length === 0 && (
+                  <div className="mt-4 rounded-2xl border border-dashed border-white/12 bg-white/[0.03] px-4 py-10 text-center">
+                    <p className="text-sm font-medium text-white">
+                      {isZh ? '没有匹配的车型' : 'No matching vehicles'}
+                    </p>
+                    <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                      {isZh
+                        ? '试试切换品牌筛选，或者搜索其他品牌/车型关键词。'
+                        : 'Try another brand filter or search keyword.'}
+                    </p>
+                  </div>
+                )}
+
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-xs text-slate-300">
+                    {isZh
+                      ? `当前显示 ${visibleCars.length} / ${filteredCars.length} 辆车型`
+                      : `Showing ${visibleCars.length} of ${filteredCars.length} vehicles`}
+                  </p>
+                  {filteredCars.length > 6 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAllCars(!showAllCars)}
+                      className="min-h-11 max-w-full break-words text-center text-slate-300 hover:bg-white/10 hover:text-white"
+                    >
+                      {showAllCars ? (
+                        <>
+                          <ChevronUp className="mr-2 h-4 w-4" />
+                          {t('collapse')}
+                        </>
+                      ) : (
+                        <>
+                          <ChevronDown className="mr-2 h-4 w-4" />
+                          {t('viewAll')} {filteredCars.length} {t('carModelsCount')}
+                        </>
+                      )}
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -2890,6 +3071,37 @@ export default function CarModderConfigurator() {
                             <div className="border-t border-white/10 px-4 py-5">
                               {section.id === 'paint' && (
                                 <div className="space-y-8">
+                                  <div className="overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(135deg,rgba(71,37,244,0.14),rgba(255,255,255,0.03))]">
+                                    <div className="grid gap-0 md:grid-cols-[1.15fr_0.85fr]">
+                                      <div className="p-5">
+                                        <p className="text-[11px] font-medium tracking-[0.18em] text-slate-300 uppercase">
+                                          Paint Direction
+                                        </p>
+                                        <h4 className="mt-3 text-xl font-semibold tracking-tight text-white">
+                                          {isZh ? selectedColor.nameZh : selectedColor.name}
+                                        </h4>
+                                        <p className="mt-1 text-sm text-slate-200/85">
+                                          {isZh ? selectedFinish.nameZh : selectedFinish.name}
+                                          {selectedFinish.price > 0
+                                            ? ` · +${formatPrice(selectedFinish.price)}`
+                                            : ''}
+                                        </p>
+                                        <p className="mt-3 text-xs leading-relaxed text-slate-300">
+                                          {isZh ? selectedColor.descriptionZh : selectedColor.description}
+                                        </p>
+                                      </div>
+                                      <div className="border-t border-white/10 md:border-t-0 md:border-l">
+                                        <div
+                                          className="h-full min-h-[180px] w-full"
+                                          style={getColorCardStyle(
+                                            selectedColor.color,
+                                            selectedFinish.id
+                                          )}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+
                                   <div>
                                     <div className="mb-4 flex items-center justify-between gap-3">
                                       <h4 className="text-sm font-medium tracking-wider text-slate-300 uppercase">
@@ -2901,13 +3113,13 @@ export default function CarModderConfigurator() {
                                           : selectedFinish.name}
                                       </span>
                                     </div>
-                                    <div className="flex flex-wrap gap-3">
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                       {FINISH_TYPES.map((finish) => (
                                         <motion.button
                                           key={finish.id}
-                                          className={`min-h-11 rounded-2xl border px-4 py-2 text-sm transition-all ${
+                                          className={`overflow-hidden rounded-2xl border text-left transition-all ${
                                             selectedFinish.id === finish.id
-                                              ? 'border-transparent bg-gradient-to-r from-[#4725f4] to-[#7c5cff] text-white shadow-[0_0_15px_rgba(99,102,241,0.35)]'
+                                              ? 'border-[#4725f4]/45 bg-[#4725f4]/10 text-white shadow-[0_0_15px_rgba(99,102,241,0.18)]'
                                               : 'border-white/10 bg-white/[0.04] text-white hover:border-[#4725f4]/40'
                                           }`}
                                           onClick={() => {
@@ -2917,12 +3129,28 @@ export default function CarModderConfigurator() {
                                           whileHover={{ scale: 1.03, y: -2 }}
                                           whileTap={{ scale: 0.97 }}
                                         >
-                                          {isZh ? finish.nameZh : finish.name}
-                                          {finish.price > 0 && (
-                                            <span className="ml-2 text-xs font-medium">
-                                              +{formatPrice(finish.price)}
-                                            </span>
-                                          )}
+                                          <div
+                                            className="h-24 w-full border-b border-white/10"
+                                            style={getFinishPreviewStyle(
+                                              finish.id,
+                                              selectedColor.color
+                                            )}
+                                          />
+                                          <div className="flex items-start justify-between gap-3 p-4">
+                                            <div>
+                                              <p className="text-sm font-semibold text-white">
+                                                {isZh ? finish.nameZh : finish.name}
+                                              </p>
+                                              <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                                                {isZh ? finish.descriptionZh : finish.description}
+                                              </p>
+                                            </div>
+                                            {finish.price > 0 && (
+                                              <span className="shrink-0 text-xs font-medium text-[#c9bcff]">
+                                                +{formatPrice(finish.price)}
+                                              </span>
+                                            )}
+                                          </div>
                                         </motion.button>
                                       ))}
                                     </div>
@@ -2948,32 +3176,57 @@ export default function CarModderConfigurator() {
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="grid grid-cols-5 gap-4 sm:grid-cols-6">
+                                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                                       {PAINT_COLORS.map((color) => (
-                                        <motion.div
+                                        <motion.button
                                           key={color.id}
-                                          className={`group relative cursor-pointer ${
+                                          type="button"
+                                          className={`group relative overflow-hidden rounded-2xl border text-left ${
                                             selectedColor.id === color.id
-                                              ? 'ring-2 ring-[#4725f4] ring-offset-2 ring-offset-[#1c1833]'
-                                              : ''
-                                          } rounded-full`}
+                                              ? 'border-[#4725f4]/45 bg-[#4725f4]/10'
+                                              : 'border-white/10 bg-white/[0.03] hover:border-white/20'
+                                          }`}
                                           onClick={() => {
                                             setActivePresetId(null);
                                             setSelectedColor(color);
                                           }}
-                                          whileHover={{ scale: 1.12, y: -4 }}
+                                          whileHover={{ y: -3 }}
                                           whileTap={{ scale: 0.95 }}
                                         >
                                           <div
-                                            className="h-12 w-12 rounded-full border-2 border-white/10 shadow-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-                                            style={{
-                                              backgroundColor: color.color,
-                                            }}
+                                            className="h-20 w-full border-b border-white/10"
+                                            style={getColorCardStyle(
+                                              color.color,
+                                              selectedFinish.id
+                                            )}
                                           />
-                                          <div className="absolute -bottom-12 left-1/2 z-10 max-w-[96px] -translate-x-1/2 rounded-lg border border-white/10 bg-[#17132a]/95 px-2 py-1 text-center text-[10px] leading-tight opacity-0 transition-opacity group-hover:opacity-100">
-                                            {isZh ? color.nameZh : color.name}
+                                          <div className="p-3">
+                                            <div className="flex items-center justify-between gap-2">
+                                              <div className="min-w-0">
+                                                <p className="truncate text-sm font-medium text-white">
+                                                  {isZh ? color.nameZh : color.name}
+                                                </p>
+                                                <p className="mt-0.5 truncate text-[11px] text-slate-300">
+                                                  {color.id}
+                                                </p>
+                                              </div>
+                                              <span
+                                                className="h-3.5 w-3.5 shrink-0 rounded-full border border-white/20"
+                                                style={{ backgroundColor: color.color }}
+                                              />
+                                            </div>
+                                            {color.price > 0 && (
+                                              <p className="mt-2 text-xs font-medium text-[#c9bcff]">
+                                                +{formatPrice(color.price)}
+                                              </p>
+                                            )}
                                           </div>
-                                        </motion.div>
+                                          {selectedColor.id === color.id && (
+                                            <div className="pointer-events-none absolute top-3 right-3 rounded-full bg-[#4725f4] p-1 text-white shadow-[0_0_16px_rgba(71,37,244,0.5)]">
+                                              <Check className="h-3 w-3" />
+                                            </div>
+                                          )}
+                                        </motion.button>
                                       ))}
                                     </div>
                                   </div>
