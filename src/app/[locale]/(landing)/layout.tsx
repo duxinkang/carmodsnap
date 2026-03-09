@@ -35,7 +35,7 @@ export default async function LandingLayout({
       {
         question: 'Do I need technical skills to use CarModSnap?',
         answer:
-          'No! CarModSnap is designed to be user-friendly. You don't need any technical skills to use our 3D configurator or browse the community showcases.',
+          "No! CarModSnap is designed to be user-friendly. You don't need any technical skills to use our 3D configurator or browse the community showcases.",
       },
       {
         question: 'What types of cars does CarModSnap support?',
