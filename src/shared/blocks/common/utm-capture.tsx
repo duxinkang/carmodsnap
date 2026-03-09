@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { getCookie, setCookie } from '@/shared/lib/cookie';
 
-const COOKIE_NAME = 'utm_source';
+const UTM_COOKIE_NAMES = ['utm_source', 'utm_medium', 'utm_campaign'] as const;
 const COOKIE_DAYS = 30;
 
 function sanitizeUtmSource(value: string) {
@@ -28,18 +28,18 @@ function sanitizeUtmSource(value: string) {
  */
 export function UtmCapture() {
   useEffect(() => {
-    // Don’t overwrite if already captured.
-    if (getCookie(COOKIE_NAME)) return;
-
     const params = new URLSearchParams(window.location.search);
-    const utmSource = params.get('utm_source');
-    if (!utmSource) return;
+    UTM_COOKIE_NAMES.forEach((cookieName) => {
+      if (getCookie(cookieName)) return;
 
-    const sanitized = sanitizeUtmSource(utmSource);
-    if (!sanitized) return;
+      const value = params.get(cookieName);
+      if (!value) return;
 
-    // Store encoded to keep cookie safe.
-    setCookie(COOKIE_NAME, encodeURIComponent(sanitized), COOKIE_DAYS);
+      const sanitized = sanitizeUtmSource(value);
+      if (!sanitized) return;
+
+      setCookie(cookieName, encodeURIComponent(sanitized), COOKIE_DAYS);
+    });
   }, []);
 
   return null;

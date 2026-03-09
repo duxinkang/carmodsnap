@@ -6,6 +6,7 @@ import {
   PaymentPrice,
   PaymentType,
 } from '@/extensions/payment/types';
+import { trackServerEvent } from '@/shared/lib/analytics/server-track';
 import { getSnowId, getUuid } from '@/shared/lib/hash';
 import { respData, respErr } from '@/shared/lib/resp';
 import { getAllConfigs } from '@/shared/models/config';
@@ -289,6 +290,23 @@ export async function POST(req: Request) {
         paymentProvider: result.provider,
       });
 
+      await trackServerEvent(
+        'checkout_created',
+        {
+          user_id: user.id,
+          is_authenticated: true,
+          order_id: orderNo,
+          product_id: pricingItem.product_id,
+          payment_provider: result.provider,
+          payment_type: paymentType,
+          currency: checkoutCurrency,
+          amount: checkoutAmount,
+          locale: locale || 'en',
+          source: 'pricing',
+        },
+        configs
+      );
+
       return respData(result.checkoutInfo);
     } catch (e: any) {
       // update order status to completed, means checkout failed
@@ -296,6 +314,24 @@ export async function POST(req: Request) {
         status: OrderStatus.COMPLETED, // means checkout failed
         checkoutInfo: JSON.stringify(checkoutOrder),
       });
+
+      await trackServerEvent(
+        'payment_failed',
+        {
+          user_id: user.id,
+          is_authenticated: true,
+          order_id: orderNo,
+          payment_provider: paymentProvider.name,
+          payment_type: paymentType,
+          currency: checkoutCurrency,
+          amount: checkoutAmount,
+          stage: 'checkout_create',
+          error: e.message,
+          locale: locale || 'en',
+          source: 'pricing',
+        },
+        configs
+      );
 
       return respErr('checkout failed: ' + e.message);
     }

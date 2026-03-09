@@ -294,8 +294,7 @@ export async function getSettings() {
     {
       name: 'app_description',
       title: 'App Description',
-      placeholder:
-        'CarModSnap is an AI-powered car modification platform. ',
+      placeholder: 'CarModSnap is an AI-powered car modification platform. ',
       type: 'textarea',
       group: 'appinfo',
       tab: 'general',
@@ -691,6 +690,14 @@ export async function getSettings() {
       tab: 'analytics',
     },
     {
+      name: 'openpanel_client_secret',
+      title: 'OpenPanel Client Secret',
+      type: 'password',
+      placeholder: '',
+      group: 'openpanel',
+      tab: 'analytics',
+    },
+    {
       name: 'vercel_analytics_enabled',
       title: 'Enabled',
       type: 'switch',
@@ -856,7 +863,8 @@ export async function getSettings() {
       name: 'qwen_base_url',
       title: 'Qwen Base URL',
       type: 'url',
-      placeholder: 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis',
+      placeholder:
+        'https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis',
       group: 'qwen',
       tab: 'ai',
       tip: 'Qwen API Base URL, leave empty to use default',

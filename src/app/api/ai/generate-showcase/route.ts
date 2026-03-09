@@ -1,8 +1,10 @@
 import { envConfigs } from '@/config';
 import { AIMediaType, AITaskStatus } from '@/extensions/ai';
+import { trackServerEvent } from '@/shared/lib/analytics/server-track';
 import { getUuid } from '@/shared/lib/hash';
 import { respData, respErr } from '@/shared/lib/resp';
 import { createAITask, NewAITask } from '@/shared/models/ai_task';
+import { getAllConfigs } from '@/shared/models/config';
 import { getRemainingCredits } from '@/shared/models/credit';
 import { getUserInfo } from '@/shared/models/user';
 import { getAIService } from '@/shared/services/ai';
@@ -72,6 +74,7 @@ export async function POST(request: Request) {
     if (!user) {
       throw new Error('no auth, please sign in');
     }
+    const configs = await getAllConfigs();
 
     const bundleId =
       typeof rawBundleId === 'string' && rawBundleId.trim()
@@ -80,13 +83,23 @@ export async function POST(request: Request) {
 
     const chargeShotType: ShowcaseShotType = 'panorama';
     const needCharge =
-      shouldGenerateShots.includes(chargeShotType) &&
-      !retryShotType;
+      shouldGenerateShots.includes(chargeShotType) && !retryShotType;
     const costCredits = needCharge ? 4 : 0;
 
     if (costCredits > 0) {
       const remainingCredits = await getRemainingCredits(user.id);
       if (remainingCredits < costCredits) {
+        await trackServerEvent(
+          'carmodder_insufficient_credits',
+          {
+            user_id: user.id,
+            is_authenticated: true,
+            source: 'server_generate_request',
+            cost_credits: costCredits,
+            remaining_credits: remainingCredits,
+          },
+          configs
+        );
         throw new Error('insufficient credits');
       }
     }
@@ -130,7 +143,9 @@ export async function POST(request: Request) {
           costCredits: shotType === chargeShotType ? costCredits : 0,
           taskId: result.taskId,
           taskInfo: result.taskInfo ? JSON.stringify(result.taskInfo) : null,
-          taskResult: result.taskResult ? JSON.stringify(result.taskResult) : null,
+          taskResult: result.taskResult
+            ? JSON.stringify(result.taskResult)
+            : null,
           options: JSON.stringify({
             size: '1024*1024',
             n: 1,
@@ -170,6 +185,21 @@ export async function POST(request: Request) {
       return respErr('showcase generation failed');
     }
 
+    await trackServerEvent(
+      'carmodder_generation_requested',
+      {
+        user_id: user.id,
+        is_authenticated: true,
+        bundle_id: bundleId,
+        provider,
+        model,
+        scene,
+        shot_count: shouldGenerateShots.length,
+        charged_credits: costCredits,
+      },
+      configs
+    );
+
     return respData({
       bundleId,
       scene,
@@ -180,4 +210,3 @@ export async function POST(request: Request) {
     return respErr(e.message);
   }
 }
-

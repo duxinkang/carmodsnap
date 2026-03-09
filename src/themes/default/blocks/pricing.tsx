@@ -1,7 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Check, Loader2, Shield, CreditCard, RotateCcw, Zap } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Check,
+  CreditCard,
+  Loader2,
+  RotateCcw,
+  Shield,
+  Zap,
+} from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -25,6 +32,7 @@ import {
 } from '@/shared/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { useAppContext } from '@/shared/contexts/app';
+import { trackProductEvent } from '@/shared/lib/analytics/track';
 import { getCookie } from '@/shared/lib/cookie';
 import { cn } from '@/shared/lib/utils';
 import { Subscription } from '@/shared/models/subscription';
@@ -121,6 +129,20 @@ export function Pricing({
   const [itemCurrencies, setItemCurrencies] = useState<
     Record<string, { selectedCurrency: string; displayedItem: PricingItem }>
   >({});
+  const hasTrackedViewRef = useRef(false);
+
+  useEffect(() => {
+    if (hasTrackedViewRef.current) return;
+    hasTrackedViewRef.current = true;
+
+    trackProductEvent('pricing_viewed', {
+      locale,
+      user_id: user?.id,
+      is_authenticated: !!user,
+      page_type: 'pricing',
+      source: 'pricing',
+    });
+  }, [locale, user]);
 
   // Initialize currency states for all items
   useEffect(() => {
@@ -203,16 +225,33 @@ export function Pricing({
   };
 
   const handlePayment = async (item: PricingItem) => {
+    const displayedItem =
+      itemCurrencies[item.product_id]?.displayedItem || item;
+
     if (!user) {
+      trackProductEvent('checkout_started', {
+        locale,
+        user_id: undefined,
+        is_authenticated: false,
+        source: 'pricing',
+        product_id: displayedItem.product_id,
+        payment_provider: configs.default_payment_provider || undefined,
+        currency: displayedItem.currency,
+      });
       setIsShowSignModal(true);
       return;
     }
 
-    // Use displayed item with selected currency
-    const displayedItem =
-      itemCurrencies[item.product_id]?.displayedItem || item;
-
     if (configs.select_payment_enabled === 'true') {
+      trackProductEvent('checkout_started', {
+        locale,
+        user_id: user?.id,
+        is_authenticated: true,
+        source: 'pricing',
+        product_id: displayedItem.product_id,
+        payment_provider: configs.default_payment_provider || undefined,
+        currency: displayedItem.currency,
+      });
       setPricingItem(displayedItem);
       setIsShowPaymentModal(true);
     } else {
@@ -275,6 +314,16 @@ export function Pricing({
 
       setIsLoading(true);
       setProductId(item.product_id);
+
+      trackProductEvent('checkout_started', {
+        locale,
+        user_id: user?.id,
+        is_authenticated: !!user,
+        source: 'pricing',
+        product_id: item.product_id,
+        payment_provider: paymentProvider || undefined,
+        currency: item.currency,
+      });
 
       const response = await fetch('/api/payment/checkout', {
         method: 'POST',
@@ -541,11 +590,17 @@ export function Pricing({
           <div className="overflow-x-auto rounded-lg border">
             <table className="w-full">
               <thead>
-                <tr className="border-b bg-muted/50">
+                <tr className="bg-muted/50 border-b">
                   <th className="px-4 py-4 text-left font-semibold">Feature</th>
-                  <th className="px-4 py-4 text-center font-semibold">Starter</th>
-                  <th className="px-4 py-4 text-center font-semibold">Standard</th>
-                  <th className="px-4 py-4 text-center font-semibold">Premium</th>
+                  <th className="px-4 py-4 text-center font-semibold">
+                    Starter
+                  </th>
+                  <th className="px-4 py-4 text-center font-semibold">
+                    Standard
+                  </th>
+                  <th className="px-4 py-4 text-center font-semibold">
+                    Premium
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -593,10 +648,10 @@ export function Pricing({
                 <CardHeader>
                   <div className="mb-2 flex items-center gap-3">
                     {section.icon && (
-                      <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+                      <div className="bg-primary/10 flex size-10 items-center justify-center rounded-lg">
                         <SmartIcon
                           name={section.icon}
-                          className="size-5 text-primary"
+                          className="text-primary size-5"
                         />
                       </div>
                     )}
@@ -606,9 +661,7 @@ export function Pricing({
                 <CardContent className="space-y-4">
                   {section.features.map((feature, featureIdx) => (
                     <div key={featureIdx} className="space-y-1">
-                      <h4 className="font-medium text-sm">
-                        {feature.title}
-                      </h4>
+                      <h4 className="text-sm font-medium">{feature.title}</h4>
                       <p className="text-muted-foreground text-sm">
                         {feature.description}
                       </p>
@@ -677,9 +730,9 @@ function TrustBadge({
   if (!title) return null;
 
   return (
-    <div className="flex flex-col items-center rounded-lg border bg-card p-6 text-center">
-      <div className="mb-3 flex size-12 items-center justify-center rounded-full bg-primary/10">
-        <Icon className="size-6 text-primary" />
+    <div className="bg-card flex flex-col items-center rounded-lg border p-6 text-center">
+      <div className="bg-primary/10 mb-3 flex size-12 items-center justify-center rounded-full">
+        <Icon className="text-primary size-6" />
       </div>
       <h3 className="mb-1 font-semibold">{title}</h3>
       {description && (

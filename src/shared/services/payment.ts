@@ -9,6 +9,7 @@ import {
   PaymentStatus,
   PaymentType,
 } from '@/extensions/payment/types';
+import { trackServerEvent } from '@/shared/lib/analytics/server-track';
 import { getSnowId, getUuid } from '@/shared/lib/hash';
 import { Configs, getAllConfigs } from '@/shared/models/config';
 
@@ -129,6 +130,7 @@ export async function handleCheckoutSuccess({
   order: Order; // checkout order
   session: PaymentSession; // payment session
 }) {
+  const configs = await getAllConfigs();
   const orderNo = order.orderNo;
   if (!orderNo) {
     throw new Error('invalid order');
@@ -141,7 +143,10 @@ export async function handleCheckoutSuccess({
   }
 
   // Only process orders in CREATED or PENDING status
-  if (order.status !== OrderStatus.CREATED && order.status !== OrderStatus.PENDING) {
+  if (
+    order.status !== OrderStatus.CREATED &&
+    order.status !== OrderStatus.PENDING
+  ) {
     console.log(`Order ${orderNo} status is ${order.status}, not processing`);
     return;
   }
@@ -252,6 +257,22 @@ export async function handleCheckoutSuccess({
       newSubscription,
       newCredit,
     });
+
+    await trackServerEvent(
+      'payment_succeeded',
+      {
+        user_id: order.userId,
+        is_authenticated: true,
+        order_id: orderNo,
+        payment_provider: order.paymentProvider,
+        payment_type: order.paymentType || 'unknown',
+        currency:
+          session.paymentInfo?.paymentCurrency || order.currency || undefined,
+        amount: session.paymentInfo?.paymentAmount || order.amount || undefined,
+        credits_amount: order.creditsAmount || undefined,
+      },
+      configs
+    );
   } else if (
     session.paymentStatus === PaymentStatus.FAILED ||
     session.paymentStatus === PaymentStatus.CANCELED
@@ -261,6 +282,25 @@ export async function handleCheckoutSuccess({
       status: OrderStatus.FAILED,
       paymentResult: JSON.stringify(session.paymentResult),
     });
+
+    await trackServerEvent(
+      session.paymentStatus === PaymentStatus.CANCELED
+        ? 'payment_canceled'
+        : 'payment_failed',
+      {
+        user_id: order.userId,
+        is_authenticated: true,
+        order_id: orderNo,
+        payment_provider: order.paymentProvider,
+        payment_type: order.paymentType || 'unknown',
+        currency: order.currency || undefined,
+        amount: order.amount || undefined,
+        ...(session.paymentStatus === PaymentStatus.FAILED
+          ? { stage: 'payment_callback' as const }
+          : {}),
+      },
+      configs
+    );
   } else if (session.paymentStatus === PaymentStatus.PROCESSING) {
     // update order payment result
     await updateOrderByOrderNo(orderNo, {
@@ -281,6 +321,7 @@ export async function handlePaymentSuccess({
   order: Order; // checkout order
   session: PaymentSession; // payment session
 }) {
+  const configs = await getAllConfigs();
   const orderNo = order.orderNo;
   if (!orderNo) {
     throw new Error('invalid order');
@@ -389,6 +430,22 @@ export async function handlePaymentSuccess({
       newSubscription,
       newCredit,
     });
+
+    await trackServerEvent(
+      'payment_succeeded',
+      {
+        user_id: order.userId,
+        is_authenticated: true,
+        order_id: orderNo,
+        payment_provider: order.paymentProvider,
+        payment_type: order.paymentType || 'unknown',
+        currency:
+          session.paymentInfo?.paymentCurrency || order.currency || undefined,
+        amount: session.paymentInfo?.paymentAmount || order.amount || undefined,
+        credits_amount: order.creditsAmount || undefined,
+      },
+      configs
+    );
   } else {
     throw new Error('unknown payment status');
   }

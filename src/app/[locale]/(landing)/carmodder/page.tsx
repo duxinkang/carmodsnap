@@ -47,6 +47,8 @@ import {
 import { Separator } from '@/shared/components/ui/separator';
 import { Switch } from '@/shared/components/ui/switch';
 import { useAppContext } from '@/shared/contexts/app';
+import { ConfiguratorPanel } from '@/shared/lib/analytics/events';
+import { trackProductEvent } from '@/shared/lib/analytics/track';
 import { getUuid } from '@/shared/lib/hash';
 
 import { CustomCarInput, type CustomCarInputData } from './custom-car-input';
@@ -1226,6 +1228,7 @@ export default function CarModderConfigurator() {
   const [generationStartTime, setGenerationStartTime] = useState<number | null>(
     null
   );
+  const [activeBundleId, setActiveBundleId] = useState<string | null>(null);
   const [downloadingImageId, setDownloadingImageId] = useState<string | null>(
     null
   );
@@ -1246,6 +1249,8 @@ export default function CarModderConfigurator() {
   });
   const [historyReady, setHistoryReady] = useState(false);
   const applyingSnapshotRef = useRef(false);
+  const hasTrackedInitialCarRef = useRef(false);
+  const lastTrackedPanelRef = useRef<ConfiguratorPanel | null>(null);
 
   const handleCustomCarSubmit = useCallback(
     (data: CustomCarInputData) => {
@@ -1275,6 +1280,39 @@ export default function CarModderConfigurator() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!selectedCar) return;
+
+    if (!hasTrackedInitialCarRef.current) {
+      hasTrackedInitialCarRef.current = true;
+      return;
+    }
+
+    trackProductEvent('carmodder_vehicle_selected', {
+      locale,
+      user_id: user?.id,
+      is_authenticated: !!user,
+      car_id: selectedCar.id,
+      car_brand: selectedCar.brand,
+      car_name: isZh ? selectedCar.nameZh : selectedCar.name,
+      car_type: selectedCar.type,
+      is_custom_car: selectedCar.id.startsWith('custom-'),
+    });
+  }, [isZh, locale, selectedCar, user]);
+
+  useEffect(() => {
+    const panel = activeTab as ConfiguratorPanel;
+    if (lastTrackedPanelRef.current === panel) return;
+    lastTrackedPanelRef.current = panel;
+
+    trackProductEvent('carmodder_panel_viewed', {
+      locale,
+      user_id: user?.id,
+      is_authenticated: !!user,
+      panel,
+    });
+  }, [activeTab, locale, user]);
 
   useEffect(() => {
     if (activeShot !== 'panorama' && compareMode) {
@@ -1748,6 +1786,13 @@ export default function CarModderConfigurator() {
       generationStartTime &&
       Date.now() - generationStartTime > GENERATION_TIMEOUT;
     if (hasTimedOut) {
+      trackProductEvent('carmodder_generation_timeout', {
+        locale,
+        user_id: user?.id,
+        is_authenticated: !!user,
+        bundle_id: activeBundleId || undefined,
+        duration_ms: Date.now() - generationStartTime,
+      });
       setShowcaseStates((prev) => ({
         panorama:
           prev.panorama.status === AITaskStatus.SUCCESS
@@ -1787,15 +1832,46 @@ export default function CarModderConfigurator() {
     if (allDone) {
       const panoramaOk = !!showcaseStates.panorama.image;
       const closeupOk = !!showcaseStates.closeup.image;
+      const durationMs = generationStartTime
+        ? Date.now() - generationStartTime
+        : undefined;
       if (panoramaOk && closeupOk) {
+        trackProductEvent('carmodder_generation_completed', {
+          locale,
+          user_id: user?.id,
+          is_authenticated: !!user,
+          bundle_id: activeBundleId || undefined,
+          success_shots: 2,
+          failed_shots: 0,
+          duration_ms: durationMs,
+        });
         toast.success(t('generationComplete'));
       } else if (panoramaOk || closeupOk) {
+        trackProductEvent('carmodder_generation_partial_success', {
+          locale,
+          user_id: user?.id,
+          is_authenticated: !!user,
+          bundle_id: activeBundleId || undefined,
+          success_shots: 1,
+          failed_shots: 1,
+          duration_ms: durationMs,
+        });
         toast.success(t('partialSuccessHint'));
       } else {
+        trackProductEvent('carmodder_generation_failed', {
+          locale,
+          user_id: user?.id,
+          is_authenticated: !!user,
+          bundle_id: activeBundleId || undefined,
+          failed_shots: 2,
+          duration_ms: durationMs,
+          error: t('generationFailed'),
+        });
         toast.error(t('generationFailed'));
       }
       setIsGenerating(false);
       setGenerationStartTime(null);
+      setActiveBundleId(null);
       setShowcaseStates((prev) => ({
         panorama: { ...prev.panorama, taskId: null },
         closeup: { ...prev.closeup, taskId: null },
@@ -1821,12 +1897,15 @@ export default function CarModderConfigurator() {
       clearInterval(interval);
     };
   }, [
+    activeBundleId,
     fetchUserCredits,
     generationStartTime,
     isGenerating,
+    locale,
     pollShotTask,
     showcaseStates,
     t,
+    user,
   ]);
 
   const applyShowcaseTask = useCallback((task: ShowcaseTaskResp) => {
@@ -1921,12 +2000,39 @@ export default function CarModderConfigurator() {
   );
 
   const handleGenerate = async () => {
+    trackProductEvent('carmodder_generate_clicked', {
+      locale,
+      user_id: user?.id,
+      is_authenticated: !!user,
+      car_id: selectedCar.id,
+      panel_at_click: activeTab as ConfiguratorPanel,
+      has_custom_car: !!selectedCar.customInput,
+      has_mods: selectedMods.length > 0,
+      cost_credits: costCredits,
+      remaining_credits: remainingCredits,
+    });
+
     if (!user && !testMode) {
+      trackProductEvent('carmodder_auth_required', {
+        locale,
+        user_id: undefined,
+        is_authenticated: false,
+        source: 'carmodder',
+        trigger: 'generate_click',
+      });
       setIsShowSignModal(true);
       return;
     }
 
     if (remainingCredits < costCredits && !testMode) {
+      trackProductEvent('carmodder_insufficient_credits', {
+        locale,
+        user_id: user?.id,
+        is_authenticated: !!user,
+        source: 'generate_click',
+        cost_credits: costCredits,
+        remaining_credits: remainingCredits,
+      });
       toast.error(t('insufficientCredits'));
       return;
     }
@@ -1949,9 +2055,11 @@ export default function CarModderConfigurator() {
     setIsGenerating(true);
     setProgress(15);
     setGenerationStartTime(Date.now());
+    setActiveBundleId(null);
 
     try {
       const data = await requestShowcaseGeneration();
+      setActiveBundleId(data.bundleId);
       data.tasks.forEach((task) => applyShowcaseTask(task));
       const panoramaSuccess = data.tasks.some(
         (item) =>
@@ -1963,13 +2071,31 @@ export default function CarModderConfigurator() {
       await fetchUserCredits();
     } catch (error: any) {
       console.error('生成图片失败:', error);
+      trackProductEvent('carmodder_generation_failed', {
+        locale,
+        user_id: user?.id,
+        is_authenticated: !!user,
+        failed_shots: 2,
+        duration_ms: generationStartTime
+          ? Date.now() - generationStartTime
+          : undefined,
+        error: error.message,
+      });
       toast.error(`${t('generationFailed')}: ${error.message}`);
       resetTaskState();
+      setActiveBundleId(null);
     }
   };
 
   const handleRetryShot = async (shotType: ShowcaseShotType) => {
     if (!user && !testMode) {
+      trackProductEvent('carmodder_auth_required', {
+        locale,
+        user_id: undefined,
+        is_authenticated: false,
+        source: 'carmodder',
+        trigger: 'generate_click',
+      });
       setIsShowSignModal(true);
       return;
     }
@@ -1999,9 +2125,21 @@ export default function CarModderConfigurator() {
         retryShotType: shotType,
         bundleId,
       });
+      setActiveBundleId(data.bundleId);
       data.tasks.forEach((task) => applyShowcaseTask(task));
       await fetchUserCredits();
     } catch (error: any) {
+      trackProductEvent('carmodder_generation_failed', {
+        locale,
+        user_id: user?.id,
+        is_authenticated: !!user,
+        bundle_id: activeBundleId || undefined,
+        failed_shots: 1,
+        duration_ms: generationStartTime
+          ? Date.now() - generationStartTime
+          : undefined,
+        error: error.message,
+      });
       toast.error(`${t('generationFailed')}: ${error.message}`);
       setShowcaseStates((prev) => ({
         ...prev,
@@ -2191,7 +2329,9 @@ export default function CarModderConfigurator() {
         summary:
           selectedMods.length > 0
             ? selectedMods
-                .map((id) => MODIFICATION_OPTIONS.find((item) => item.id === id))
+                .map((id) =>
+                  MODIFICATION_OPTIONS.find((item) => item.id === id)
+                )
                 .filter(Boolean)
                 .slice(0, 2)
                 .map((item) => (isZh ? item!.nameZh : item!.name))
@@ -2247,7 +2387,10 @@ export default function CarModderConfigurator() {
     wheelSpec.spokeCount,
   ]);
   const carBrands = useMemo(
-    () => ['all', ...Array.from(new Set(CHINESE_CAR_MODELS.map((car) => car.brand)))],
+    () => [
+      'all',
+      ...Array.from(new Set(CHINESE_CAR_MODELS.map((car) => car.brand))),
+    ],
     []
   );
   const filteredCars = useMemo(() => {
@@ -2408,7 +2551,7 @@ export default function CarModderConfigurator() {
                               (e.currentTarget as HTMLImageElement).src =
                                 selectedCar.localImage;
                             }}
-                              />
+                          />
                         )}
                         <div
                           className="pointer-events-none absolute inset-0"
@@ -2722,7 +2865,7 @@ export default function CarModderConfigurator() {
                             ? '搜索车型、品牌，例如 Honda、Supra、BMW'
                             : 'Search model or brand, e.g. Honda, Supra, BMW'
                         }
-                        className="h-12 w-full rounded-2xl border border-white/10 bg-white/[0.04] pr-12 pl-11 text-sm text-white outline-none transition-colors placeholder:text-slate-400 focus:border-[#4725f4]/50"
+                        className="h-12 w-full rounded-2xl border border-white/10 bg-white/[0.04] pr-12 pl-11 text-sm text-white transition-colors outline-none placeholder:text-slate-400 focus:border-[#4725f4]/50"
                       />
                       {carSearch && (
                         <button
@@ -2906,7 +3049,7 @@ export default function CarModderConfigurator() {
                       variant="ghost"
                       size="sm"
                       onClick={() => setShowAllCars(!showAllCars)}
-                      className="min-h-11 max-w-full break-words text-center text-slate-300 hover:bg-white/10 hover:text-white"
+                      className="min-h-11 max-w-full text-center break-words text-slate-300 hover:bg-white/10 hover:text-white"
                     >
                       {showAllCars ? (
                         <>
@@ -2916,7 +3059,8 @@ export default function CarModderConfigurator() {
                       ) : (
                         <>
                           <ChevronDown className="mr-2 h-4 w-4" />
-                          {t('viewAll')} {filteredCars.length} {t('carModelsCount')}
+                          {t('viewAll')} {filteredCars.length}{' '}
+                          {t('carModelsCount')}
                         </>
                       )}
                     </Button>
@@ -3216,16 +3360,22 @@ export default function CarModderConfigurator() {
                                           Paint Direction
                                         </p>
                                         <h4 className="mt-3 text-xl font-semibold tracking-tight text-white">
-                                          {isZh ? selectedColor.nameZh : selectedColor.name}
+                                          {isZh
+                                            ? selectedColor.nameZh
+                                            : selectedColor.name}
                                         </h4>
                                         <p className="mt-1 text-sm text-slate-200/85">
-                                          {isZh ? selectedFinish.nameZh : selectedFinish.name}
+                                          {isZh
+                                            ? selectedFinish.nameZh
+                                            : selectedFinish.name}
                                           {selectedFinish.price > 0
                                             ? ` · +${formatPrice(selectedFinish.price)}`
                                             : ''}
                                         </p>
                                         <p className="mt-3 text-xs leading-relaxed text-slate-300">
-                                          {isZh ? selectedColor.descriptionZh : selectedColor.description}
+                                          {isZh
+                                            ? selectedColor.descriptionZh
+                                            : selectedColor.description}
                                         </p>
                                       </div>
                                       <div className="border-t border-white/10 md:border-t-0 md:border-l">
@@ -3277,10 +3427,14 @@ export default function CarModderConfigurator() {
                                           <div className="flex items-start justify-between gap-3 p-4">
                                             <div>
                                               <p className="text-sm font-semibold text-white">
-                                                {isZh ? finish.nameZh : finish.name}
+                                                {isZh
+                                                  ? finish.nameZh
+                                                  : finish.name}
                                               </p>
                                               <p className="mt-1 text-xs leading-relaxed text-slate-300">
-                                                {isZh ? finish.descriptionZh : finish.description}
+                                                {isZh
+                                                  ? finish.descriptionZh
+                                                  : finish.description}
                                               </p>
                                             </div>
                                             {finish.price > 0 && (
@@ -3342,7 +3496,9 @@ export default function CarModderConfigurator() {
                                             <div className="flex items-center justify-between gap-2">
                                               <div className="min-w-0">
                                                 <p className="truncate text-sm font-medium text-white">
-                                                  {isZh ? color.nameZh : color.name}
+                                                  {isZh
+                                                    ? color.nameZh
+                                                    : color.name}
                                                 </p>
                                                 <p className="mt-0.5 truncate text-[11px] text-slate-300">
                                                   {color.id}
@@ -3350,7 +3506,9 @@ export default function CarModderConfigurator() {
                                               </div>
                                               <span
                                                 className="h-3.5 w-3.5 shrink-0 rounded-full border border-white/20"
-                                                style={{ backgroundColor: color.color }}
+                                                style={{
+                                                  backgroundColor: color.color,
+                                                }}
                                               />
                                             </div>
                                             {color.price > 0 && (
