@@ -424,12 +424,6 @@ export function GlobalSchemaMarkup() {
             price: '9.90',
             priceCurrency: 'USD',
           },
-          aggregateRating: {
-            ratingValue: 4.8,
-            ratingCount: 2400,
-            bestRating: 5,
-            worstRating: 1,
-          },
         }}
       />
     </>

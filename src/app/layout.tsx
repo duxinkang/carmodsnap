@@ -44,6 +44,7 @@ export default async function RootLayout({
 
   const isProduction = process.env.NODE_ENV === 'production';
   const isDebug = process.env.NEXT_PUBLIC_DEBUG === 'true';
+  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
 
   // ads components
   let adsMetaTags = null;
@@ -65,7 +66,7 @@ export default async function RootLayout({
   let customerServiceHeadScripts = null;
   let customerServiceBodyScripts = null;
 
-  if (isProduction || isDebug) {
+  if (!isBuildPhase && (isProduction || isDebug)) {
     const configs = await getAllConfigs();
 
     const [adsService, analyticsService, affiliateService, customerService] =
