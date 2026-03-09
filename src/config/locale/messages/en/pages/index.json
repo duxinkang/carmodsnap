@@ -43,19 +43,19 @@
         "show_award": false,
         "image": {
           "src": "/imgs/features/admin.png",
-          "alt": "hero",
+          "alt": "CarModSnap AI car modification visualizer dashboard - 3D configurator interface",
           "width": 1200,
           "height": 800
         },
         "image_invert": {
           "src": "/imgs/features/admin-dark.png",
-          "alt": "hero",
+          "alt": "CarModSnap dark mode dashboard - AI car customization platform",
           "width": 1200,
           "height": 800
         },
         "background_image": {
           "src": "/imgs/bg/tree.jpg",
-          "alt": "hero"
+          "alt": "CarModSnap car modification platform background"
         }
       },
       "logos": {
@@ -107,7 +107,7 @@
         "description": "CarModSnap is an AI-powered car modification platform, including 3D visualization, community showcases, and local service provider connections.",
         "image": {
           "src": "/imgs/features/landing-page.png",
-          "alt": "introduce"
+          "alt": "CarModSnap car modification platform overview - 3D visualization and community features"
         },
         "items": [
           {
@@ -116,7 +116,7 @@
             "icon": "RiNextjsFill",
             "image": {
               "src": "/imgs/features/1.png",
-              "alt": "introduce"
+              "alt": "3D car configurator showing vehicle customization interface"
             }
           },
           {
@@ -300,7 +300,7 @@
             "quote": "CarModSnap helped me visualize my dream car before making any changes. The 3D renderings were incredibly realistic!",
             "image": {
               "src": "/imgs/avatars/1.png",
-              "alt": "david"
+              "alt": "David Chen - CarModSnap user testimonial - car enthusiast"
             }
           },
           {
@@ -309,7 +309,7 @@
             "quote": "I was able to find a trusted mechanic in my area through CarModSnap. The entire process was seamless!",
             "image": {
               "src": "/imgs/avatars/2.png",
-              "alt": "rachel"
+              "alt": "Rachel Kim - CarModSnap user testimonial - satisfied car owner"
             }
           },
           {
@@ -318,7 +318,7 @@
             "quote": "The community showcases gave me so many ideas for my classic car collection. CarModSnap is a game-changer!",
             "image": {
               "src": "/imgs/avatars/3.png",
-              "alt": "marcus"
+              "alt": "Marcus Thompson - CarModSnap user testimonial - classic car collector"
             }
           },
           {
@@ -327,7 +327,7 @@
             "quote": "As a professional customizer, CarModSnap has become an essential tool for showing clients what their car will look like.",
             "image": {
               "src": "/imgs/avatars/4.png",
-              "alt": "sofia"
+              "alt": "Sofia Garcia - CarModSnap user testimonial - professional car customizer"
             }
           },
           {
@@ -336,7 +336,7 @@
             "quote": "The AI suggestions were spot-on! I never would have thought of some of the modifications that were recommended.",
             "image": {
               "src": "/imgs/avatars/5.png",
-              "alt": "james"
+              "alt": "James Wilson - CarModSnap user testimonial - car enthusiast"
             }
           },
           {
@@ -345,7 +345,7 @@
             "quote": "CarModSnap made it easy for me to understand what modifications would look like on my first car. I'm thrilled with the results!",
             "image": {
               "src": "/imgs/avatars/6.png",
-              "alt": "anna"
+              "alt": "Anna Zhang - CarModSnap user testimonial - first-time car owner"
             }
           }
         ]

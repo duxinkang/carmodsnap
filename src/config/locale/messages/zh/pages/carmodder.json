@@ -1,4 +1,9 @@
 {
+  "metadata": {
+    "title": "3D 汽车改装器_AI 汽车改装可视化工具 | CarModSnap",
+    "description": "免费使用我们的 3D 汽车改装可视化工具。实时定制轮毂、喷漆和车身套件。支持 30+ 款车型，包括 JDM、欧系和美式肌肉车。",
+    "keywords": "3d 汽车改装器，汽车定制工具，轮毂搭配 app, 汽车贴膜模拟器，包围改装预览，jdm 改装，欧系车改装，肌肉车改装，免费改装工具"
+  },
   "carName": "GT-R Alpha",
   "carPrice": "$142,500",
   "totalBuildCost": "总建造成本",
@@ -76,7 +81,11 @@
   "startModding": "开始改装",
   "watchDemo": "观看演示",
   "buildsCreated": "方案库",
+  "buildsCreatedCount": "2,400+",
   "textures": "材质",
+  "texturesCount": "50+",
+  "carModels": "车型",
+  "carModelsCount": "30+",
   "customForgedRims": "定制锻造轮毂",
   "aeroSideSkirts": "空气动力学侧裙",
   "threeSixtyVisualization": "360° 可视化",

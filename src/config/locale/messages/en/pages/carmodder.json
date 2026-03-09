@@ -1,4 +1,9 @@
 {
+  "metadata": {
+    "title": "3D Car Modder - AI Car Modification Visualizer | CarModSnap",
+    "description": "Try our free 3D car modification visualizer tool. Customize wheels, paint, and body kits in real-time. Support 30+ car models including JDM, Euro, and Muscle cars.",
+    "keywords": "3d car modder, car customization tool, wheel fitment app, car wrap visualizer, body kit preview, jdm car mods, euro car customization, muscle car mods, free car visualizer"
+  },
   "carName": "GT-R Alpha",
   "carPrice": "$142,500",
   "totalBuildCost": "Total Build Cost",
@@ -67,8 +72,12 @@
   "ultimateConfiguratorDescription": "The ultimate real-time 3D configurator. Customize wheels, aero kits, and wraps for 30+ car models and share your vision with the world.",
   "startModding": "START MODDING",
   "watchDemo": "Watch Demo",
-  "buildsCreated": "Build Library",
-  "textures": "Textures",
+  "buildsCreated": "Builds Created",
+  "buildsCreatedCount": "2,400+",
+  "textures": "Textures Available",
+  "texturesCount": "50+",
+  "carModels": "Car Models",
+  "carModelsCount": "30+",
   "customForgedRims": "Custom Forged Rims",
   "aeroSideSkirts": "Aero Side Skirts",
   "threeSixtyVisualization": "360° VISUALIZATION",

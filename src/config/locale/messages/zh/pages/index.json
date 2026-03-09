@@ -43,19 +43,19 @@
         "show_award": false,
         "image": {
           "src": "/imgs/features/admin.png",
-          "alt": "hero",
+          "alt": "CarModSnap AI 汽车改装可视化平台仪表板 - 3D 配置器界面",
           "width": 1200,
           "height": 800
         },
         "image_invert": {
           "src": "/imgs/features/admin-dark.png",
-          "alt": "hero",
+          "alt": "CarModSnap 深色模式仪表板 - AI 汽车定制平台",
           "width": 1200,
           "height": 800
         },
         "background_image": {
           "src": "/imgs/bg/tree.jpg",
-          "alt": "hero"
+          "alt": "CarModSnap 汽车改装平台背景"
         }
       },
       "logos": {
@@ -106,7 +106,7 @@
         "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台，包括 3D 可视化、社区展示和本地服务商对接。",
         "image": {
           "src": "/imgs/features/landing-page.png",
-          "alt": "introduce"
+          "alt": "CarModSnap 汽车改装平台概览 - 3D 可视化和社区功能"
         },
         "items": [
           {
@@ -115,7 +115,7 @@
             "icon": "RiNextjsFill",
             "image": {
               "src": "/imgs/features/1.png",
-              "alt": "introduce"
+              "alt": "3D 汽车配置器显示车辆定制界面"
             }
           },
           {

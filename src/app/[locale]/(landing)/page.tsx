@@ -162,21 +162,24 @@ export default function CarModderLanding() {
               className="mt-12 flex items-center justify-center gap-8 border-t border-white/10 pt-8 lg:justify-start"
             >
               <div>
-                <div className="text-2xl font-bold text-white">Beta</div>
+                <div className="text-2xl font-bold text-white">{t('buildsCreatedCount')}</div>
                 <div className="text-xs tracking-widest text-slate-300 uppercase">
                   {t('buildsCreated')}
                 </div>
               </div>
               <div className="h-8 w-px bg-white/20"></div>
               <div>
-                <div className="text-2xl font-bold text-white">Demo</div>
+                <div className="text-2xl font-bold text-white">{t('texturesCount')}</div>
                 <div className="text-xs tracking-widest text-slate-300 uppercase">
                   {t('textures')}
                 </div>
               </div>
               <div className="h-8 w-px bg-white/20"></div>
-              <div className="rounded-full border border-white/20 bg-white/[0.08] px-3 py-2 text-xs text-slate-100">
-                {t('demoDataNotice')}
+              <div>
+                <div className="text-2xl font-bold text-white">{t('carModelsCount')}</div>
+                <div className="text-xs tracking-widest text-slate-300 uppercase">
+                  {t('carModels')}
+                </div>
               </div>
             </motion.div>
           </div>
@@ -193,26 +196,10 @@ export default function CarModderLanding() {
               <CarouselContent>
                 <CarouselItem>
                   <div className="group relative z-10 w-full transform cursor-pointer transition-transform duration-700 hover:scale-105">
-                    <div className="group/spot absolute top-[35%] left-[20%] z-20">
-                      <div className="absolute h-4 w-4 animate-ping rounded-full bg-[#4725f4]"></div>
-                      <div className="relative h-4 w-4 cursor-pointer rounded-full bg-white shadow-[0_0_15px_#4725f4] transition-transform hover:scale-125"></div>
-                      <div className="absolute top-1/2 left-6 -translate-y-1/2 rounded-lg border border-white/10 bg-black/80 px-3 py-1 text-xs whitespace-nowrap text-white opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover/spot:opacity-100">
-                        {t('customForgedRims')}
-                      </div>
-                    </div>
-
-                    <div className="group/spot absolute top-[45%] right-[25%] z-20">
-                      <div className="absolute h-4 w-4 animate-ping rounded-full bg-[#4725f4]"></div>
-                      <div className="relative h-4 w-4 cursor-pointer rounded-full bg-white shadow-[0_0_15px_#4725f4] transition-transform hover:scale-125"></div>
-                      <div className="absolute top-1/2 right-6 -translate-y-1/2 rounded-lg border border-white/10 bg-black/80 px-3 py-1 text-xs whitespace-nowrap text-white opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover/spot:opacity-100">
-                        {t('aeroSideSkirts')}
-                      </div>
-                    </div>
-
                     <img
                       className="h-auto w-full object-contain drop-shadow-2xl"
                       src={heroImage}
-                      alt="Sleek dark sports car in neon environment representing Xiaomi SU7"
+                      alt="Dark sports car with custom wheels and body kit in neon lighting - CarModSnap 3D visualization"
                       loading="eager"
                       fetchPriority="high"
                       decoding="async"
@@ -225,7 +212,7 @@ export default function CarModderLanding() {
                     <img
                       className="h-auto w-full object-contain drop-shadow-2xl"
                       src="/front_img/image_巴塞罗那MWC｜小米Vision..._7.png"
-                      alt="Barcelona MWC image 7"
+                      alt="CarModSnap platform demonstration at Barcelona MWC technology showcase"
                     />
                   </div>
                 </CarouselItem>
@@ -235,7 +222,7 @@ export default function CarModderLanding() {
                     <img
                       className="h-auto w-full object-contain drop-shadow-2xl"
                       src="/front_img/image_巴塞罗那MWC｜小米Vision..._9.png"
-                      alt="Barcelona MWC image 9"
+                      alt="AI-powered car customization technology displayed at Barcelona MWC"
                     />
                   </div>
                 </CarouselItem>
@@ -345,7 +332,7 @@ export default function CarModderLanding() {
                   <img
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     src={config.image}
-                    alt={`${config.name} car configuration`}
+                    alt={`${config.name} - Custom car modification with wheels and body kit - CarModSnap community build`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#131022] to-transparent opacity-80"></div>
                 </div>

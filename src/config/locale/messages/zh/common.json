@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "AI 汽车改装可视化工具 | CarModSnap",
-    "description": "用 CarModSnap 在改装前预览贴膜、轮毂与包围效果，快速完成 3D 汽车改装方案。",
-    "keywords": "AI 汽车改装可视化, 3D 汽车配置器, 汽车贴膜预览, 轮毂改装预览, 车身包围模拟"
+    "title": "AI 汽车改装可视化工具_3D 配置器_改装预览 - CarModSnap",
+    "description": "用 CarModSnap 在改装前预览贴膜、轮毂与包围效果。支持 30+ 车型，实时 3D 渲染，AI 智能推荐改装方案。基础功能免费使用。",
+    "keywords": "AI 汽车改装可视化，3D 汽车配置器，汽车贴膜预览，轮毂改装预览，车身包围模拟，汽车改装工具，车辆改装 app,360 度看车，汽车 3d 渲染"
   },
   "sign": {
     "sign_in_title": "登录",
@@ -29,7 +29,7 @@
     "name_placeholder": "请输入您的姓名",
     "email_verification_hint": "请输入可正常接收邮件的邮箱。注册后需完成邮箱验证才能正常使用。",
     "admin_title": "管理后台",
-    "credits_title": "积分: {credits}",
+    "credits_title": "积分：{credits}",
     "verify_email_sent": "验证邮件已发送，请前往邮箱完成验证。",
     "verify_email_required": "请先完成邮箱验证后再登录。",
     "resend_verification": "重新发送验证邮件",
@@ -50,7 +50,7 @@
     "cancel_title": "取消"
   },
   "locale_detector": {
-    "title": "检测到浏览器语言是: {locale}，是否切换？",
+    "title": "检测到浏览器语言是：{locale}，是否切换？",
     "switch_to": "切换到{locale}"
   }
 }
