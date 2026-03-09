@@ -20,6 +20,14 @@ export interface PostFaq {
   answer: string;
 }
 
+export interface PostLink {
+  slug?: string;
+  title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
+}
+
 export interface Blog {
   id?: string;
   sr_only_title?: string;
@@ -55,6 +63,8 @@ export interface Post {
   key_stats?: PostKeyStat[];
   authority_sources?: PostAuthoritySource[];
   faqs?: PostFaq[];
+  decision_path?: PostLink[];
+  related_guides?: PostLink[];
 }
 
 export interface Category {

@@ -16,6 +16,15 @@ interface FAQPageSchema {
   }[];
 }
 
+interface CreativeWorkSchema {
+  name: string;
+  description: string;
+  image?: string;
+  url: string;
+  creator?: string;
+  keywords?: string[];
+}
+
 interface ProductSchema {
   name: string;
   description: string;
@@ -361,6 +370,40 @@ export function FAQPageSchemaMarkup({ faqPage }: { faqPage: FAQPageSchema }) {
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: generateSchema('FAQPage', schema) }}
+    />
+  );
+}
+
+export function CreativeWorkSchemaMarkup({
+  creativeWork,
+}: {
+  creativeWork: CreativeWorkSchema;
+}) {
+  const schema = {
+    name: creativeWork.name,
+    description: creativeWork.description,
+    image: creativeWork.image
+      ? creativeWork.image.startsWith('http')
+        ? creativeWork.image
+        : `${envConfigs.app_url}${creativeWork.image}`
+      : `${envConfigs.app_url}/og.png`,
+    url: creativeWork.url,
+    creator: creativeWork.creator
+      ? {
+          '@type': 'Person',
+          name: creativeWork.creator,
+        }
+      : {
+          '@type': 'Organization',
+          name: envConfigs.app_name,
+        },
+    keywords: creativeWork.keywords,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: generateSchema('CreativeWork', schema) }}
     />
   );
 }

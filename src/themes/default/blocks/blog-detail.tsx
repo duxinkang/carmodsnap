@@ -153,6 +153,65 @@ export function BlogDetail({ post }: { post: PostType }) {
                   )}
                 </article>
 
+                {post.decision_path && post.decision_path.length > 0 ? (
+                  <section className="mt-12 rounded-2xl border border-amber-200 bg-amber-50 p-6">
+                    <h2 className="text-2xl font-semibold text-slate-900">
+                      Decision path
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Follow this sequence to move from comparison into a
+                      clearer purchase or installer decision.
+                    </p>
+                    <div className="mt-6 grid gap-4 md:grid-cols-2">
+                      {post.decision_path.map((item, index) => (
+                        <a
+                          key={item.url || item.slug || item.title}
+                          href={item.url || '#'}
+                          className="rounded-2xl border border-amber-200 bg-white p-5 transition-colors hover:border-amber-300 hover:bg-amber-50/50"
+                        >
+                          <p className="text-xs font-semibold tracking-[0.18em] text-amber-700 uppercase">
+                            Step {index + 1}
+                          </p>
+                          <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                            {item.title}
+                          </h3>
+                          {item.description ? (
+                            <p className="mt-2 text-sm leading-6 text-slate-600">
+                              {item.description}
+                            </p>
+                          ) : null}
+                        </a>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+
+                {post.related_guides && post.related_guides.length > 0 ? (
+                  <section className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-6">
+                    <h2 className="text-2xl font-semibold text-slate-900">
+                      Related guides
+                    </h2>
+                    <div className="mt-6 grid gap-4 md:grid-cols-2">
+                      {post.related_guides.map((item) => (
+                        <a
+                          key={item.url || item.slug || item.title}
+                          href={item.url || '#'}
+                          className="rounded-2xl border border-slate-200 bg-white p-5 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                        >
+                          <h3 className="text-lg font-semibold text-slate-900">
+                            {item.title}
+                          </h3>
+                          {item.description ? (
+                            <p className="mt-2 text-sm leading-6 text-slate-600">
+                              {item.description}
+                            </p>
+                          ) : null}
+                        </a>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+
                 {post.authority_sources && post.authority_sources.length > 0 ? (
                   <section className="mt-12 rounded-2xl border border-slate-200 bg-white p-6">
                     <h2 className="text-xl font-semibold text-slate-900">

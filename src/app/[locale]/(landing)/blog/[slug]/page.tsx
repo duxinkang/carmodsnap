@@ -4,7 +4,8 @@ import { getThemePage } from '@/core/theme';
 import { envConfigs } from '@/config';
 import { Empty } from '@/shared/blocks/common';
 import { BlogPostSchemaMarkup } from '@/shared/components/seo/schema-markup';
-import { getPost } from '@/shared/models/post';
+import { buildPostRelationships } from '@/shared/lib/blog-clusters';
+import { getPost, getPostsAndCategories } from '@/shared/models/post';
 import { DynamicPage } from '@/shared/types/blocks/landing';
 
 export const revalidate = 3600;
@@ -82,13 +83,36 @@ export default async function BlogDetailPage({
     return <Empty message={`Post not found`} />;
   }
 
+  const { posts: allPosts } = await getPostsAndCategories({
+    locale,
+    limit: 100,
+  });
+  const relationships = buildPostRelationships(post, allPosts);
+  const enrichedPost = {
+    ...post,
+    decision_path: relationships.decisionPath.map((item) => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      image: item.image,
+      url: item.url,
+    })),
+    related_guides: relationships.relatedGuides.map((item) => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      image: item.image,
+      url: item.url,
+    })),
+  };
+
   // build page sections
   const page: DynamicPage = {
     sections: {
       blogDetail: {
         block: 'blog-detail',
         data: {
-          post,
+          post: enrichedPost,
         },
       },
     },
@@ -103,16 +127,16 @@ export default async function BlogDetailPage({
       <Page locale={locale} page={page} />
       <BlogPostSchemaMarkup
         post={{
-          headline: post.title || slug,
-          description: post.description || '',
+          headline: enrichedPost.title || slug,
+          description: enrichedPost.description || '',
           image: getPostOgImageUrl(
-            post.image,
+            enrichedPost.image,
             `${canonicalUrl}/opengraph-image`
           ),
-          datePublished: post.created_at_iso || '',
-          dateModified: post.created_at_iso || '',
+          datePublished: enrichedPost.created_at_iso || '',
+          dateModified: enrichedPost.created_at_iso || '',
           faqs:
-            post.faqs?.map((faq) => ({
+            enrichedPost.faqs?.map((faq) => ({
               question: faq.question,
               answer: faq.answer,
             })) || [],
