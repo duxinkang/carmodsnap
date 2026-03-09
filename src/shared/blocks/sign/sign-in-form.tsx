@@ -12,6 +12,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { useAppContext } from '@/shared/contexts/app';
+import { setPendingAuthIntent } from '@/shared/lib/analytics/pending-intent';
 
 import { SocialProviders } from './social-providers';
 
@@ -71,6 +72,7 @@ export function SignInForm({
     setLoading(true);
 
     try {
+      setPendingAuthIntent('auth', 'email');
       await signIn.email(
         {
           email,

@@ -9,6 +9,7 @@ import { useRouter } from '@/core/i18n/navigation';
 import { defaultLocale } from '@/config/locale';
 import { Button } from '@/shared/components/ui/button';
 import { useAppContext } from '@/shared/contexts/app';
+import { setPendingAuthIntent } from '@/shared/lib/analytics/pending-intent';
 import { cn } from '@/shared/lib/utils';
 import { Button as ButtonType } from '@/shared/types/blocks/common';
 
@@ -40,6 +41,7 @@ export function SocialProviders({
   }
 
   const handleSignIn = async ({ provider }: { provider: string }) => {
+    setPendingAuthIntent('auth', provider);
     await signIn.social(
       {
         provider: provider,

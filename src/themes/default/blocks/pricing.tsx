@@ -32,6 +32,7 @@ import {
 } from '@/shared/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { useAppContext } from '@/shared/contexts/app';
+import { setPendingAuthIntent } from '@/shared/lib/analytics/pending-intent';
 import { trackProductEvent } from '@/shared/lib/analytics/track';
 import { getCookie } from '@/shared/lib/cookie';
 import { cn } from '@/shared/lib/utils';
@@ -229,6 +230,7 @@ export function Pricing({
       itemCurrencies[item.product_id]?.displayedItem || item;
 
     if (!user) {
+      setPendingAuthIntent('pricing', 'unknown');
       trackProductEvent('checkout_started', {
         locale,
         user_id: undefined,
@@ -296,6 +298,7 @@ export function Pricing({
   ) => {
     try {
       if (!user) {
+        setPendingAuthIntent('pricing', 'unknown');
         setIsShowSignModal(true);
         return;
       }
@@ -329,6 +332,8 @@ export function Pricing({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-pathname': window.location.pathname,
+          'x-locale': locale || 'en',
         },
         body: JSON.stringify(params),
       });

@@ -12,6 +12,7 @@ export type ConfiguratorPanel = 'paint' | 'wheels' | 'mods' | 'accents';
 
 export type ProductEventName =
   | 'page_viewed'
+  | 'auth_succeeded'
   | 'carmodder_viewed'
   | 'carmodder_vehicle_selected'
   | 'carmodder_panel_viewed'
@@ -47,6 +48,10 @@ export type BaseAnalyticsPayload = {
 
 export type ProductEventPayloadMap = {
   page_viewed: BaseAnalyticsPayload;
+  auth_succeeded: BaseAnalyticsPayload & {
+    source?: string;
+    method?: 'email' | 'google' | 'github' | 'unknown';
+  };
   carmodder_viewed: BaseAnalyticsPayload;
   carmodder_vehicle_selected: BaseAnalyticsPayload & {
     car_id: string;

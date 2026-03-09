@@ -7,6 +7,10 @@ import { usePathname } from '@/core/i18n/navigation';
 import { useAppContext } from '@/shared/contexts/app';
 import { identifyClarityUser } from '@/shared/lib/analytics/clarity';
 import { inferPageType } from '@/shared/lib/analytics/events';
+import {
+  clearPendingAuthIntent,
+  readPendingAuthIntent,
+} from '@/shared/lib/analytics/pending-intent';
 import { trackProductEvent } from '@/shared/lib/analytics/track';
 
 export function AnalyticsBridge() {
@@ -46,8 +50,22 @@ export function AnalyticsBridge() {
     const userId = user?.id || '';
     if (!userId || lastUserIdRef.current === userId) return;
 
+    const pendingAuth = readPendingAuthIntent();
     lastUserIdRef.current = userId;
     identifyClarityUser(userId);
+
+    if (pendingAuth) {
+      trackProductEvent('auth_succeeded', {
+        locale,
+        user_id: userId,
+        is_authenticated: true,
+        source: pendingAuth.source,
+        method:
+          (pendingAuth.method as 'email' | 'google' | 'github' | 'unknown') ||
+          'unknown',
+      });
+      clearPendingAuthIntent();
+    }
 
     if (typeof window !== 'undefined' && typeof window.op === 'function') {
       try {

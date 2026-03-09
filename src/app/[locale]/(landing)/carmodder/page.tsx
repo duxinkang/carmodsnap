@@ -48,6 +48,7 @@ import { Separator } from '@/shared/components/ui/separator';
 import { Switch } from '@/shared/components/ui/switch';
 import { useAppContext } from '@/shared/contexts/app';
 import { ConfiguratorPanel } from '@/shared/lib/analytics/events';
+import { setPendingAuthIntent } from '@/shared/lib/analytics/pending-intent';
 import { trackProductEvent } from '@/shared/lib/analytics/track';
 import { getUuid } from '@/shared/lib/hash';
 
@@ -1969,7 +1970,11 @@ export default function CarModderConfigurator() {
 
       const resp = await fetch('/api/ai/generate-showcase', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-pathname': window.location.pathname,
+          'x-locale': locale,
+        },
         body: JSON.stringify({
           provider: 'qwen',
           model,
@@ -2013,6 +2018,7 @@ export default function CarModderConfigurator() {
     });
 
     if (!user && !testMode) {
+      setPendingAuthIntent('carmodder', 'unknown');
       trackProductEvent('carmodder_auth_required', {
         locale,
         user_id: undefined,
@@ -2089,6 +2095,7 @@ export default function CarModderConfigurator() {
 
   const handleRetryShot = async (shotType: ShowcaseShotType) => {
     if (!user && !testMode) {
+      setPendingAuthIntent('carmodder', 'unknown');
       trackProductEvent('carmodder_auth_required', {
         locale,
         user_id: undefined,
