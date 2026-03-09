@@ -106,8 +106,8 @@ export default async function BlogDetailPage({
           headline: post.title || slug,
           description: post.description || '',
           image: getPostOgImageUrl(post.image, `${canonicalUrl}/opengraph-image`),
-          datePublished: post.created_at || '',
-          dateModified: post.created_at || '',
+          datePublished: post.created_at_iso || '',
+          dateModified: post.created_at_iso || '',
         }}
         url={canonicalUrl}
       />

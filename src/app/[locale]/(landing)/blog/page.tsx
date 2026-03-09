@@ -1,7 +1,13 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';
+import { envConfigs } from '@/config';
+import { defaultLocale } from '@/config/locale';
 import { InternalLinkHub } from '@/shared/components/seo/internal-link-hub';
+import {
+  CollectionPageSchemaMarkup,
+  ItemListSchemaMarkup,
+} from '@/shared/components/seo/schema-markup';
 import { getMetadata } from '@/shared/lib/seo';
 import { getPostsAndCategories } from '@/shared/models/post';
 import {
@@ -82,6 +88,28 @@ export default async function BlogPage({
   return (
     <>
       <Page locale={locale} page={page} />
+      <CollectionPageSchemaMarkup
+        page={{
+          name: t('metadata.title'),
+          description: t('metadata.description'),
+          url:
+            locale === defaultLocale
+              ? `${envConfigs.app_url}/blog`
+              : `${envConfigs.app_url}/${locale}/blog`,
+        }}
+      />
+      <ItemListSchemaMarkup
+        itemList={{
+          itemListElement: posts.map((post, index) => ({
+            position: index + 1,
+            url: post.url || '/blog',
+            name: post.title || '',
+            image: post.image,
+            description: post.description,
+            datePublished: post.created_at_iso,
+          })),
+        }}
+      />
       <InternalLinkHub locale={locale} />
     </>
   );

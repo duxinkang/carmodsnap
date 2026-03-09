@@ -180,6 +180,7 @@ export async function getPost({
             created_at: postData.createdAt.toISOString(),
             locale,
           }) || '',
+        created_at_iso: postData.createdAt.toISOString(),
         author_name: postData.authorName || '',
         author_image: postData.authorImage || '',
         author_role: '',
@@ -238,6 +239,7 @@ export async function getLocalPost({
           locale,
         })
       : '',
+    created_at_iso: frontmatter.created_at || '',
     author_name: frontmatter.author_name || '',
     author_image: frontmatter.author_image || '',
     author_role: '',
@@ -287,6 +289,7 @@ export async function getLocalPage({
           locale,
         })
       : '',
+    created_at_iso: frontmatter.created_at || '',
     author_name: frontmatter.author_name || '',
     author_image: frontmatter.author_image || '',
     author_role: '',
@@ -359,8 +362,8 @@ export async function getPostsAndCategories({
 
   // Convert map to array and sort by created_at desc
   posts = Array.from(postsMap.values()).sort((a, b) => {
-    const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
-    const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+    const dateA = a.created_at_iso ? new Date(a.created_at_iso).getTime() : 0;
+    const dateB = b.created_at_iso ? new Date(b.created_at_iso).getTime() : 0;
     return dateB - dateA;
   });
 
@@ -439,6 +442,7 @@ export async function getRemotePostsAndCategories({
             created_at: post.createdAt.toISOString(),
             locale,
           }) || '',
+        created_at_iso: post.createdAt.toISOString(),
         image: post.image || '',
         url: getLocalizedPostUrl(`${postPrefix}${post.slug}`, locale),
       }))
@@ -548,6 +552,7 @@ export async function getLocalPostsAndCategories({
         author_name: frontmatter.author_name || '',
         author_image: frontmatter.author_image || '',
         created_at: createdAt,
+        created_at_iso: frontmatter.created_at || '',
         date: frontmatter.date || createdAt,
         image: frontmatter.image || '',
         url: getLocalizedPostUrl(`${postPrefix}${slug}`, locale),

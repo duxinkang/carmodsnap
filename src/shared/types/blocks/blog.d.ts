@@ -21,6 +21,7 @@ export interface Post {
   image?: string;
   content?: string;
   created_at?: string;
+  created_at_iso?: string;
   author_name?: string;
   author_role?: string;
   author_image?: string;

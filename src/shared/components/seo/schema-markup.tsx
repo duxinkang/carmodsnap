@@ -61,6 +61,24 @@ interface WebSiteSchema {
   url: string;
   description?: string;
   language?: string;
+  searchUrlTemplate?: string;
+}
+
+interface CollectionPageSchema {
+  name: string;
+  description?: string;
+  url: string;
+}
+
+interface ItemListSchema {
+  itemListElement: {
+    position: number;
+    url: string;
+    name: string;
+    image?: string;
+    description?: string;
+    datePublished?: string;
+  }[];
 }
 
 interface SoftwareApplicationSchema {
@@ -82,11 +100,11 @@ interface SoftwareApplicationSchema {
 }
 
 function generateSchema<T extends object>(type: string, data: T): string {
-  return `<script type="application/ld+json">${JSON.stringify({
+  return JSON.stringify({
     '@context': 'https://schema.org',
     '@type': type,
     ...data,
-  })}</script>`;
+  });
 }
 
 export function ArticleSchemaMarkup({ post }: { post: ArticleSchema & { url?: string } }) {
@@ -258,14 +276,18 @@ export function WebSiteSchemaMarkup({ website }: { website: WebSiteSchema }) {
     url: website.url,
     description: website.description,
     inLanguage: website.language || 'en',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${website.url}/search?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
+    ...(website.searchUrlTemplate
+      ? {
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: {
+              '@type': 'EntryPoint',
+              urlTemplate: website.searchUrlTemplate,
+            },
+            'query-input': 'required name=search_term_string',
+          },
+        }
+      : {}),
   };
 
   return (
@@ -311,6 +333,56 @@ export function SoftwareApplicationSchemaMarkup({
       type="application/ld+json"
       dangerouslySetInnerHTML={{
         __html: generateSchema('SoftwareApplication', schema),
+      }}
+    />
+  );
+}
+
+export function CollectionPageSchemaMarkup({
+  page,
+}: {
+  page: CollectionPageSchema;
+}) {
+  const schema = {
+    name: page.name,
+    description: page.description,
+    url: page.url,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: generateSchema('CollectionPage', schema),
+      }}
+    />
+  );
+}
+
+export function ItemListSchemaMarkup({ itemList }: { itemList: ItemListSchema }) {
+  const schema = {
+    itemListElement: itemList.itemListElement.map((item) => ({
+      '@type': 'ListItem',
+      position: item.position,
+      url: item.url.startsWith('http')
+        ? item.url
+        : `${envConfigs.app_url}${item.url}`,
+      name: item.name,
+      image: item.image
+        ? item.image.startsWith('http')
+          ? item.image
+          : `${envConfigs.app_url}${item.image}`
+        : undefined,
+      description: item.description,
+      datePublished: item.datePublished,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: generateSchema('ItemList', schema),
       }}
     />
   );
