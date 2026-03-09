@@ -1,5 +1,12 @@
+import { envConfigs } from '@/config';
+import { defaultLocale } from '@/config/locale';
 import { getMetadata } from '@/shared/lib/seo';
-import { BreadcrumbListSchemaMarkup } from '@/shared/components/seo/schema-markup';
+import {
+  BreadcrumbListSchemaMarkup,
+  CollectionPageSchemaMarkup,
+  ItemListSchemaMarkup,
+} from '@/shared/components/seo/schema-markup';
+import { getShowcaseUrl, showcaseEntries } from '@/shared/data/showcases';
 
 import ShowcasesClientPage from './showcases.client';
 
@@ -10,10 +17,39 @@ export const generateMetadata = getMetadata({
   canonicalUrl: '/showcases',
 });
 
-export default function ShowcasesPage() {
+export default async function ShowcasesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const collectionUrl =
+    locale === defaultLocale
+      ? `${envConfigs.app_url}/showcases`
+      : `${envConfigs.app_url}/${locale}/showcases`;
+
   return (
     <>
       <ShowcasesClientPage />
+      <CollectionPageSchemaMarkup
+        page={{
+          name: 'Real Car Modification Examples | CarModSnap Showcases',
+          description:
+            'Browse individual car wrap, wheel, and body kit showcase case studies with indexable build detail pages.',
+          url: collectionUrl,
+        }}
+      />
+      <ItemListSchemaMarkup
+        itemList={{
+          itemListElement: showcaseEntries.map((item, index) => ({
+            position: index + 1,
+            url: `${locale === defaultLocale ? '' : `/${locale}`}${getShowcaseUrl(item.slug)}`,
+            name: item.title,
+            image: item.image,
+            description: item.description,
+          })),
+        }}
+      />
       <BreadcrumbListSchemaMarkup
         items={[
           { position: 1, name: 'Home', item: '/' },

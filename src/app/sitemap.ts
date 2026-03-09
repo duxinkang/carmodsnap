@@ -3,6 +3,7 @@ import { MetadataRoute } from 'next';
 import { postsSource } from '@/core/docs/source';
 import { envConfigs } from '@/config';
 import { defaultLocale, locales } from '@/config/locale';
+import { getShowcaseUrl, showcaseEntries } from '@/shared/data/showcases';
 
 const staticPaths = [
   '/',
@@ -19,7 +20,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const appUrl = envConfigs.app_url;
   const now = new Date();
   const blogPaths = getBlogPaths();
-  const allPaths = Array.from(new Set([...staticPaths, ...blogPaths]));
+  const showcasePaths = showcaseEntries.map((entry) => getShowcaseUrl(entry.slug));
+  const allPaths = Array.from(
+    new Set([...staticPaths, ...blogPaths, ...showcasePaths])
+  );
 
   return locales.flatMap((locale) =>
     allPaths.map((path) => ({

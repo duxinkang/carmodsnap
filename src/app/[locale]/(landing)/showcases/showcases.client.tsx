@@ -4,91 +4,29 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
+import { Link } from '@/core/i18n/navigation';
+import { getShowcaseUrl, showcaseEntries } from '@/shared/data/showcases';
+
 export default function CommunityShowcase() {
   const t = useTranslations('pages.carmodder');
-  const [activeFilter, setActiveFilter] = useState('trending');
+  const [activeFilter, setActiveFilter] = useState('all');
 
   const filters = [
+    { id: 'all', name: t('all') },
     { id: 'trending', name: t('trending') },
     { id: 'latest', name: t('latest') },
     { id: 'jdm', name: t('jdmLegends') },
     { id: 'euro', name: t('euroLuxury') },
   ];
 
-  const showcaseItems = [
-    {
-      id: 1,
-      title: 'Cyber Porsche 911',
-      creator: '@turbo_tom',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuBjQeU8ByQCyrRUYs8TyOmpEFVfzNfAfh9tQkLGfcbSVSKP2e9QhIONoOOmCZk31zC8gw__-fWKZqrOkHzqz3XVUCGBJsR1LPFK5EGi5ZlyhrOG6KrhzK40nFn6ZLMZXDITWwKrH8Kl_mZP3sMtQw36X0m9MBwLNwcChjss3S6kmH7NafXKmya5mDEN-EfTLmgeGf5y2g-cQFhdaw3kscZ85toRAWhRGbEgEeJCFxmXrOrV6_5WPpGhTaeSpsthRDDARTJnlumZpzKV',
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCWgCqsD7JPUMDDT0EBw13Ar8OnDBveJmD1T0MEcyfyeSz4aeFunqkYcmEDmBWpMm6zZUSXFsLkhPDInThYn6-yxqn58UyjY6qwmTegIzQsoIktXH65fUF-hPVWyBVe_8nIgkj7UkgA2XvLalb-au7u0IDUkvrrMLPKOuQmUrzYVd0EDPC82syI8g5Pcbut0gT3C9Mi5SPkMboVwXPjBSP-eQewASZjypE0qIayuJdp5VlSCA-Hq10n86tzum1Dn7TAYIctBCamSZVC',
-      badge: t('wrapOfTheMonth'),
-      tags: ['Matte Black', 'Widebody'],
-      aspect: 'portrait',
-    },
-    {
-      id: 2,
-      title: 'Neon Benz GT',
-      creator: '@sarah_drifts',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuAtgdkG6AZ9nAi9niwTJPoMyHRhNhXGmdK4r6EONGZSsIqybaG2NnGCNkUJMP2QQJDVameFTqjFQiIbwNYnF3sT8hKlrJYyv1rh9YrbfO9jdO7coJ_DP5jpi6EtlznCRvpaUmEng1UWSOffgU_rZeiXJIaDYK84in_zes2AwLA1EdZAS0baJ07HvkpW4TUJGefuDjBhkLvG1Ffm_YB4i_5__grqJwMYfPYEFneZsl-ugOjUWXBzrE34Dt5zwkUSpjrXp8AN2HGLAweo',
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDuV_qNiFd_5kV5cnF15sDPXM0YXvWoUQtNnatSkK8m1zWQ6NkjJ67gSu7pEjPrWXd1lmWOTuVz8s3HzOz-GJc8aSXqm-kJUZMc22r5nxV9jHbb59eFhYC2vPoPKLBXcg-yREQzUpF-6LsPBfdpv-tcsWsXoUivjKxbo_8gNTvH9qqLgTlJovwnkaDyLcPqT9RqtW8ATTkk6FcA3JrVWeZfSjJLMOQb3L6cyHkhQheQKeidPHtzq5_pDgkcJSmxppGBd8720Xp8WrMm',
-      aspect: 'landscape',
-    },
-    {
-      id: 3,
-      title: 'Midnight Runner GTR',
-      creator: '@kai_works',
-      avatar: null,
-      avatarInitial: 'K',
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuBHNcdsgszUHbz20v14p-dxPnqEV6BOq4wQXh_5RLbyEuOl4L6-xtgl8IAeU7Cany_ZFPI3t0nwo13_WsKo6yCiXbsyWFtegpCtlcUHCSvktPsJzikw_7NkqfUINB3ZRb3mo9zwPKp35j-riN4urK1RK0J_CDefhe0fjOk0h3I7iKbHOaCVsKQi5Ox1BW5oYtfGuw3Qsy_xze4JmfTxO-LB6sjgce6a4XFAJVE43fOsyhfsqeq1MPAWUTKa6kH5v8OcNxYFpXQX_UVn',
-      tags: ['Chameleon'],
-      aspect: 'portrait',
-    },
-    {
-      id: 4,
-      title: 'Stealth Mode RS7',
-      creator: '@audi_fanatic',
-      avatar: null,
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuAlG2eiawuDJLx6jRqfEZoVkSniNfMVLIvzNjH59HA7sF9q8_GNF7jjgDx9C-yCzTwpBmDht4x3xPWxysOV_6XoM4WAvadfiIwYWwsxqR2_qxA9rrBCGvqRibumVHQXW_y6zmr6Q3KjGfx01fyiMsPPaEB6H2zPcg02cIxedas_AIZcCju0iXaayK0zV4ha5iM0Wt9Nl6t2_oZbpAiaFB8uFl9ynCbnRIsSuCODvfcbuf2IwXvEpnzH0dgy1Gfte7KBi_pAZrYtuaQD',
-      aspect: 'square',
-    },
-    {
-      id: 5,
-      title: 'Drift Spec M4',
-      creator: '@sideways_sam',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCsH4eDKFEFqigYwdpKfAQNbQ0A2tQSB9HyOJ6D41E6WufNUnQnWG5F-di2UMHnUwF8ei_o9rkcySQnBtiogdjR2bt4R7pcPZIbEvAJTbTp93tucpdGaEyFYojZTEwwp7TPdB0Jhi6lw8oOqXG9ZoMqxMNzMS_2embG7sO4OIbfwbE84q4itVlEgLn7AROEghKc5TpjEgX92TN-Nas7d5rgulu58FruWRB1yPVQ_gIH4IsP70PMKibFNCdf1XdPbN5MBqGTKTb3AS6y',
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuC5ZggYKJ4T9Q3uUR5h6uYOGspW0AWN9O0crYbJDJ-UEmFwjXwmrjGZM8EnrxyUcdp2ZwYQI5OXvfrp9f-lSUtI1j3Vgv9MJif3U4gx9WJx59hzmHpW1h-GjcSmSdnhVpkQ4bu4vJsO_0s1KFIQvQhQXJIaM2pXyeCbYYj6q0VIzzMRRsM8ZuLj5N45ynE6fyK7BpeC-Rkm1nsiIscd2DlMLsu1rJzEFZO2yujEnZUdjkIpoxFzHnreZJhtyyvCtj5qZUzleTQ_n1DY',
-      tags: ['Satin White'],
-      aspect: 'portrait',
-    },
-    {
-      id: 6,
-      title: 'Cherry Bomb Supra',
-      creator: '@jdm_king',
-      avatar: null,
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuAb3PhsvqgkVJ6Ynp6DXBkbl_YkIeiO-9JUNvaV34NPig6m76b1jLgdqXaVxkUjZMnDmJyRriWLtY1XHlOSUmJOEBvT1zHa8l7BAq54xF_hdkPPBUvn4y9_yIVUmqbyf__l4m554Ex3OMLf1bTF9f0rsh6ZfOXVY4m_TdldS4mLAfPlSZuCZb8hGrOVY_gJ7iloYZ0ZsYt6AIAw7_IbOUa0R44krY02gwMNfMl1lASn3F9uF6--Qd1draVf78W9lsYWrgZzxR6Tls5j',
-      aspect: 'landscape',
-    },
-    {
-      id: 7,
-      title: 'Alcantara Custom',
-      creator: '@stitch_works',
-      avatar: null,
-      image:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuBt79p3YRy1J_d3vMJHA6hPQYmDHWzQjLxG5ap7xBpOgLgjiq948ESfJf8kr-YHbGYKJ3tWnwRliMoIw456DeWsVtCuvJU3BpOlATSDLbXpLNrCo5cm_NP6FweBr1xD68lcqExnoubbdGUwGBPTrngK8mw1yRxmYQj7bVX1ynC5J724Gd4nzPA_G7NDhUW2JS7Tn3OuCWn1EFtWTL07HxueOyXZjG0a3buIP48qez0436gYjVOuUDOYBZ_gnjhizd6AaQFi1J_R6RQc',
-      tags: ['Interior'],
-      aspect: 'portrait',
-    },
-  ];
+  const showcaseItems = showcaseEntries.map((item) => ({
+    ...item,
+    badge: item.badge === 'Wrap of the Month' ? t('wrapOfTheMonth') : item.badge,
+  }));
+  const filteredItems =
+    activeFilter === 'all'
+      ? showcaseItems
+      : showcaseItems.filter((item) => item.filter === activeFilter);
 
   return (
     <div className="min-h-screen bg-[#131022] font-[family-name:var(--font-sans)] text-white">
@@ -129,7 +67,7 @@ export default function CommunityShowcase() {
 
       <main className="mx-auto max-w-7xl px-4 py-8 pb-32 sm:px-6 lg:px-8">
         <div className="columns-1 gap-6 space-y-6 sm:columns-2 lg:columns-3 xl:columns-4">
-          {showcaseItems.map((item, index) => (
+          {filteredItems.map((item, index) => (
             <motion.div
               key={item.id}
               className="group relative break-inside-avoid overflow-hidden rounded-lg border border-white/5 bg-[#1c1833] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_-5px_rgba(71,37,244,0.5)]"
@@ -149,7 +87,7 @@ export default function CommunityShowcase() {
                 <img
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   src={item.image}
-                  alt={item.title}
+                  alt={item.imageAlt}
                 />
                 <div
                   className={`absolute inset-0 bg-gradient-to-t from-black/90 ${
@@ -180,13 +118,17 @@ export default function CommunityShowcase() {
                       ))}
                     </div>
                   )}
-                  <h3
-                    className={`mb-1 font-bold text-white ${
+                  <Link
+                    href={getShowcaseUrl(item.slug)}
+                    className={`mb-1 block font-bold text-white hover:text-[#c7bbff] ${
                       item.aspect === 'landscape' ? 'text-lg' : 'text-xl'
                     }`}
                   >
                     {item.title}
-                  </h3>
+                  </Link>
+                  <p className="mb-3 line-clamp-2 text-sm text-slate-200/85">
+                    {item.description}
+                  </p>
 
                   <div className="flex items-center justify-between border-t border-white/10 pt-3">
                     <div className="flex items-center gap-2">
@@ -208,6 +150,14 @@ export default function CommunityShowcase() {
                     <span className="inline-flex items-center rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-xs font-semibold tracking-wide text-white/90">
                       DEMO
                     </span>
+                  </div>
+                  <div className="mt-3">
+                    <Link
+                      href={getShowcaseUrl(item.slug)}
+                      className="text-sm font-semibold text-[#c7bbff] hover:text-white"
+                    >
+                      View case study
+                    </Link>
                   </div>
                 </div>
               </div>
