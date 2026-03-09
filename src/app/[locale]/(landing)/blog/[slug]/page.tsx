@@ -105,9 +105,17 @@ export default async function BlogDetailPage({
         post={{
           headline: post.title || slug,
           description: post.description || '',
-          image: getPostOgImageUrl(post.image, `${canonicalUrl}/opengraph-image`),
+          image: getPostOgImageUrl(
+            post.image,
+            `${canonicalUrl}/opengraph-image`
+          ),
           datePublished: post.created_at_iso || '',
           dateModified: post.created_at_iso || '',
+          faqs:
+            post.faqs?.map((faq) => ({
+              question: faq.question,
+              answer: faq.answer,
+            })) || [],
         }}
         url={canonicalUrl}
       />

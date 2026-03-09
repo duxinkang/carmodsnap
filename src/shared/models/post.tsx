@@ -3,11 +3,11 @@ import { and, count, desc, eq, like } from 'drizzle-orm';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import moment from 'moment';
 
-import { defaultLocale } from '@/config/locale';
 import { db } from '@/core/db';
 import { logsSource, pagesSource, postsSource } from '@/core/docs/source';
 import { generateTOC } from '@/core/docs/toc';
 import { post } from '@/config/db/schema';
+import { defaultLocale } from '@/config/locale';
 import { MarkdownContent } from '@/shared/blocks/common/markdown-content';
 import {
   Category as BlogCategoryType,
@@ -245,6 +245,10 @@ export async function getLocalPost({
     author_role: '',
     image: frontmatter.image || '',
     url: getLocalizedPostUrl(`${postPrefix}${slug}`, locale),
+    answer_summary: frontmatter.answer_summary || '',
+    key_stats: frontmatter.key_stats || [],
+    authority_sources: frontmatter.authority_sources || [],
+    faqs: frontmatter.faqs || [],
   };
 
   return post;
@@ -487,7 +491,10 @@ export async function getLocalPostsAndCategories({
   type?: PostType;
 }) {
   const localPostsList: BlogPostType[] = [];
-  const categoriesMap = new Map<string, { slug: string; title: string; count: number }>();
+  const categoriesMap = new Map<
+    string,
+    { slug: string; title: string; count: number }
+  >();
 
   // get posts from local files
   let localPosts = postsSource.getPages(locale);
@@ -533,12 +540,15 @@ export async function getLocalPostsAndCategories({
       postCategories.forEach((catSlug: string) => {
         const existing = categoriesMap.get(catSlug);
         if (existing) {
-          categoriesMap.set(catSlug, { ...existing, count: existing.count + 1 });
+          categoriesMap.set(catSlug, {
+            ...existing,
+            count: existing.count + 1,
+          });
         } else {
           // Convert slug to title case
           const title = catSlug
             .split('-')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
           categoriesMap.set(catSlug, { slug: catSlug, title, count: 1 });
         }
@@ -559,13 +569,17 @@ export async function getLocalPostsAndCategories({
         version: frontmatter.version || '',
         tags: frontmatter.tags || [],
         categories: postCategories,
+        answer_summary: frontmatter.answer_summary || '',
+        key_stats: frontmatter.key_stats || [],
+        authority_sources: frontmatter.authority_sources || [],
+        faqs: frontmatter.faqs || [],
         body,
       };
     })
   );
 
   // Convert categories map to array
-  const categories = Array.from(categoriesMap.values()).map(cat => ({
+  const categories = Array.from(categoriesMap.values()).map((cat) => ({
     id: cat.slug,
     slug: cat.slug,
     title: cat.title,

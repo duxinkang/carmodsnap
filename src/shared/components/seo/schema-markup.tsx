@@ -9,6 +9,13 @@ interface ArticleSchema {
   author?: string;
 }
 
+interface FAQPageSchema {
+  questions: {
+    question: string;
+    answer: string;
+  }[];
+}
+
 interface ProductSchema {
   name: string;
   description: string;
@@ -338,6 +345,26 @@ export function SoftwareApplicationSchemaMarkup({
   );
 }
 
+export function FAQPageSchemaMarkup({ faqPage }: { faqPage: FAQPageSchema }) {
+  const schema = {
+    mainEntity: faqPage.questions.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: generateSchema('FAQPage', schema) }}
+    />
+  );
+}
+
 export function CollectionPageSchemaMarkup({
   page,
 }: {
@@ -435,7 +462,9 @@ export function BlogPostSchemaMarkup({
   post,
   url,
 }: {
-  post: ArticleSchema;
+  post: ArticleSchema & {
+    faqs?: FAQPageSchema['questions'];
+  };
   url: string;
 }) {
   const breadcrumbs = {
@@ -450,6 +479,9 @@ export function BlogPostSchemaMarkup({
     <>
       <ArticleSchemaMarkup post={{ ...post, url }} />
       <BreadcrumbListSchemaMarkup items={breadcrumbs.itemListElement} />
+      {post.faqs && post.faqs.length > 0 ? (
+        <FAQPageSchemaMarkup faqPage={{ questions: post.faqs }} />
+      ) : null}
     </>
   );
 }

@@ -2,6 +2,24 @@ import { ReactNode } from 'react';
 
 import type { TOCItemType } from '@/core/docs/toc';
 
+export interface PostKeyStat {
+  value: string;
+  label: string;
+  source?: string;
+  url?: string;
+}
+
+export interface PostAuthoritySource {
+  title: string;
+  url: string;
+  publisher?: string;
+}
+
+export interface PostFaq {
+  question: string;
+  answer: string;
+}
+
 export interface Blog {
   id?: string;
   sr_only_title?: string;
@@ -33,6 +51,10 @@ export interface Post {
   tags?: string[];
   version?: string;
   date?: string;
+  answer_summary?: string;
+  key_stats?: PostKeyStat[];
+  authority_sources?: PostAuthoritySource[];
+  faqs?: PostFaq[];
 }
 
 export interface Category {
