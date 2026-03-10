@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import NextImage from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Check,
@@ -26,7 +27,6 @@ import {
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
-import { Link } from '@/core/i18n/navigation';
 import { AITaskStatus } from '@/extensions/ai/types';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
@@ -44,7 +44,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import { Separator } from '@/shared/components/ui/separator';
 import { Switch } from '@/shared/components/ui/switch';
 import { useAppContext } from '@/shared/contexts/app';
 import { ConfiguratorPanel } from '@/shared/lib/analytics/events';
@@ -1067,6 +1066,25 @@ interface BackendTask {
   taskResult: string | null;
 }
 
+type TaskResultItem =
+  | string
+  | {
+      url?: string;
+      uri?: string;
+      image?: string;
+      src?: string;
+      imageUrl?: string;
+    };
+
+type TaskResultPayload =
+  | {
+      output?: string | TaskResultItem[];
+      images?: TaskResultItem[];
+      data?: string | TaskResultItem[];
+      errorMessage?: string;
+    }
+  | null;
+
 const SHOT_TYPES: ShowcaseShotType[] = ['panorama', 'closeup'];
 
 const getInitialShowcaseStates = (): ShowcaseStates => ({
@@ -1084,16 +1102,24 @@ const getInitialShowcaseStates = (): ShowcaseStates => ({
   },
 });
 
-function parseTaskResult(taskResult: string | null): any {
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return 'Unknown error';
+}
+
+function parseTaskResult(taskResult: string | null): TaskResultPayload {
   if (!taskResult) return null;
   try {
-    return JSON.parse(taskResult);
+    return JSON.parse(taskResult) as TaskResultPayload;
   } catch {
     return null;
   }
 }
 
-function extractImageUrls(result: any): string[] {
+function extractImageUrls(result: TaskResultPayload): string[] {
   if (!result) return [];
   const output = result.output ?? result.images ?? result.data;
   if (!output) return [];
@@ -1234,7 +1260,7 @@ export default function CarModderConfigurator() {
     null
   );
   const [isMounted, setIsMounted] = useState(false);
-  const [testMode, setTestMode] = useState(false);
+  const [testMode] = useState(false);
   const [showAllCars, setShowAllCars] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [carSearch, setCarSearch] = useState('');
@@ -1574,7 +1600,7 @@ export default function CarModderConfigurator() {
     }
 
     const activeAccents = Object.entries(accentOptions)
-      .filter(([_, enabled]) => enabled)
+      .filter(([, enabled]) => enabled)
       .map(([id]) => ACCENT_OPTIONS.find((a) => a.id === id))
       .map((a) => (isZh ? a?.nameZh : a?.name))
       .filter(Boolean);
@@ -1748,7 +1774,8 @@ export default function CarModderConfigurator() {
             [shotType]: next,
           };
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const message = getErrorMessage(error);
         console.error('poll shot task failed:', error);
         setShowcaseStates((prev) => ({
           ...prev,
@@ -1756,7 +1783,7 @@ export default function CarModderConfigurator() {
             ...prev[shotType],
             status: AITaskStatus.FAILED,
             taskId: null,
-            error: `${t('queryFailed')}: ${error.message}`,
+            error: `${t('queryFailed')}: ${message}`,
           },
         }));
       }
@@ -1999,6 +2026,7 @@ export default function CarModderConfigurator() {
       buildShowcasePrompts,
       getReferenceImage,
       isZh,
+      locale,
       selectedCar.customInput?.imageUrl,
       t,
     ]
@@ -2075,7 +2103,8 @@ export default function CarModderConfigurator() {
         setActiveShot('closeup');
       }
       await fetchUserCredits();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error);
       console.error('生成图片失败:', error);
       trackProductEvent('carmodder_generation_failed', {
         locale,
@@ -2085,9 +2114,9 @@ export default function CarModderConfigurator() {
         duration_ms: generationStartTime
           ? Date.now() - generationStartTime
           : undefined,
-        error: error.message,
+        error: message,
       });
-      toast.error(`${t('generationFailed')}: ${error.message}`);
+      toast.error(`${t('generationFailed')}: ${message}`);
       resetTaskState();
       setActiveBundleId(null);
     }
@@ -2135,7 +2164,8 @@ export default function CarModderConfigurator() {
       setActiveBundleId(data.bundleId);
       data.tasks.forEach((task) => applyShowcaseTask(task));
       await fetchUserCredits();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = getErrorMessage(error);
       trackProductEvent('carmodder_generation_failed', {
         locale,
         user_id: user?.id,
@@ -2145,9 +2175,9 @@ export default function CarModderConfigurator() {
         duration_ms: generationStartTime
           ? Date.now() - generationStartTime
           : undefined,
-        error: error.message,
+        error: message,
       });
-      toast.error(`${t('generationFailed')}: ${error.message}`);
+      toast.error(`${t('generationFailed')}: ${message}`);
       setShowcaseStates((prev) => ({
         ...prev,
         [shotType]: {
@@ -2258,7 +2288,7 @@ export default function CarModderConfigurator() {
       return sum + (mod?.price || 0);
     }, 0);
     basePrice += Object.entries(accentOptions)
-      .filter(([_, enabled]) => enabled)
+      .filter(([, enabled]) => enabled)
       .reduce((sum, [accentId]) => {
         const accent = ACCENT_OPTIONS.find((a) => a.id === accentId);
         return sum + (accent?.price || 0);
@@ -2286,13 +2316,6 @@ export default function CarModderConfigurator() {
   const selectedWheelColor =
     WHEEL_COLORS.find((item) => item.id === wheelSpec.colorId) ??
     WHEEL_COLORS[0];
-  const selectedConcavity =
-    WHEEL_CONCAVITY_OPTIONS.find((item) => item.id === wheelSpec.concavity) ??
-    WHEEL_CONCAVITY_OPTIONS[1];
-  const wheelSpecExtraCost =
-    (WHEEL_SIZE_EXTRA_COST[wheelSpec.size] ?? 0) +
-    selectedWheelColor.extraCost +
-    selectedConcavity.extraCost;
   const canUndo = historyState.index > 0;
   const canRedo =
     historyState.index >= 0 &&
@@ -2515,10 +2538,13 @@ export default function CarModderConfigurator() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
                       >
-                        <img
+                        <NextImage
                           src={selectedCar.localImage}
                           alt={`${isZh ? selectedCar.nameZh : selectedCar.name} before`}
                           className="absolute inset-0 h-full w-full object-cover"
+                          fill
+                          priority
+                          sizes="(max-width: 1024px) 100vw, 60vw"
                           onError={(e) => {
                             (e.currentTarget as HTMLImageElement).src =
                               'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1280&h=720&fit=crop';
@@ -2532,11 +2558,13 @@ export default function CarModderConfigurator() {
                                 clipPath: `inset(0 0 0 ${comparePosition}%)`,
                               }}
                             >
-                              <img
+                              <NextImage
                                 key={activeImage.url}
                                 src={activeImage.url}
                                 alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
                                 className="absolute inset-0 h-full w-full object-cover"
+                                fill
+                                sizes="(max-width: 1024px) 100vw, 60vw"
                                 onError={(e) => {
                                   (e.currentTarget as HTMLImageElement).src =
                                     selectedCar.localImage;
@@ -2549,11 +2577,13 @@ export default function CarModderConfigurator() {
                             />
                           </>
                         ) : (
-                          <img
+                          <NextImage
                             key={activeImage.url}
                             src={activeImage.url}
                             alt={`${isZh ? selectedCar.nameZh : selectedCar.name} ${t('modEffect')}`}
                             className="absolute inset-0 h-full w-full object-cover"
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 60vw"
                             onError={(e) => {
                               (e.currentTarget as HTMLImageElement).src =
                                 selectedCar.localImage;
@@ -2669,10 +2699,12 @@ export default function CarModderConfigurator() {
                         className="relative flex min-h-[360px] items-center justify-center overflow-hidden bg-[#131022] sm:min-h-[420px] lg:min-h-[520px] xl:min-h-[560px]"
                         whileHover={{ scale: 1.02 }}
                       >
-                        <img
+                        <NextImage
                           src={selectedCar.localImage}
                           alt={isZh ? selectedCar.nameZh : selectedCar.name}
                           className="h-full w-full object-cover opacity-70 transition-opacity duration-300 hover:opacity-90"
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 60vw"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src =
                               'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=450&fit=crop';
@@ -3209,7 +3241,7 @@ export default function CarModderConfigurator() {
                     <div className="flex items-center justify-between border-b border-white/10 pb-3 text-sm">
                       <span className="text-slate-300">{t('spec')}</span>
                       <span className="text-white">
-                        {wheelSpec.size}" / {wheelSpec.spokeCount}
+                        {wheelSpec.size}&quot; / {wheelSpec.spokeCount}
                         {t('spokeUnit')}
                       </span>
                     </div>
@@ -3541,7 +3573,7 @@ export default function CarModderConfigurator() {
                                   <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                                     <div className="flex items-start gap-4">
                                       <div className="relative h-18 w-18 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[#141122]">
-                                        <img
+                                        <NextImage
                                           src={getWheelThumbnail(
                                             selectedWheel.id
                                           )}
@@ -3551,7 +3583,8 @@ export default function CarModderConfigurator() {
                                               : selectedWheel.name
                                           }
                                           className="h-full w-full object-cover"
-                                          loading="lazy"
+                                          fill
+                                          sizes="72px"
                                           onError={(e) => {
                                             e.currentTarget.src =
                                               selectedCar.localImage;
@@ -3571,7 +3604,7 @@ export default function CarModderConfigurator() {
                                         </p>
                                         <div className="mt-3 flex items-center justify-between gap-3">
                                           <div className="text-xs text-slate-300">
-                                            {wheelSpec.size}" ·{' '}
+                                            {wheelSpec.size}&quot; ·{' '}
                                             {wheelSpec.spokeCount}
                                             {t('spokeUnit')}
                                           </div>
@@ -3600,13 +3633,14 @@ export default function CarModderConfigurator() {
                                       >
                                         <div className="flex items-start gap-4">
                                           <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[#141122]">
-                                            <img
+                                            <NextImage
                                               src={getWheelThumbnail(wheel.id)}
                                               alt={
                                                 isZh ? wheel.nameZh : wheel.name
                                               }
                                               className="h-full w-full object-cover"
-                                              loading="lazy"
+                                              fill
+                                              sizes="64px"
                                               onError={(e) => {
                                                 e.currentTarget.src =
                                                   selectedCar.localImage;
@@ -3678,7 +3712,7 @@ export default function CarModderConfigurator() {
                                                   key={size}
                                                   value={String(size)}
                                                 >
-                                                  {size}" (
+                                                  {size}&quot; (
                                                   {WHEEL_SIZE_EXTRA_COST[size] >
                                                   0
                                                     ? `+${formatPrice(WHEEL_SIZE_EXTRA_COST[size])}`
@@ -3814,11 +3848,12 @@ export default function CarModderConfigurator() {
                                     >
                                       <div className="flex min-w-0 gap-4">
                                         <div className="relative h-18 w-18 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-[#141122]">
-                                          <img
+                                          <NextImage
                                             src={getModThumbnail(mod.id)}
                                             alt={isZh ? mod.nameZh : mod.name}
                                             className="h-full w-full object-cover"
-                                            loading="lazy"
+                                            fill
+                                            sizes="72px"
                                             onError={(e) => {
                                               e.currentTarget.src =
                                                 selectedCar.localImage;
@@ -3932,7 +3967,7 @@ export default function CarModderConfigurator() {
                             {isZh
                               ? entry.selectedCar.nameZh
                               : entry.selectedCar.name}{' '}
-                            · {entry.wheelSpec.size}" ·{' '}
+                            · {entry.wheelSpec.size}&quot; ·{' '}
                             {idx === historyState.index
                               ? t('current')
                               : `${t('step')} ${idx + 1}`}

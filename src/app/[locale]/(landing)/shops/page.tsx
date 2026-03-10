@@ -1,10 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import {
+  ArrowLeft,
+  MapPin,
+  Phone,
+  Star,
+  Store,
+  Globe,
+  LocateFixed,
+  Paintbrush,
+  Verified,
+} from 'lucide-react';
 
 interface Shop {
   id: string;
@@ -32,20 +44,28 @@ interface Shop {
 }
 
 interface SearchResponse {
-  list: Shop[];
-  total: number;
-  page: number;
-  limit: number;
-  hasMore: boolean;
+  code: number;
+  message?: string;
+  data: {
+    list: Shop[];
+    total: number;
+    page: number;
+    limit: number;
+    hasMore: boolean;
+  };
 }
 
 interface NearbyResponse {
-  list: Shop[];
-  total: number;
-  location: {
-    latitude: string;
-    longitude: string;
-    source: string;
+  code: number;
+  message?: string;
+  data: {
+    list: Shop[];
+    total: number;
+    location?: {
+      latitude?: string;
+      longitude?: string;
+      source?: string;
+    };
   };
 }
 
@@ -64,52 +84,36 @@ export default function ShopsSearchPage() {
 
   // 自动定位状态
   const [autoLocation, setAutoLocation] = useState(false);
-  const [userLocation, setUserLocation] = useState<{ city?: string; latitude?: string; longitude?: string }>({});
-
   // 从 URL 参数获取搜索条件
   const city = searchParams.get('city') || '';
   const state = searchParams.get('state') || '';
   const serviceType = searchParams.get('service') || '';
   const postalCode = searchParams.get('postal') || '';
 
-  useEffect(() => {
-    // 如果没有搜索条件，自动获取用户位置并搜索附近店铺
-    if (!city && !state && !postalCode) {
-      setAutoLocation(true);
-      fetchNearbyShops();
-    } else {
-      fetchShops();
-    }
-  }, [city, state, serviceType, postalCode, sortBy, certifiedOnly]);
-
-  const fetchNearbyShops = async () => {
+  const fetchNearbyShops = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
       const response = await fetch('/api/shops/nearby');
-      const result = await response.json();
+      const result = (await response.json()) as NearbyResponse;
 
       if (result.code === 0) {
         setShops(result.data.list || []);
         setTotal(result.data.total || 0);
-        setUserLocation({
-          latitude: result.data.location?.latitude,
-          longitude: result.data.location?.longitude,
-        });
       } else {
         setError(result.message || t('noShopsFound'));
       }
-    } catch (e: any) {
-      console.error('Failed to fetch nearby shops:', e);
+    } catch (error: unknown) {
+      console.error('Failed to fetch nearby shops:', error);
       setError(t('noShopsFound'));
     } finally {
       setLoading(false);
       setAutoLocation(false);
     }
-  };
+  }, [t]);
 
-  const fetchShops = async () => {
+  const fetchShops = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -123,7 +127,7 @@ export default function ShopsSearchPage() {
       params.set('sort_by', sortBy);
 
       const response = await fetch(`/api/shops/search?${params.toString()}`);
-      const result = await response.json();
+      const result = (await response.json()) as SearchResponse;
 
       if (result.code === 0) {
         setShops(result.data.list || []);
@@ -131,12 +135,37 @@ export default function ShopsSearchPage() {
       } else {
         setError(result.message || t('noShopsFound'));
       }
-    } catch (e: any) {
-      console.error('Failed to fetch shops:', e);
+    } catch (error: unknown) {
+      console.error('Failed to fetch shops:', error);
       setError(t('noShopsFound'));
     } finally {
       setLoading(false);
     }
+  }, [certifiedOnly, city, postalCode, serviceType, sortBy, state, t]);
+
+  useEffect(() => {
+    // 如果没有搜索条件，自动获取用户位置并搜索附近店铺
+    if (!city && !state && !postalCode) {
+      setAutoLocation(true);
+      fetchNearbyShops();
+    } else {
+      fetchShops();
+    }
+  }, [city, state, postalCode, fetchNearbyShops, fetchShops]);
+
+  const handleSortChange = (value: 'rating' | 'distance' | 'reviews') => {
+    setSortBy(value);
+  };
+
+  const formatRating = (rating: number) => {
+    return (rating / 100).toFixed(1);
+  };
+
+  const parseSortBy = (value: string): 'rating' | 'distance' | 'reviews' => {
+    if (value === 'distance' || value === 'reviews') {
+      return value;
+    }
+    return 'rating';
   };
 
   // 使用浏览器地理定位
@@ -161,14 +190,6 @@ export default function ShopsSearchPage() {
     );
   };
 
-  const handleSortChange = (value: 'rating' | 'distance' | 'reviews') => {
-    setSortBy(value);
-  };
-
-  const formatRating = (rating: number) => {
-    return (rating / 100).toFixed(1);
-  };
-
   return (
     <div className="min-h-screen bg-[#050505] text-white pt-24 pb-12 px-6">
       <div className="max-w-7xl mx-auto">
@@ -183,7 +204,7 @@ export default function ShopsSearchPage() {
               href="/#find-shop"
               className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
             >
-              <span className="material-icons text-sm">arrow_back</span>
+              <ArrowLeft className="h-4 w-4" />
               {t('backToSearch')}
             </Link>
           </div>
@@ -203,7 +224,7 @@ export default function ShopsSearchPage() {
                 onClick={useBrowserLocation}
                 className="px-4 py-2 bg-[#4725f4] hover:bg-[#361bb8] text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
               >
-                <span className="material-icons text-sm">my_location</span>
+                <LocateFixed className="h-4 w-4" />
                 {t('useCurrentLocation')}
               </button>
             )}
@@ -221,13 +242,13 @@ export default function ShopsSearchPage() {
             <div className="flex flex-wrap items-center gap-3">
               {city && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#4725f4]/20 text-[#4725f4] text-sm">
-                  <span className="material-icons text-sm">location_on</span>
+                  <MapPin className="h-4 w-4" />
                   {city}{state && `, ${state}`}
                 </span>
               )}
               {serviceType && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#4725f4]/20 text-[#4725f4] text-sm">
-                  <span className="material-icons text-sm">format_paint</span>
+                  <Paintbrush className="h-4 w-4" />
                   {t(serviceType) || serviceType}
                 </span>
               )}
@@ -236,7 +257,7 @@ export default function ShopsSearchPage() {
               <label className="text-sm text-gray-400">{t('sortBy')}:</label>
               <select
                 value={sortBy}
-                onChange={(e) => handleSortChange(e.target.value as any)}
+                onChange={(e) => handleSortChange(parseSortBy(e.target.value))}
                 className="bg-[#1c1830] border border-slate-700 text-white px-3 py-1.5 rounded-lg focus:outline-none focus:border-[#4725f4]"
               >
                 <option value="rating">{t('sortByRating')}</option>
@@ -264,13 +285,13 @@ export default function ShopsSearchPage() {
           </div>
         ) : error ? (
           <div className="text-center py-20">
-            <span className="material-icons text-6xl text-gray-600 mb-4">store</span>
+            <Store className="mx-auto mb-4 h-16 w-16 text-gray-600" />
             <h3 className="text-xl font-bold text-white mb-2">{t('noShopsFound')}</h3>
             <p className="text-gray-400">{t('tryDifferentSearch')}</p>
           </div>
         ) : shops.length === 0 ? (
           <div className="text-center py-20">
-            <span className="material-icons text-6xl text-gray-600 mb-4">store</span>
+            <Store className="mx-auto mb-4 h-16 w-16 text-gray-600" />
             <h3 className="text-xl font-bold text-white mb-2">{t('noShopsFound')}</h3>
             <p className="text-gray-400">{t('tryDifferentSearch')}</p>
           </div>
@@ -282,7 +303,7 @@ export default function ShopsSearchPage() {
               </div>
               {autoLocation && (
                 <div className="text-xs text-[#4725f4] flex items-center gap-1">
-                  <span className="material-icons text-xs">public</span>
+                  <Globe className="h-3.5 w-3.5" />
                   {t('fromIP')}
                 </div>
               )}
@@ -299,20 +320,23 @@ export default function ShopsSearchPage() {
                   {/* Shop Image */}
                   <div className="aspect-[16/9] overflow-hidden bg-[#1c1830]">
                     {shop.images ? (
-                      <img
+                      <Image
                         src={JSON.parse(shop.images)[0] || '/placeholder-shop.jpg'}
                         alt={shop.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        width={960}
+                        height={540}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="material-icons text-6xl text-gray-600">store</span>
+                        <Store className="h-16 w-16 text-gray-600" />
                       </div>
                     )}
                     {shop.certified && (
                       <div className="absolute top-3 right-3">
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#4725f4] text-white text-xs font-bold">
-                          <span className="material-icons text-xs">verified</span>
+                          <Verified className="h-3 w-3" />
                           Certified
                         </span>
                       </div>
@@ -320,7 +344,7 @@ export default function ShopsSearchPage() {
                     {shop.featured && (
                       <div className="absolute top-3 left-3">
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-500/90 text-black text-xs font-bold">
-                          <span className="material-icons text-xs">star</span>
+                          <Star className="h-3 w-3" />
                           Featured
                         </span>
                       </div>
@@ -328,7 +352,7 @@ export default function ShopsSearchPage() {
                     {shop.source && (
                       <div className="absolute bottom-3 right-3">
                         <span className="px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm text-white text-xs font-medium flex items-center gap-1">
-                          <span className="material-icons text-xs">public</span>
+                          <Globe className="h-3 w-3" />
                           {shop.source === 'google'
                             ? 'Google'
                             : shop.source === 'demo'
@@ -349,7 +373,7 @@ export default function ShopsSearchPage() {
                         </p>
                       </div>
                       <div className="flex items-center gap-1 ml-2">
-                        <span className="material-icons text-yellow-500 text-sm">star</span>
+                        <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
                         <span className="text-sm font-bold text-white">
                           {shop.source === 'demo' ? 'N/A' : formatRating(shop.rating)}
                         </span>
@@ -384,7 +408,7 @@ export default function ShopsSearchPage() {
                           href={`tel:${shop.phone}`}
                           className="px-4 py-2 bg-[#1c1830] hover:bg-[#26233b] text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-1"
                         >
-                          <span className="material-icons text-sm">phone</span>
+                          <Phone className="h-4 w-4" />
                         </a>
                       )}
                     </div>
@@ -396,7 +420,6 @@ export default function ShopsSearchPage() {
         )}
       </div>
 
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     </div>
   );
 }

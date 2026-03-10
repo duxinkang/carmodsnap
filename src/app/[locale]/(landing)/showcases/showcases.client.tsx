@@ -1,7 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
+import {
+  AutoAwesome,
+  MapPin,
+  MoreVertical,
+  Wallpaper,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { Link } from '@/core/i18n/navigation';
@@ -34,7 +41,7 @@ export default function CommunityShowcase() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-4 sm:px-6 md:flex-row lg:px-8">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4725f4] shadow-[0_0_20px_rgba(71,37,244,0.5)]">
-              <span className="material-icons text-white">auto_fix_high</span>
+              <AutoAwesome className="h-5 w-5 text-white" />
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight uppercase">
@@ -84,10 +91,19 @@ export default function CommunityShowcase() {
                       : 'aspect-square'
                 }`}
               >
-                <img
+                <Image
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   src={item.image}
                   alt={item.imageAlt}
+                  width={960}
+                  height={
+                    item.aspect === 'portrait'
+                      ? 1280
+                      : item.aspect === 'landscape'
+                        ? 540
+                        : 960
+                  }
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
                 />
                 <div
                   className={`absolute inset-0 bg-gradient-to-t from-black/90 ${
@@ -133,10 +149,12 @@ export default function CommunityShowcase() {
                   <div className="flex items-center justify-between border-t border-white/10 pt-3">
                     <div className="flex items-center gap-2">
                       {item.avatar ? (
-                        <img
-                          className="h-8 w-8 rounded-full border border-white/20"
+                        <Image
+                          className="h-8 w-8 rounded-full border border-white/20 object-cover"
                           src={item.avatar}
                           alt={item.creator}
+                          width={32}
+                          height={32}
                         />
                       ) : item.avatarInitial ? (
                         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-purple-500 to-[#4725f4] text-xs font-bold text-white">
@@ -192,7 +210,7 @@ export default function CommunityShowcase() {
         <div className="pointer-events-auto flex max-w-full items-center gap-4 overflow-hidden rounded-full border border-white/15 bg-[#17132a]/88 p-2 pr-2 pl-6 shadow-[0_0_30px_-5px_rgba(71,37,244,0.7)] backdrop-blur-xl">
           <div className="flex hidden items-center gap-4 border-r border-white/15 pr-4 sm:flex">
             <button className="group relative flex flex-col items-center justify-center text-slate-200/85 transition-colors hover:text-white">
-              <span className="material-icons text-2xl">wallpaper</span>
+              <Wallpaper className="h-6 w-6" />
               <span className="pointer-events-none absolute -top-10 rounded bg-black px-2 py-1 text-[10px] whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
                 {t('saveWallpaper')}
               </span>
@@ -206,7 +224,7 @@ export default function CommunityShowcase() {
           </div>
 
           <button className="text-slate-200/85 sm:hidden">
-            <span className="material-icons">more_vert</span>
+            <MoreVertical className="h-5 w-5" />
           </button>
 
           <motion.button
@@ -215,7 +233,7 @@ export default function CommunityShowcase() {
             whileTap={{ scale: 0.95 }}
           >
             <span className="absolute inset-0 h-full w-full -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></span>
-            <span className="material-icons text-xl">location_on</span>
+            <MapPin className="h-5 w-5" />
             <span className="whitespace-nowrap">{t('findLocalWrapShop')}</span>
           </motion.button>
         </div>
@@ -226,18 +244,6 @@ export default function CommunityShowcase() {
         <div className="absolute right-0 bottom-0 h-[500px] w-[500px] rounded-full bg-purple-600 mix-blend-screen blur-[128px] filter"></div>
       </div>
 
-      <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet"
-      />
     </div>
   );
 }

@@ -1,8 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import {
+  ArrowRight,
+  ChevronDown,
+  MoreVertical,
+  Palette,
+  PlayCircle,
+  Rotate3D,
+  Share2,
+  ShoppingBag,
+  Wallpaper,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { preconnect, preload } from 'react-dom';
 
@@ -136,9 +148,7 @@ export default function CarModderLanding() {
                   <div className="absolute inset-0 translate-y-full bg-white/20 transition-transform duration-300 group-hover:translate-y-0"></div>
                   <span className="relative flex items-center justify-center gap-2">
                     {t('startModding')}
-                    <span className="material-icons transition-transform group-hover:translate-x-1">
-                      tune
-                    </span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
               </motion.div>
@@ -147,9 +157,7 @@ export default function CarModderLanding() {
                 className="flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-8 py-4 text-base font-medium text-slate-50 transition-colors hover:bg-white/[0.12] sm:w-auto"
                 whileHover={{ scale: 1.05 }}
               >
-                <span className="material-icons text-slate-200">
-                  play_circle
-                </span>
+                <PlayCircle className="h-5 w-5 text-slate-200" />
                 {t('watchDemo')}
               </motion.button>
             </motion.div>
@@ -195,33 +203,40 @@ export default function CarModderLanding() {
               <CarouselContent>
                 <CarouselItem>
                   <div className="group relative z-10 w-full transform cursor-pointer transition-transform duration-700 hover:scale-105">
-                    <img
+                    <Image
                       className="h-auto w-full object-contain drop-shadow-2xl"
                       src={heroImage}
                       alt="Dark sports car with custom wheels and body kit in neon lighting - CarModSnap 3D visualization"
-                      loading="eager"
-                      fetchPriority="high"
-                      decoding="async"
+                      width={1600}
+                      height={900}
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 66vw"
                     />
                   </div>
                 </CarouselItem>
 
                 <CarouselItem>
                   <div className="group relative z-10 w-full transform cursor-pointer transition-transform duration-700 hover:scale-105">
-                    <img
+                    <Image
                       className="h-auto w-full object-contain drop-shadow-2xl"
                       src="/front_img/image_巴塞罗那MWC｜小米Vision..._7.png"
                       alt="CarModSnap platform demonstration at Barcelona MWC technology showcase"
+                      width={1600}
+                      height={900}
+                      sizes="(max-width: 1024px) 100vw, 66vw"
                     />
                   </div>
                 </CarouselItem>
 
                 <CarouselItem>
                   <div className="group relative z-10 w-full transform cursor-pointer transition-transform duration-700 hover:scale-105">
-                    <img
+                    <Image
                       className="h-auto w-full object-contain drop-shadow-2xl"
                       src="/front_img/image_巴塞罗那MWC｜小米Vision..._9.png"
                       alt="AI-powered car customization technology displayed at Barcelona MWC"
+                      width={1600}
+                      height={900}
+                      sizes="(max-width: 1024px) 100vw, 66vw"
                     />
                   </div>
                 </CarouselItem>
@@ -243,9 +258,7 @@ export default function CarModderLanding() {
                 <div className="h-8 w-8 cursor-pointer rounded-full bg-gray-200 ring-2 ring-transparent ring-offset-2 ring-offset-black transition-all hover:ring-white"></div>
                 <div className="h-8 w-8 cursor-pointer rounded-full bg-yellow-400 ring-2 ring-transparent ring-offset-2 ring-offset-black transition-all hover:ring-white"></div>
                 <div className="my-1 h-px w-full bg-white/20"></div>
-                <span className="material-icons cursor-pointer text-xl text-white/50 hover:text-white">
-                  palette
-                </span>
+                <Palette className="h-5 w-5 cursor-pointer text-white/50 hover:text-white" />
               </div>
             </motion.div>
           </div>
@@ -255,42 +268,42 @@ export default function CarModderLanding() {
       <div className="relative z-20 overflow-hidden border-y border-white/5 bg-[#131022] py-6">
         <motion.div className="animate-marquee flex items-center gap-16 whitespace-nowrap opacity-80 transition-opacity duration-500 hover:opacity-100">
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <span className="material-icons text-[#4725f4]">3d_rotation</span>{' '}
+            <Rotate3D className="h-5 w-5 text-[#4725f4]" />{' '}
             {t('threeSixtyVisualization')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <span className="material-icons text-[#4725f4]">blur_on</span>{' '}
+            <Palette className="h-5 w-5 text-[#4725f4]" />{' '}
             {t('realTimeRendering')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <span className="material-icons text-[#4725f4]">share</span>{' '}
+            <Share2 className="h-5 w-5 text-[#4725f4]" />{' '}
             {t('instantSharing')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <span className="material-icons text-[#4725f4]">shopping_bag</span>{' '}
+            <ShoppingBag className="h-5 w-5 text-[#4725f4]" />{' '}
             {t('oneClickOrdering')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <span className="material-icons text-[#4725f4]">3d_rotation</span>{' '}
+            <Rotate3D className="h-5 w-5 text-[#4725f4]" />{' '}
             {t('threeSixtyVisualization')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <span className="material-icons text-[#4725f4]">blur_on</span>{' '}
+            <Palette className="h-5 w-5 text-[#4725f4]" />{' '}
             {t('realTimeRendering')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <span className="material-icons text-[#4725f4]">share</span>{' '}
+            <Share2 className="h-5 w-5 text-[#4725f4]" />{' '}
             {t('instantSharing')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <span className="material-icons text-[#4725f4]">shopping_bag</span>{' '}
+            <ShoppingBag className="h-5 w-5 text-[#4725f4]" />{' '}
             {t('oneClickOrdering')}
           </div>
         </motion.div>
@@ -313,8 +326,7 @@ export default function CarModderLanding() {
               className="hidden items-center gap-2 text-[#4725f4] transition-colors hover:text-white md:flex"
               href="/showcases"
             >
-              {t('viewGallery')}{' '}
-              <span className="material-icons text-sm">arrow_forward</span>
+              {t('viewGallery')} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -328,10 +340,13 @@ export default function CarModderLanding() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <div className="aspect-[4/3] overflow-hidden">
-                  <img
+                  <Image
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     src={config.image}
                     alt={`${config.name} - Custom car modification with wheels and body kit - CarModSnap community build`}
+                    width={960}
+                    height={720}
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#131022] to-transparent opacity-80"></div>
                 </div>
@@ -435,9 +450,7 @@ export default function CarModderLanding() {
             >
               <span className="relative flex items-center justify-center gap-2">
                 Create Your Transformation
-                <span className="material-icons transition-transform group-hover:translate-x-1">
-                  arrow_forward
-                </span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
             </Link>
           </motion.div>
@@ -584,9 +597,7 @@ export default function CarModderLanding() {
                   <span className="text-lg font-medium text-white transition-colors group-hover:text-[#4725f4]">
                     {faq.question}
                   </span>
-                  <span className="material-icons text-slate-300 transition-transform group-open:rotate-180 group-open:text-[#4725f4]">
-                    expand_more
-                  </span>
+                  <ChevronDown className="h-5 w-5 text-slate-300 transition-transform group-open:rotate-180 group-open:text-[#4725f4]" />
                 </summary>
                 <div className="border-t border-slate-700/70 px-6 pt-4 pb-6 leading-relaxed text-slate-200/85">
                   {faq.answer}
@@ -646,7 +657,7 @@ export default function CarModderLanding() {
         <div className="pointer-events-auto flex max-w-full items-center gap-4 overflow-hidden rounded-full border border-white/15 bg-[#17132a]/88 p-2 pr-2 pl-6 shadow-[0_0_30px_-5px_rgba(71,37,244,0.7)] backdrop-blur-xl">
           <div className="flex hidden items-center gap-4 border-r border-white/15 pr-4 sm:flex">
             <button className="group relative flex flex-col items-center justify-center text-slate-200/85 transition-colors hover:text-white">
-              <span className="material-icons text-2xl">wallpaper</span>
+              <Wallpaper className="h-6 w-6" />
               <span className="pointer-events-none absolute -top-10 rounded bg-black px-2 py-1 text-[10px] whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
                 {t('saveWallpaper')}
               </span>
@@ -660,7 +671,7 @@ export default function CarModderLanding() {
           </div>
 
           <button className="text-slate-200/85 sm:hidden">
-            <span className="material-icons">more_vert</span>
+            <MoreVertical className="h-5 w-5" />
           </button>
 
           {/* <a href="#find-shop">
@@ -682,18 +693,6 @@ export default function CarModderLanding() {
         <div className="absolute right-0 bottom-0 h-[500px] w-[500px] rounded-full bg-purple-600 mix-blend-screen blur-[128px] filter"></div>
       </div>
 
-      <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet"
-      />
     </div>
   );
 }

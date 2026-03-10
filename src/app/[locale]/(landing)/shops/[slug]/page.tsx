@@ -1,10 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import {
+  AlertCircle,
+  ArrowLeft,
+  Globe,
+  Info,
+  Mail,
+  MapPin,
+  Phone,
+  Quote,
+  Send,
+  Star,
+  Store,
+  Verified,
+} from 'lucide-react';
 
 interface Shop {
   id: string;
@@ -29,8 +44,39 @@ interface Shop {
   certified: boolean;
   featured: boolean;
   source?: string;
-  services?: any[];
-  reviews?: any[];
+  services?: ShopService[];
+  reviews?: ShopReview[];
+}
+
+interface ShopService {
+  id: string;
+  name: string;
+  description?: string | null;
+  priceFrom?: number | null;
+  priceTo?: number | null;
+}
+
+interface ShopReview {
+  id: string;
+  userId?: string | null;
+  rating: number;
+  createdAt: string;
+  serviceType?: string | null;
+  title?: string | null;
+  content: string;
+}
+
+interface ShopDetailResponse {
+  code: number;
+  message?: string;
+  data: {
+    shop: Shop;
+  };
+}
+
+interface QuoteResponse {
+  code: number;
+  message?: string;
 }
 
 export default function ShopDetailPage() {
@@ -60,28 +106,28 @@ export default function ShopDetailPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  useEffect(() => {
-    fetchShop();
-  }, [slug]);
-
-  const fetchShop = async () => {
+  const fetchShop = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/shops/${slug}`);
-      const result = await response.json();
+      const result = (await response.json()) as ShopDetailResponse;
 
       if (result.code === 0) {
         setShop(result.data.shop);
       } else {
-        setError(result.message);
+        setError(result.message || 'Failed to load shop');
       }
-    } catch (e: any) {
-      console.error('Failed to fetch shop:', e);
+    } catch (error: unknown) {
+      console.error('Failed to fetch shop:', error);
       setError('Failed to load shop');
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug]);
+
+  useEffect(() => {
+    fetchShop();
+  }, [fetchShop]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -104,7 +150,7 @@ export default function ShopDetailPage() {
           location: shop ? `${shop.city}, ${shop.state}` : '',
         }),
       });
-      const result = await response.json();
+      const result = (await response.json()) as QuoteResponse;
 
       if (result.code === 0) {
         setSubmitResult({ success: true, message: t('quoteRequestSuccess') });
@@ -123,8 +169,8 @@ export default function ShopDetailPage() {
       } else {
         setSubmitResult({ success: false, message: result.message || t('quoteRequestError') });
       }
-    } catch (e: any) {
-      console.error('Failed to submit quote:', e);
+    } catch (error: unknown) {
+      console.error('Failed to submit quote:', error);
       setSubmitResult({ success: false, message: t('quoteRequestError') });
     } finally {
       setSubmitting(false);
@@ -161,7 +207,7 @@ export default function ShopDetailPage() {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
         <div className="text-center">
-          <span className="material-icons text-6xl text-gray-600 mb-4">error</span>
+          <AlertCircle className="mx-auto mb-4 h-16 w-16 text-gray-600" />
           <h2 className="text-xl font-bold text-white mb-2">Error</h2>
           <p className="text-gray-400">{error || 'Shop not found'}</p>
           <Link href="/shops" className="mt-4 inline-block text-[#4725f4] hover:text-white">
@@ -178,16 +224,19 @@ export default function ShopDetailPage() {
       <div className="relative h-[50vh] min-h-[400px] overflow-hidden">
         {images.length > 0 ? (
           <>
-            <img
+            <Image
               src={images[activeImage]}
               alt={shop.name}
               className="w-full h-full object-cover"
+              fill
+              priority
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent"></div>
           </>
         ) : (
           <div className="w-full h-full bg-[#131022] flex items-center justify-center">
-            <span className="material-icons text-9xl text-gray-700">store</span>
+            <Store className="h-24 w-24 text-gray-700" />
           </div>
         )}
 
@@ -202,7 +251,14 @@ export default function ShopDetailPage() {
                   activeImage === idx ? 'border-[#4725f4]' : 'border-white/20 hover:border-white/40'
                 }`}
               >
-                <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
+                <Image
+                  src={img}
+                  alt={`Thumbnail ${idx}`}
+                  className="w-full h-full object-cover"
+                  width={64}
+                  height={48}
+                  sizes="64px"
+                />
               </button>
             ))}
           </div>
@@ -213,7 +269,7 @@ export default function ShopDetailPage() {
           href="/shops"
           className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-black/50 backdrop-blur-sm rounded-full text-white hover:bg-black/70 transition-colors"
         >
-          <span className="material-icons text-sm">arrow_back</span>
+          <ArrowLeft className="h-4 w-4" />
           {t('backToSearch')}
         </Link>
       </div>
@@ -233,31 +289,31 @@ export default function ShopDetailPage() {
                     <h1 className="text-3xl font-bold text-white">{shop.name}</h1>
                     {shop.certified && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#4725f4] text-white text-xs font-bold">
-                        <span className="material-icons text-xs">verified</span>
+                        <Verified className="h-3 w-3" />
                         Certified
                       </span>
                     )}
                     {shop.featured && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-500 text-black text-xs font-bold">
-                        <span className="material-icons text-xs">star</span>
+                        <Star className="h-3 w-3" />
                         Featured
                       </span>
                     )}
                     {shop.source === 'demo' && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-700 text-white text-xs font-bold">
-                        <span className="material-icons text-xs">info</span>
+                        <Info className="h-3 w-3" />
                         Demo Data
                       </span>
                     )}
                   </div>
                   <p className="text-gray-400 flex items-center gap-2">
-                    <span className="material-icons text-sm">location_on</span>
+                    <MapPin className="h-4 w-4" />
                     {shop.address}, {shop.city}{shop.state && `, ${shop.state}`} {shop.postalCode}
                   </p>
                 </div>
                 <div className="text-right">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="material-icons text-yellow-500">star</span>
+                    <Star className="h-5 w-5 fill-yellow-500 text-yellow-500" />
                     <span className="text-2xl font-bold text-white">
                       {shop.source === 'demo' ? 'N/A' : formatRating(shop.rating)}
                     </span>
@@ -281,7 +337,7 @@ export default function ShopDetailPage() {
                 <div className="mb-6">
                   <h3 className="text-lg font-bold text-white mb-4">{t('shopServices')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {shop.services.map((service: any) => (
+                    {shop.services.map((service) => (
                       <div
                         key={service.id}
                         className="flex items-center justify-between p-4 bg-[#1c1830] rounded-lg"
@@ -310,19 +366,19 @@ export default function ShopDetailPage() {
                 <div className="space-y-3">
                   {shop.phone && (
                     <a href={`tel:${shop.phone}`} className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
-                      <span className="material-icons">phone</span>
+                      <Phone className="h-4 w-4" />
                       {shop.phone}
                     </a>
                   )}
                   {shop.email && (
                     <a href={`mailto:${shop.email}`} className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
-                      <span className="material-icons">email</span>
+                      <Mail className="h-4 w-4" />
                       {shop.email}
                     </a>
                   )}
                   {shop.website && (
                     <a href={shop.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
-                      <span className="material-icons">language</span>
+                      <Globe className="h-4 w-4" />
                       {shop.website}
                     </a>
                   )}
@@ -340,7 +396,7 @@ export default function ShopDetailPage() {
               >
                 <h3 className="text-xl font-bold text-white mb-6">{t('customerReviews')}</h3>
                 <div className="space-y-4">
-                  {shop.reviews.map((review: any) => (
+                  {shop.reviews.map((review) => (
                     <div key={review.id} className="p-4 bg-[#1c1830] rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -352,14 +408,13 @@ export default function ShopDetailPage() {
                               <span className="text-white font-medium">Anonymous</span>
                               <div className="flex items-center gap-0.5">
                                 {[...Array(5)].map((_, i) => (
-                                  <span
+                                  <Star
                                     key={i}
-                                    className={`material-icons text-sm ${
+                                    className={`h-4 w-4 ${
                                       i < review.rating ? 'text-yellow-500' : 'text-gray-600'
                                     }`}
-                                  >
-                                    star
-                                  </span>
+                                    fill="currentColor"
+                                  />
                                 ))}
                               </div>
                             </div>
@@ -395,7 +450,7 @@ export default function ShopDetailPage() {
                 onClick={() => setShowQuoteForm(!showQuoteForm)}
                 className="w-full py-4 bg-[#4725f4] hover:bg-[#361bb8] text-white font-bold rounded-xl transition-colors mb-6 flex items-center justify-center gap-2"
               >
-                <span className="material-icons">request_quote</span>
+                <Quote className="h-5 w-5" />
                 {showQuoteForm ? t('viewShopDetail') : t('requestQuote')}
               </button>
 
@@ -544,7 +599,7 @@ export default function ShopDetailPage() {
                       </>
                     ) : (
                       <>
-                        <span className="material-icons">send</span>
+                        <Send className="h-4 w-4" />
                         {t('submitQuoteRequest')}
                       </>
                     )}
@@ -555,8 +610,6 @@ export default function ShopDetailPage() {
           </div>
         </div>
       </div>
-
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     </div>
   );
 }
