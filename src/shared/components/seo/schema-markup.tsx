@@ -80,6 +80,14 @@ interface WebSiteSchema {
   searchUrlTemplate?: string;
 }
 
+interface WebPageSchema {
+  name: string;
+  description?: string;
+  url: string;
+  inLanguage?: string;
+  about?: string[];
+}
+
 interface CollectionPageSchema {
   name: string;
   description?: string;
@@ -310,6 +318,31 @@ export function WebSiteSchemaMarkup({ website }: { website: WebSiteSchema }) {
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: generateSchema('WebSite', schema) }}
+    />
+  );
+}
+
+export function WebPageSchemaMarkup({ page }: { page: WebPageSchema }) {
+  const schema = {
+    name: page.name,
+    description: page.description,
+    url: page.url,
+    inLanguage: page.inLanguage || 'en',
+    about: page.about?.map((item) => ({
+      '@type': 'Thing',
+      name: item,
+    })),
+    isPartOf: {
+      '@type': 'WebSite',
+      name: envConfigs.app_name,
+      url: envConfigs.app_url,
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: generateSchema('WebPage', schema) }}
     />
   );
 }

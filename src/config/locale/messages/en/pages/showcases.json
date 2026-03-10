@@ -1,15 +1,15 @@
 {
   "metadata": {
-    "title": "Real Car Modification Examples | CarModSnap Showcases",
-    "description": "Review real car wrap, wheel, and body kit visualization examples before planning your own build."
+    "title": "Car Modification Concept Gallery | CarModSnap Showcases",
+    "description": "Browse car wrap, wheel, and body kit concept references to compare styling directions before planning your own build."
   },
   "page": {
-    "title": "Showcases",
+    "title": "Concept Gallery",
     "sections": {
       "showcases": {
         "id": "showcases",
-        "title": "Car Builds Visualized with CarModSnap",
-        "description": "Easy to use and fast to ship.",
+        "title": "Car Modification Concepts Built with CarModSnap",
+        "description": "Reference builds for wraps, wheels, and body kits.",
         "groups": [
           {
             "name": "all",

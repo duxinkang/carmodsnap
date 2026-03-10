@@ -4,12 +4,13 @@ import { setRequestLocale } from 'next-intl/server';
 
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
-import { defaultLocale, locales } from '@/config/locale';
+import { defaultLocale } from '@/config/locale';
 import {
   BreadcrumbListSchemaMarkup,
   CreativeWorkSchemaMarkup,
 } from '@/shared/components/seo/schema-markup';
 import { getShowcaseBySlug, getShowcaseUrl, showcaseEntries } from '@/shared/data/showcases';
+import { buildLocaleAlternates } from '@/shared/lib/seo';
 
 export const revalidate = 3600;
 
@@ -38,29 +39,22 @@ export async function generateMetadata({
       : `${envConfigs.app_url}/${locale}${path}`;
 
   return {
-    title: `${showcase.title} Showcase | CarModSnap`,
+    title: `${showcase.title} Concept | CarModSnap`,
     description: showcase.description,
     alternates: {
       canonical,
-      ...(locale === defaultLocale
-        ? {
-            languages: {
-              [defaultLocale]: canonical,
-              'x-default': canonical,
-            },
-          }
-        : {}),
+      languages: buildLocaleAlternates(path),
     },
     openGraph: {
       type: 'article',
-      title: `${showcase.title} Showcase | CarModSnap`,
+      title: `${showcase.title} Concept | CarModSnap`,
       description: showcase.description,
       url: canonical,
       images: [showcase.image],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${showcase.title} Showcase | CarModSnap`,
+      title: `${showcase.title} Concept | CarModSnap`,
       description: showcase.description,
       images: [showcase.image],
     },
@@ -108,7 +102,7 @@ export default async function ShowcaseDetailPage({
             <div className="space-y-6">
               <div className="space-y-3">
                 <p className="text-sm font-semibold tracking-[0.28em] text-[#c7bbff] uppercase">
-                  Showcase case study
+                  Concept reference
                 </p>
                 <h1 className="text-4xl font-bold tracking-tight text-white">
                   {showcase.title}
@@ -165,7 +159,7 @@ export default async function ShowcaseDetailPage({
 
               <div className="rounded-3xl border border-white/10 bg-[#17132a]/92 p-6">
                 <h2 className="text-xl font-semibold text-white">
-                  Why this concept is indexable
+                  Why this concept matters
                 </h2>
                 <p className="mt-3 leading-7 text-slate-200/85">
                   {showcase.summary}

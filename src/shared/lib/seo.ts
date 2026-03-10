@@ -3,6 +3,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { envConfigs } from '@/config';
 import { defaultLocale, locales } from '@/config/locale';
 
+type MetadataTranslations = {
+  title: string;
+  description: string;
+  keywords: string;
+};
+
 // get metadata for page component
 export function getMetadata(
   options: {
@@ -38,7 +44,11 @@ export function getMetadata(
     );
 
     // translated metadata
-    let translatedMetadata: any = {};
+    let translatedMetadata: MetadataTranslations = {
+      title: '',
+      description: '',
+      keywords: '',
+    };
     if (options.metadataKey) {
       translatedMetadata = await getTranslatedMetadata(
         options.metadataKey,
@@ -175,6 +185,10 @@ function getAlternateLanguageUrls(canonicalUrl?: string) {
     ...languages,
     'x-default': languages[defaultLocale],
   };
+}
+
+export function buildLocaleAlternates(path: string) {
+  return getAlternateLanguageUrls(path);
 }
 
 function normalizePath(path: string) {

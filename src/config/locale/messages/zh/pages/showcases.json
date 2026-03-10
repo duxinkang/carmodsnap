@@ -1,15 +1,15 @@
 {
   "metadata": {
-    "title": "案例展示",
-    "description": "查看真实的贴膜、轮毂与包围改装可视化案例，快速确认你的改装方向。"
+    "title": "汽车改装概念图库 | CarModSnap Showcases",
+    "description": "浏览贴膜、轮毂与包围改装概念参考图，快速比较不同改装方向。"
   },
   "page": {
-    "title": "案例展示",
+    "title": "概念图库",
     "sections": {
       "showcases": {
         "id": "showcases",
-        "title": "使用 CarModSnap 打造的改装案例",
-        "description": "简单、快速、高效。",
+        "title": "使用 CarModSnap 制作的改装概念参考",
+        "description": "用于比较贴膜、轮毂与包围方向的概念示例。",
         "groups": [
           {
             "name": "all",

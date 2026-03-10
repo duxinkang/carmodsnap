@@ -148,7 +148,7 @@ export default function CommunityShowcase() {
                       </span>
                     </div>
                     <span className="inline-flex items-center rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-xs font-semibold tracking-wide text-white/90">
-                      DEMO
+                      CONCEPT
                     </span>
                   </div>
                   <div className="mt-3">
@@ -156,7 +156,7 @@ export default function CommunityShowcase() {
                       href={getShowcaseUrl(item.slug)}
                       className="text-sm font-semibold text-[#c7bbff] hover:text-white"
                     >
-                      View case study
+                      View concept brief
                     </Link>
                   </div>
                 </div>

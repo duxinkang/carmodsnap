@@ -33,9 +33,9 @@ export default async function ShowcasesPage({
       <ShowcasesClientPage />
       <CollectionPageSchemaMarkup
         page={{
-          name: 'Real Car Modification Examples | CarModSnap Showcases',
+          name: 'Car Modification Concept Gallery | CarModSnap Showcases',
           description:
-            'Browse individual car wrap, wheel, and body kit showcase case studies with indexable build detail pages.',
+            'Browse individual car wrap, wheel, and body kit concept references with indexable build detail pages.',
           url: collectionUrl,
         }}
       />

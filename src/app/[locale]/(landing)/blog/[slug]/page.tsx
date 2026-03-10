@@ -5,6 +5,7 @@ import { envConfigs } from '@/config';
 import { Empty } from '@/shared/blocks/common';
 import { BlogPostSchemaMarkup } from '@/shared/components/seo/schema-markup';
 import { buildPostRelationships } from '@/shared/lib/blog-clusters';
+import { buildLocaleAlternates } from '@/shared/lib/seo';
 import { getPost, getPostsAndCategories } from '@/shared/models/post';
 import { DynamicPage } from '@/shared/types/blocks/landing';
 
@@ -28,6 +29,7 @@ export async function generateMetadata({
       description: t('description'),
       alternates: {
         canonical: canonicalUrl,
+        languages: buildLocaleAlternates(`/blog/${slug}`),
       },
       openGraph: {
         type: 'article',
@@ -52,6 +54,7 @@ export async function generateMetadata({
     description: post.description,
     alternates: {
       canonical: canonicalUrl,
+      languages: buildLocaleAlternates(`/blog/${slug}`),
     },
     openGraph: {
       type: 'article',
