@@ -105,6 +105,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="theme-color" content="#4725f4" />
         <link rel="icon" href={envConfigs.app_favicon} />
         <link rel="alternate icon" href="/favicon.ico" />
 
