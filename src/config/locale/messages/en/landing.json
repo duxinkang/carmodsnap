@@ -29,34 +29,9 @@
           "icon": "DollarSign"
         },
         {
-          "title": "AI",
-          "icon": "RiRobot2Line",
-          "children": [
-            {
-              "title": "AI Image Generator",
-              "description": "Use AI to generate images",
-              "url": "/ai-image-generator",
-              "icon": "RiImage2Line"
-            },
-            {
-              "title": "AI Music Generator",
-              "description": "Use AI to generate music",
-              "url": "/ai-music-generator",
-              "icon": "RiMusic2Line"
-            },
-            {
-              "title": "AI Video Generator",
-              "description": "Use AI to generate videos",
-              "url": "/ai-video-generator",
-              "icon": "RiVideoLine"
-            },
-            {
-              "title": "AI Chatbot",
-              "description": "Chat with AI chatbot",
-              "url": "/chat",
-              "icon": "RiMessage2Line"
-            }
-          ]
+          "title": "Shops",
+          "url": "/shops",
+          "icon": "MapPin"
         },
         {
           "title": "Settings",
@@ -93,8 +68,8 @@
     "show_locale": true
   },
   "hero": {
-    "title": "Visualize Your Dream Build",
-    "description": "CarModSnap is an AI-powered car modification platform. Start with free core visualization tools and unlock advanced AI generation features via paid plans.",
+    "title": "Preview Your Next Car Mod Before You Buy",
+    "description": "CarModSnap helps drivers and wrap buyers visualize color changes, wheels, body kits, and before-after concepts on real vehicle photos.",
     "buttons": [
       {
         "title": "Start Modding",
@@ -109,22 +84,22 @@
     ]
   },
   "features": {
-    "title": "Powerful Features",
-    "description": "Professional tools built for modification enthusiasts",
+    "title": "Built For Real Modification Decisions",
+    "description": "Focused tools for planning wraps, wheels, aero parts, and quote-ready concepts",
     "items": [
       {
-        "title": "360° Real-time Preview",
-        "description": "View modification effects from all angles with various lighting environments.",
+        "title": "Photo-Based Build Preview",
+        "description": "Upload a vehicle photo or start from a supported model to test realistic exterior directions.",
         "icon": "Box"
       },
       {
-        "title": "AI Smart Recommendation",
-        "description": "AI recommends the most suitable modification plans based on your car and preferences.",
+        "title": "Wrap, Wheel, and Body Kit Modes",
+        "description": "Compare paint and wrap finishes, wheel styles, stance direction, trim changes, and aero ideas.",
         "icon": "Sparkles"
       },
       {
-        "title": "Realistic Material Simulation",
-        "description": "Accurately simulate metallic paint, matte wrap, carbon fiber, and more.",
+        "title": "Before-After Outputs",
+        "description": "Create clear visuals you can save, share, and bring to a shop when asking for quotes.",
         "icon": "Layers"
       }
     ]
@@ -133,7 +108,7 @@
     "id": "footer",
     "brand": {
       "title": "CarModSnap",
-      "description": "CarModSnap is an AI-powered car modification platform. Visualize and customize your car with cutting-edge 3D technology.",
+      "description": "AI car modification previews for wraps, wheels, body kits, and quote-ready build planning.",
       "logo": {
         "src": "/logo.png",
         "alt": "CarModSnap",
@@ -168,18 +143,13 @@
           "title": "Resources",
           "children": [
             {
-              "title": "Documents",
-              "url": "/docs",
-              "target": "_self"
-            },
-            {
               "title": "Blog",
               "url": "/blog",
               "target": "_self"
             },
             {
-              "title": "Chat",
-              "url": "/chat",
+              "title": "Wrap Shops",
+              "url": "/shops",
               "target": "_self"
             }
           ]
@@ -231,6 +201,7 @@
         }
       ]
     },
+    "show_built_with": false,
     "show_theme": true,
     "show_locale": true
   }

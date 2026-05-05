@@ -8,6 +8,7 @@ import {
   RotateCcw,
   Shield,
   Zap,
+  type LucideIcon,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -42,6 +43,12 @@ import {
   PricingItem,
   Pricing as PricingType,
 } from '@/shared/types/blocks/pricing';
+
+declare global {
+  interface Window {
+    promotekit_referral?: string;
+  }
+}
 
 // Helper function to get all available currencies from a pricing item
 function getCurrenciesFromItem(item: PricingItem | null): PricingCurrency[] {
@@ -283,8 +290,8 @@ export function Pricing({
       ['stripe'].includes(paymentProvider)
     ) {
       const promotekitReferral =
-        typeof window !== 'undefined' && (window as any).promotekit_referral
-          ? (window as any).promotekit_referral
+        typeof window !== 'undefined' && window.promotekit_referral
+          ? window.promotekit_referral
           : getCookie('promotekit_referral') || '';
       affiliateMetadata.promotekit_referral = promotekitReferral;
     }
@@ -361,9 +368,10 @@ export function Pricing({
       }
 
       window.location.href = checkoutUrl;
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.log('checkout failed: ', e);
-      toast.error('checkout failed: ' + e.message);
+      const message = e instanceof Error ? e.message : 'unknown error';
+      toast.error('checkout failed: ' + message);
 
       setIsLoading(false);
       setProductId(null);
@@ -596,15 +604,17 @@ export function Pricing({
             <table className="w-full">
               <thead>
                 <tr className="bg-muted/50 border-b">
-                  <th className="px-4 py-4 text-left font-semibold">Feature</th>
-                  <th className="px-4 py-4 text-center font-semibold">
-                    Starter
+                  <th className="px-4 py-4 text-left font-semibold">
+                    {section.feature_comparison.labels?.feature || 'Feature'}
                   </th>
                   <th className="px-4 py-4 text-center font-semibold">
-                    Standard
+                    {section.feature_comparison.labels?.starter || 'Starter'}
                   </th>
                   <th className="px-4 py-4 text-center font-semibold">
-                    Premium
+                    {section.feature_comparison.labels?.standard || 'Standard'}
+                  </th>
+                  <th className="px-4 py-4 text-center font-semibold">
+                    {section.feature_comparison.labels?.premium || 'Premium'}
                   </th>
                 </tr>
               </thead>
@@ -711,7 +721,7 @@ export function Pricing({
 }
 
 // Helper component for rendering feature values
-function renderFeatureValue(value: any) {
+function renderFeatureValue(value: boolean | string) {
   if (typeof value === 'boolean') {
     return value ? (
       <Check className="mx-auto size-5 text-green-600" />
@@ -728,7 +738,7 @@ function TrustBadge({
   title,
   description,
 }: {
-  icon: any;
+  icon: LucideIcon;
   title?: string;
   description?: string;
 }) {

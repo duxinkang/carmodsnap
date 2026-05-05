@@ -1,5 +1,12 @@
-import { ChatGenerator } from '@/shared/blocks/chat/generator';
+import { redirect } from 'next/navigation';
 
-export default function ChatPage() {
-  return <ChatGenerator />;
+import { defaultLocale } from '@/config/locale';
+
+export default async function ChatPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  redirect(locale === defaultLocale ? '/carmodder' : `/${locale}/carmodder`);
 }

@@ -6,7 +6,8 @@ import { PricingSchemaMarkup } from '@/shared/components/seo/schema-markup';
 import { getMetadata } from '@/shared/lib/seo';
 import { getCurrentSubscription } from '@/shared/models/subscription';
 import { getUserInfo } from '@/shared/models/user';
-import { DynamicPage } from '@/shared/types/blocks/landing';
+import type { DynamicPage } from '@/shared/types/blocks/landing';
+import type { PricingItem } from '@/shared/types/blocks/pricing';
 
 export const revalidate = 3600;
 
@@ -60,11 +61,13 @@ export default async function PricingPage({
       <PricingSchemaMarkup
         productName="CarModSnap Subscription"
         description={t.raw('page.sections.pricing.description')}
-        offers={t.raw('page.sections.pricing.items').map((item: any) => ({
-          price: item.amount / 100,
-          priceCurrency: item.currency,
-          availability: 'https://schema.org/InStock',
-        }))}
+        offers={(t.raw('page.sections.pricing.items') as PricingItem[]).map(
+          (item) => ({
+            price: (item.amount / 100).toFixed(2),
+            priceCurrency: item.currency,
+            availability: 'https://schema.org/InStock',
+          })
+        )}
       />
     </>
   );

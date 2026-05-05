@@ -8,42 +8,36 @@
     "sections": {
       "pricing": {
         "id": "pricing",
-        "title": "Plans for every kind of build",
-        "description": "Visualize wraps, wheels, and body kits with AI. Pick monthly to try things out, or save 20% with annual billing.",
+        "title": "Simple plans for car modification previews",
+        "description": "Use credits to generate wrap, wheel, trim, and body-kit concepts. Start monthly, cancel anytime, and upgrade when you need more output.",
         "groups": [
           {
             "name": "monthly",
             "title": "Monthly",
             "is_featured": true
-          },
-          {
-            "name": "yearly",
-            "title": "Yearly (save 20%)",
-            "is_featured": false
           }
         ],
         "items": [
           {
             "title": "Starter",
-            "description": "Try AI-powered car visualization with 100 credits per month.",
-            "features_title": "Includes",
+            "description": "For trying CarModSnap and generating a small set of visual concepts.",
+            "features_title": "Best for first projects",
             "features": [
               "100 credits per month",
-              "Wrap color visualizer",
-              "Wheel fitment preview",
-              "HD (1080p) image export",
-              "Multi-language support"
+              "Wrap and paint color concepts",
+              "Wheel style previews",
+              "Before-after image view",
+              "Standard image download"
             ],
             "interval": "month",
             "amount": 990,
             "currency": "USD",
             "price": "$9.9",
-            "original_price": "$19.9",
             "unit": "/ month",
             "is_featured": false,
-            "tip": "Lowest-cost way to try CarModSnap.",
+            "tip": "Good for testing one vehicle direction.",
             "button": {
-              "title": "Get Starter",
+              "title": "Start with Starter",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
@@ -57,28 +51,25 @@
           },
           {
             "title": "Standard",
-            "description": "More credits, all build modes, and project saving.",
+            "description": "For comparing multiple build directions before buying parts or booking a shop.",
             "label": "Popular",
             "features_title": "Everything in Starter, plus",
             "features": [
               "300 credits per month",
-              "Body kit visualizer",
-              "Before / after comparisons",
-              "Multi-angle views",
-              "4K image export",
-              "Save build projects",
-              "Priority generation queue"
+              "Body kit and trim concepts",
+              "Multiple saved build ideas",
+              "Priority generation during busy periods",
+              "Higher-resolution downloads"
             ],
             "interval": "month",
             "amount": 1990,
             "currency": "USD",
             "price": "$19.9",
-            "original_price": "$39.9",
             "unit": "/ month",
             "is_featured": true,
-            "tip": "Most chosen plan for serious modders.",
+            "tip": "Best fit for most car owners and enthusiasts.",
             "button": {
-              "title": "Get Standard",
+              "title": "Choose Standard",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
@@ -92,26 +83,24 @@
           },
           {
             "title": "Premium",
-            "description": "Everything unlocked, with commercial license and API access.",
+            "description": "For shops, creators, and heavy users who need more concepts and commercial usage rights.",
             "features_title": "Everything in Standard, plus",
             "features": [
               "800 credits per month",
-              "Batch generation",
-              "8K image export",
-              "Commercial usage license",
-              "API access",
-              "Priority email support"
+              "More variation testing per project",
+              "Commercial usage license for your outputs",
+              "Priority email support",
+              "Early access to new car-mod workflows"
             ],
             "interval": "month",
             "amount": 2990,
             "currency": "USD",
             "price": "$29.9",
-            "original_price": "$59.9",
             "unit": "/ month",
             "is_featured": false,
-            "tip": "Best for shops and content creators.",
+            "tip": "Best for wrap shops, content creators, and repeat projects.",
             "button": {
-              "title": "Get Premium",
+              "title": "Choose Premium",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
@@ -122,114 +111,11 @@
             "valid_days": 30,
             "group": "monthly",
             "plan_name": "Premium"
-          },
-          {
-            "title": "Starter",
-            "description": "Same as Starter, billed yearly. Save 20%.",
-            "features_title": "Includes",
-            "features": [
-              "100 credits per month",
-              "Wrap color visualizer",
-              "Wheel fitment preview",
-              "HD (1080p) image export",
-              "Multi-language support",
-              "Save 20% vs monthly"
-            ],
-            "interval": "year",
-            "amount": 9500,
-            "currency": "USD",
-            "price": "$95",
-            "original_price": "$118.8",
-            "unit": "/ year",
-            "is_featured": false,
-            "tip": "About $7.92 / month, billed once a year.",
-            "button": {
-              "title": "Get Starter Yearly",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "starter-yearly",
-            "payment_product_id": "REPLACE_WITH_CREEM_STARTER_YEARLY_ID",
-            "product_name": "CarModSnap Starter Yearly",
-            "credits": 1200,
-            "valid_days": 365,
-            "group": "yearly",
-            "plan_name": "Starter"
-          },
-          {
-            "title": "Standard",
-            "description": "Same as Standard, billed yearly. Save 20%.",
-            "label": "Popular",
-            "features_title": "Everything in Starter, plus",
-            "features": [
-              "300 credits per month",
-              "Body kit visualizer",
-              "Before / after comparisons",
-              "Multi-angle views",
-              "4K image export",
-              "Save build projects",
-              "Priority generation queue",
-              "Save 20% vs monthly"
-            ],
-            "interval": "year",
-            "amount": 19100,
-            "currency": "USD",
-            "price": "$191",
-            "original_price": "$238.8",
-            "unit": "/ year",
-            "is_featured": true,
-            "tip": "About $15.92 / month, billed once a year.",
-            "button": {
-              "title": "Get Standard Yearly",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "standard-yearly",
-            "payment_product_id": "REPLACE_WITH_CREEM_STANDARD_YEARLY_ID",
-            "product_name": "CarModSnap Standard Yearly",
-            "credits": 3600,
-            "valid_days": 365,
-            "group": "yearly",
-            "plan_name": "Standard"
-          },
-          {
-            "title": "Premium",
-            "description": "Everything unlocked, billed yearly. Save 20%.",
-            "features_title": "Everything in Standard, plus",
-            "features": [
-              "800 credits per month",
-              "Batch generation",
-              "8K image export",
-              "Commercial usage license",
-              "API access",
-              "Priority email support",
-              "Save 20% vs monthly"
-            ],
-            "interval": "year",
-            "amount": 28700,
-            "currency": "USD",
-            "price": "$287",
-            "original_price": "$358.8",
-            "unit": "/ year",
-            "is_featured": false,
-            "tip": "About $23.92 / month, billed once a year.",
-            "button": {
-              "title": "Get Premium Yearly",
-              "url": "/#pricing",
-              "icon": "RiFlashlightFill"
-            },
-            "product_id": "premium-yearly",
-            "payment_product_id": "REPLACE_WITH_CREEM_PREMIUM_YEARLY_ID",
-            "product_name": "CarModSnap Premium Yearly",
-            "credits": 9600,
-            "valid_days": 365,
-            "group": "yearly",
-            "plan_name": "Premium"
           }
         ],
         "feature_comparison": {
-          "title": "Feature Comparison",
-          "description": "Compare features across all plans to find the best fit for your build.",
+          "title": "Compare what each plan unlocks",
+          "description": "All plans use the same core visualizer. Higher tiers add more monthly credits, saved projects, priority generation, and usage rights.",
           "features": [
             {
               "name": "Monthly Credits",
@@ -239,157 +125,131 @@
               "category": "credits"
             },
             {
-              "name": "AI Modification Modes",
-              "starter": "Basic",
-              "standard": "Advanced",
-              "premium": "All Modes",
-              "category": "features"
-            },
-            {
-              "name": "Wrap Color Visualization",
+              "name": "Wrap & Paint Concepts",
               "starter": true,
               "standard": true,
               "premium": true,
               "category": "features"
             },
             {
-              "name": "Wheel Fitment Preview",
+              "name": "Wheel Style Preview",
               "starter": true,
               "standard": true,
               "premium": true,
               "category": "features"
             },
             {
-              "name": "Body Kit Visualizer",
+              "name": "Body Kit & Trim Concepts",
               "starter": false,
               "standard": true,
               "premium": true,
               "category": "features"
             },
             {
-              "name": "Before/After Simulator",
-              "starter": false,
+              "name": "Before/After View",
+              "starter": true,
               "standard": true,
               "premium": true,
               "category": "features"
             },
             {
-              "name": "Multi-Angle Views",
-              "starter": false,
-              "standard": true,
-              "premium": true,
-              "category": "features"
+              "name": "Saved Build Ideas",
+              "starter": "Limited",
+              "standard": "Included",
+              "premium": "Included",
+              "category": "workflow"
             },
             {
-              "name": "Save Projects",
-              "starter": false,
-              "standard": true,
-              "premium": true,
-              "category": "features"
-            },
-            {
-              "name": "Batch Generation",
-              "starter": false,
-              "standard": false,
-              "premium": true,
-              "category": "features"
-            },
-            {
-              "name": "Export Quality",
-              "starter": "HD (1080p)",
-              "standard": "4K Ultra HD",
-              "premium": "8K Ultra HD",
-              "category": "export"
-            },
-            {
-              "name": "Generation Speed",
+              "name": "Generation Priority",
               "starter": "Standard",
               "standard": "Priority",
-              "premium": "Fastest",
+              "premium": "Priority+",
               "category": "performance"
             },
             {
-              "name": "Commercial License",
+              "name": "Download Quality",
+              "starter": "Standard",
+              "standard": "High",
+              "premium": "High",
+              "category": "export"
+            },
+            {
+              "name": "Commercial Usage Rights",
               "starter": false,
               "standard": false,
               "premium": true,
               "category": "license"
             },
             {
-              "name": "API Access",
-              "starter": false,
-              "standard": false,
-              "premium": true,
-              "category": "api"
-            },
-            {
-              "name": "Priority Support",
-              "starter": false,
-              "standard": false,
-              "premium": true,
+              "name": "Support",
+              "starter": "Email",
+              "standard": "Email",
+              "premium": "Priority email",
               "category": "support"
             }
-          ]
+          ],
+          "labels": {
+            "feature": "Feature",
+            "starter": "Starter",
+            "standard": "Standard",
+            "premium": "Premium"
+          }
         },
         "features_detail": {
-          "title": "Detailed Features",
-          "description": "Everything you need to visualize and plan your car modification.",
+          "title": "What your credits are for",
+          "description": "CarModSnap focuses on practical visuals you can use to compare ideas, explain a direction, and talk to a real installer.",
           "sections": [
             {
-              "title": "AI-Powered Visualization",
+              "title": "Core Visualizer",
               "icon": "RiMagicLine",
               "features": [
                 {
-                  "title": "Wrap Color Visualizer",
-                  "description": "Preview matte, satin, and gloss wrap finishes on your exact vehicle model. Compare colors side-by-side before booking installation."
+                  "title": "Wrap and paint exploration",
+                  "description": "Generate color and finish directions such as gloss, matte, satin, metallic, and chrome-style concepts."
                 },
                 {
-                  "title": "Wheel Fitment Preview",
-                  "description": "Visualize different wheel sizes, offsets, and styles on your car. See how custom rims look before purchasing."
+                  "title": "Wheel and stance ideas",
+                  "description": "Preview wheel style direction and overall proportions before buying parts."
                 },
                 {
-                  "title": "Body Kit Visualizer",
-                  "description": "Preview aero kits, front lips, side skirts, and rear diffusers. See aggressive body modifications in photorealistic quality."
-                },
-                {
-                  "title": "Before/After Simulator",
-                  "description": "Generate side-by-side comparisons of your stock vs modified build. Perfect for planning and sharing your vision."
+                  "title": "Body and trim direction",
+                  "description": "Explore lips, skirts, diffusers, black trim, and other exterior styling ideas."
                 }
               ]
             },
             {
-              "title": "Export & Sharing",
+              "title": "Planning Workflow",
               "icon": "RiDownloadLine",
               "features": [
                 {
-                  "title": "HD/4K/8K Downloads",
-                  "description": "Export high-resolution images suitable for social media, print, or large-format displays depending on your plan."
+                  "title": "Before-after comparisons",
+                  "description": "Keep stock and modified views together so the difference is easy to understand."
                 },
                 {
-                  "title": "Multi-Angle Views",
-                  "description": "Generate multiple viewing angles of your modified build for comprehensive visualization."
+                  "title": "Saved concepts",
+                  "description": "Store build ideas in your account and return to them when comparing options."
                 },
                 {
-                  "title": "Project Saving",
-                  "description": "Save your modification projects and revisit them later. Build multiple concepts for comparison."
+                  "title": "Shareable outputs",
+                  "description": "Download images for personal planning, community feedback, or quote conversations."
                 }
               ]
             },
             {
-              "title": "Professional Tools",
+              "title": "For Frequent Users",
               "icon": "RiToolLine",
               "features": [
                 {
-                  "title": "Batch Generation",
-                  "description": "Generate multiple variations at once. Compare different color combinations and modification styles efficiently."
+                  "title": "More monthly credits",
+                  "description": "Higher tiers give you more room to test variations without stopping mid-project."
                 },
                 {
-                  "title": "Commercial License",
-                  "description": "Use generated images for commercial purposes including marketing materials, client presentations, and social media management."
+                  "title": "Commercial usage on Premium",
+                  "description": "Use your generated outputs in client conversations, marketing drafts, and shop content, subject to the Terms."
                 },
                 {
-                  "title": "API Access",
-                  "description": "Integrate CarModSnap visualization into your existing workflow or applications via our REST API."
+                  "title": "Priority support",
+                  "description": "Premium users get priority email help for billing and product questions."
                 }
               ]
             }
@@ -397,59 +257,51 @@
         },
         "trust_badges": {
           "money_back": {
-            "title": "7-Day Refund Window",
-            "description": "Refund within 7 days if you've used less than 20% of credits. See refund policy."
+            "title": "Clear 7-Day Refund Window",
+            "description": "First-time charges may be refunded within 7 days if no more than 20% of credits were used."
           },
           "secure_payment": {
-            "title": "Secure Payment via Creem",
-            "description": "Encrypted checkout via Creem. Card data never touches our servers."
+            "title": "Secure Checkout",
+            "description": "Payments are handled by Creem or another checkout provider shown before payment."
           },
           "cancel_anytime": {
             "title": "Cancel Anytime",
-            "description": "No long-term contracts. Cancel from Settings → Billing in one click."
+            "description": "Cancel in Settings > Billing. Access remains until the paid period ends."
           },
           "instant_access": {
-            "title": "Instant Access",
-            "description": "Credits and paid features unlock immediately after checkout."
+            "title": "Instant Credit Delivery",
+            "description": "Credits are added after checkout is confirmed by the payment provider."
           }
         }
       },
       "faq": {
         "id": "faq",
         "title": "Pricing FAQ",
-        "description": "Quick answers to the questions we get most about plans, credits, and refunds.",
+        "description": "Plain answers about credits, renewals, cancellation, and refunds.",
         "items": [
           {
-            "question": "What's a credit, and what does it cost?",
-            "answer": "One credit covers one AI generation request (for example, one wrap-color render or one body-kit preview). Credits are granted at the start of each billing period. Higher plans grant more credits and unlock advanced modes such as body kits, batch generation, and 8K export."
+            "question": "What is a credit?",
+            "answer": "A credit is the unit CarModSnap uses for AI generation. Most car modification preview requests consume credits when a generation is started. The exact cost may vary by workflow and is shown in the product before you generate."
           },
           {
-            "question": "What's the difference between monthly and yearly?",
-            "answer": "Yearly billing charges once for 12 months at a 20% discount versus paying monthly. Yearly plans grant the full annual credit allowance up front (Starter 1,200 / Standard 3,600 / Premium 9,600), valid until the next renewal — you decide your own pace across the year. Yearly is the better deal if you plan to use CarModSnap for at least a few months."
+            "question": "Do credits roll over?",
+            "answer": "Subscription credits are intended for the current paid period. Monthly credits expire at the end of the monthly period and do not stockpile across renewals."
           },
           {
             "question": "Can I cancel anytime?",
-            "answer": "Yes. You can cancel from Settings → Billing at any time. Your subscription stays active until the end of the current billing period (the month or the year you paid for), and it won't renew after that."
+            "answer": "Yes. You can cancel from Settings > Billing. Your plan remains active until the end of the period you already paid for, and it will not renew after that."
           },
           {
-            "question": "Do unused credits roll over?",
-            "answer": "Credits granted at the start of a billing period are valid until that period ends. Monthly credits expire at the end of the month; yearly credits are valid for the full year. They do not stockpile across periods."
+            "question": "What is your refund policy?",
+            "answer": "First-time paid charges may be eligible for a full refund within 7 calendar days if no more than 20% of the credits from that charge have been used. Renewals and heavily used credit purchases are generally not refundable. See the Refund Policy for details."
           },
           {
-            "question": "What's your refund policy?",
-            "answer": "First-time charges are eligible for a full refund within 7 days, as long as no more than 20% of the credits granted by that charge have been used. Renewals, heavily-used credit packs, and accounts terminated for abuse are generally not refundable. For full details, see our Refund Policy."
-          },
-          {
-            "question": "Can I upgrade or downgrade later?",
-            "answer": "Yes. You can change plans from Settings → Billing. Upgrades take effect immediately and any difference is prorated. Downgrades typically take effect at the start of the next billing period."
-          },
-          {
-            "question": "How does payment work? Is it safe?",
-            "answer": "Checkout is handled by our payment provider Creem (with Stripe and PayPal supported in some flows). Your card details are entered on the provider's secure environment and are never stored on CarModSnap servers."
+            "question": "Is payment safe?",
+            "answer": "Checkout is handled by Creem or another payment provider displayed at checkout. Full card details are processed in the provider environment and are not stored on CarModSnap servers."
           },
           {
             "question": "Can I use generated images commercially?",
-            "answer": "The Premium plan includes a commercial usage license for the AI-generated images you create on CarModSnap (subject to our Terms of Service and any rights of the underlying vehicle / brand owners)."
+            "answer": "Premium includes commercial usage rights for outputs you create on CarModSnap, subject to the Terms of Service and any rights held by vehicle manufacturers, brands, or other third parties."
           }
         ]
       }

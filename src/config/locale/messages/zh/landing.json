@@ -29,34 +29,9 @@
           "icon": "DollarSign"
         },
         {
-          "title": "AI",
-          "icon": "RiRobot2Line",
-          "children": [
-            {
-              "title": "AI 图片生成器",
-              "description": "使用 AI 生成图片",
-              "url": "/ai-image-generator",
-              "icon": "RiImage2Line"
-            },
-            {
-              "title": "AI 音乐生成器",
-              "description": "使用 AI 生成美妙的音乐",
-              "url": "/ai-music-generator",
-              "icon": "RiMusic2Line"
-            },
-            {
-              "title": "AI 视频生成器",
-              "description": "使用 AI 生成视频",
-              "url": "/ai-video-generator",
-              "icon": "RiVideoLine"
-            },
-            {
-              "title": "AI 聊天机器人",
-              "description": "与 AI 聊天机器人对话",
-              "url": "/chat",
-              "icon": "RiMessage2Line"
-            }
-          ]
+          "title": "改装店",
+          "url": "/shops",
+          "icon": "MapPin"
         },
         {
           "title": "设置",
@@ -93,8 +68,8 @@
     "show_locale": true
   },
   "hero": {
-    "title": "可视化您的梦想座驾",
-    "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台。基础可视化功能可免费使用，高级 AI 生成功能通过付费方案解锁。",
+    "title": "下单改装前，先预览真实效果",
+    "description": "CarModSnap 帮助车主和改色膜用户在真实车辆照片上预览改色、轮毂、包围套件与改装前后效果。",
     "buttons": [
       {
         "title": "开始改装",
@@ -109,22 +84,22 @@
     ]
   },
   "features": {
-    "title": "强大功能",
-    "description": "专为改装爱好者打造的专业工具",
+    "title": "围绕真实改装决策设计",
+    "description": "专注于改色膜、轮毂、外观套件和可用于询价的方案图",
     "items": [
       {
-        "title": "360° 实时预览",
-        "description": "全方位无死角查看改装效果，支持多种环境光效。",
+        "title": "基于照片的改装预览",
+        "description": "上传车辆照片，或从已支持车型开始，快速测试外观方向。",
         "icon": "Box"
       },
       {
-        "title": "AI 智能推荐",
-        "description": "基于您的车型和偏好，AI 为您推荐最合适的改装方案。",
+        "title": "改色、轮毂、包围模式",
+        "description": "对比漆面与膜面效果、轮毂样式、姿态方向、饰条变化和空气动力学套件。",
         "icon": "Sparkles"
       },
       {
-        "title": "真实材质模拟",
-        "description": "精确模拟金属漆、哑光膜、碳纤维等多种真实材质效果。",
+        "title": "改装前后输出",
+        "description": "生成清晰方案图，方便保存、分享，或带给改装店询价。",
         "icon": "Layers"
       }
     ]
@@ -133,7 +108,7 @@
     "id": "footer",
     "brand": {
       "title": "CarModSnap",
-      "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台。使用先进的 3D 技术可视化和定制你的爱车。",
+      "description": "AI 汽车改装预览工具，用于改色、轮毂、包围套件和可询价的方案规划。",
       "logo": {
         "src": "/logo.png",
         "alt": "CarModSnap",
@@ -168,19 +143,14 @@
           "title": "资源",
           "children": [
             {
-              "title": "文档",
-              "url": "/docs",
-              "target": "_self"
-            },
-            {
               "title": "博客",
               "url": "/blog",
               "target": "_self"
             },
             {
-              "title": "对话",
-              "url": "/chat",
-              "target": "_blank"
+              "title": "改装店",
+              "url": "/shops",
+              "target": "_self"
             }
           ]
         },
@@ -231,6 +201,7 @@
         }
       ]
     },
+    "show_built_with": false,
     "show_theme": true,
     "show_locale": true
   }

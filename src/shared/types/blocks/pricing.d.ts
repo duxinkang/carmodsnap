@@ -68,6 +68,12 @@ export interface FeatureDetailSection {
 export interface FeatureComparison {
   title?: string;
   description?: string;
+  labels?: {
+    feature?: string;
+    starter?: string;
+    standard?: string;
+    premium?: string;
+  };
   features: FeatureComparisonRow[];
 }
 
