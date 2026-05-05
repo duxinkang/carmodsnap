@@ -2,7 +2,6 @@
   "page": {
     "show_sections": [
       "hero",
-      "logos",
       "introduce",
       "benefits",
       "usage",
@@ -13,43 +12,43 @@
     "sections": {
       "hero": {
         "id": "hero",
-        "title": "用 AI 技术打造你的梦想座驾",
-        "highlight_text": "AI 技术",
-        "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台。<br/>使用先进的 3D 技术可视化和定制你的爱车。",
+        "title": "AI 改色、轮毂、包围套件可视化",
+        "highlight_text": "AI 改装",
+        "description": "CarModSnap 让你在花一分钱去店里之前，先在自己的车上预览改色、轮毂与包围效果。",
         "announcement": {
-          "badge": "全新",
-          "title": "🎉 CarModSnap 平台正式上线",
+          "badge": "新",
+          "title": "年付方案上线 —— 立省 20%",
           "url": "/pricing"
         },
-        "tip": "🎁 早期用户特别优惠",
+        "tip": "",
         "buttons": [
           {
-            "title": "立即开始",
+            "title": "开始改装",
             "icon": "Zap",
-            "url": "/pricing",
+            "url": "/carmodder",
             "target": "_self",
             "variant": "default"
           },
           {
-            "title": "阅读文档",
-            "icon": "BookOpenText",
-            "url": "/docs",
-            "target": "_blank",
+            "title": "查看作品",
+            "icon": "Layers",
+            "url": "/showcases",
+            "target": "_self",
             "variant": "outline"
           }
         ],
-        "show_avatars": true,
-        "avatars_tip": "用户正在体验 CarModSnap Beta",
+        "show_avatars": false,
+        "avatars_tip": "",
         "show_award": false,
         "image": {
           "src": "/imgs/features/admin.png",
-          "alt": "CarModSnap AI 汽车改装可视化平台仪表板 - 3D 配置器界面",
+          "alt": "CarModSnap AI 汽车改装可视化面板",
           "width": 1200,
           "height": 800
         },
         "image_invert": {
           "src": "/imgs/features/admin-dark.png",
-          "alt": "CarModSnap 深色模式仪表板 - AI 汽车定制平台",
+          "alt": "CarModSnap 深色模式面板",
           "width": 1200,
           "height": 800
         },
@@ -58,91 +57,51 @@
           "alt": "CarModSnap 汽车改装平台背景"
         }
       },
-      "logos": {
-        "title": "CarModSnap 使用以下技术栈构建",
-        "items": [
-          {
-            "title": "Next.js",
-            "image": {
-              "src": "/imgs/logos/nextjs.svg",
-              "alt": "Next.js"
-            }
-          },
-          {
-            "title": "React",
-            "image": {
-              "src": "/imgs/logos/react.svg",
-              "alt": "React"
-            }
-          },
-          {
-            "title": "TailwindCSS",
-            "image": {
-              "src": "/imgs/logos/tailwindcss.svg",
-              "alt": "TailwindCSS"
-            }
-          },
-          {
-            "title": "Shadcn/UI",
-            "image": {
-              "src": "/imgs/logos/shadcn.svg",
-              "alt": "Shadcn/UI"
-            }
-          },
-          {
-            "title": "Vercel",
-            "image": {
-              "src": "/imgs/logos/vercel.svg",
-              "alt": "Vercel"
-            }
-          }
-        ]
-      },
       "introduce": {
         "block": "features-list",
         "id": "introduce",
-        "title": "CarModSnap 是什么？",
-        "label": "产品简介",
-        "description": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台，包括 3D 可视化、社区展示和本地服务商对接。",
+        "title": "CarModSnap 是什么",
+        "label": "介绍",
+        "description": "一个 AI 驱动的汽车外观改装可视化平台：改色、轮毂、包围套件，以及改装前后对比。",
         "image": {
           "src": "/imgs/features/landing-page.png",
-          "alt": "CarModSnap 汽车改装平台概览 - 3D 可视化和社区功能"
+          "alt": "CarModSnap 汽车改装平台总览"
         },
         "items": [
           {
-            "title": "3D 汽车配置器",
-            "description": "使用先进的 3D 渲染技术实时可视化你的汽车改装效果。",
-            "icon": "RiNextjsFill",
+            "title": "改色与漆面预览",
+            "description": "在你的实际车型上预览哑光、缎面、亮光、电镀等漆面效果，预约施工前一目了然。",
+            "icon": "Palette",
             "image": {
               "src": "/imgs/features/1.png",
-              "alt": "3D 汽车配置器显示车辆定制界面"
+              "alt": "改色与漆面可视化界面"
             }
           },
           {
-            "title": "社区展示",
-            "description": "与充满活力的汽车爱好者社区一起探索和分享改装创意。",
-            "icon": "RiDatabase2Line",
+            "title": "轮毂搭配预览",
+            "description": "查看不同轮毂尺寸、ET 值、款式的实车上车效果，下单前先看清。",
+            "icon": "CircleDot",
             "image": {
               "src": "/imgs/features/2.png",
-              "alt": "introduce"
+              "alt": "轮毂搭配预览界面"
             }
           },
           {
-            "title": "本地服务商对接",
-            "description": "连接可信的本地 mechanic 和店铺，将你的改装创意变为现实。",
-            "icon": "RiCloudyFill",
+            "title": "包围套件可视化",
+            "description": "前唇、侧裙、后扩散器、空气动力学套件，照片级渲染效果。",
+            "icon": "Layers",
             "image": {
               "src": "/imgs/features/3.png",
-              "alt": "introduce"
+              "alt": "包围套件可视化界面"
             }
           },
           {
-            "title": "AI 智能推荐",
-            "description": "基于你的车型和偏好，获得个性化的改装建议。",
-            "icon": "RiRobot2Line",
+            "title": "本地改装店询价",
+            "description": "在已支持的城市，将你的方案分享给当地改色与改装店进行询价。",
+            "icon": "MapPin",
             "image": {
               "src": "/imgs/features/4.png",
-              "alt": "introduce"
+              "alt": "本地改装店询价界面"
             }
           }
         ],
@@ -151,35 +110,35 @@
       "benefits": {
         "block": "features-accordion",
         "id": "benefits",
-        "title": "为何选择 CarModSnap",
-        "label": "产品优势",
-        "description": "获得你所需的一切，从 3D 可视化到本地服务连接，让你的爱车焕然一新。",
+        "title": "为什么选择 CarModSnap",
+        "label": "优势",
+        "description": "用具体可视化代替靠想象——做出更有把握的决定。",
         "items": [
           {
-            "title": "完整平台",
-            "description": "基于 Next.js，集成 3D 渲染、社区功能和服务商对接，一站式开箱即用。",
-            "icon": "RiNextjsFill",
+            "title": "买之前先看到效果",
+            "description": "在你自己的车上预览实际改色、轮毂、包围效果，做决定时心里有数。",
+            "icon": "Eye",
             "image": {
               "src": "/imgs/features/user-billing.png",
-              "alt": "benefits"
+              "alt": "购买前预览改装效果"
             }
           },
           {
-            "title": "真实可视化",
-            "description": "在对汽车进行任何改动之前，准确了解改装效果。",
-            "icon": "RiClapperboardAiLine",
+            "title": "并排对比多个方向",
+            "description": "生成多个方案，在前后对比滑块中并排查看再决定。",
+            "icon": "Layers",
             "image": {
               "src": "/imgs/features/admin-settings.png",
-              "alt": "benefits"
+              "alt": "并排对比多种改装方案"
             }
           },
           {
-            "title": "社区支持",
-            "description": "加入我们的汽车爱好者社区，获取对改装创意的反馈。",
-            "icon": "RiCodeFill",
+            "title": "把方案带到真实店铺",
+            "description": "将概念图与车辆信息发送给本地改装店，获得报价与施工预约。",
+            "icon": "MapPin",
             "image": {
               "src": "/imgs/features/landing-page.png",
-              "alt": "benefits"
+              "alt": "将方案分享给本地改装店"
             }
           }
         ]
@@ -187,45 +146,45 @@
       "usage": {
         "block": "features-step",
         "id": "usage",
-        "title": "三步使用 CarModSnap 打造梦想座驾",
-        "description": "只需三步，开启你的汽车改装之旅：",
+        "title": "如何使用 CarModSnap",
+        "description": "三步把灵感变成可以真正下单的方案：",
         "image": {
           "src": "/imgs/features/1.png",
-          "alt": "usage"
+          "alt": "如何使用 CarModSnap"
         },
         "image_position": "left",
         "text_align": "center",
         "items": [
           {
-            "title": "选择你的车型",
-            "description": "从我们广泛的品牌和车型数据库中选择你的爱车。",
+            "title": "选择你的车",
+            "description": "选择品牌车型，或直接上传你自己的车辆照片。",
             "image": {
               "src": "/imgs/features/5.png",
-              "alt": "usage"
+              "alt": "选择你的车"
             }
           },
           {
-            "title": "定制你的改装方案",
-            "description": "使用我们的 3D 配置器尝试不同的改装方案，实时查看效果。",
+            "title": "可视化你的方案",
+            "description": "尝试改色、轮毂与包围，AI 会实时渲染出效果。",
             "image": {
               "src": "/imgs/features/6.png",
-              "alt": "usage"
+              "alt": "可视化你的方案"
             }
           },
           {
-            "title": "连接服务商",
-            "description": "找到可信的本地 mechanic 和店铺，将你的改装创意变为现实。",
+            "title": "获取真实报价",
+            "description": "在已支持的城市，将方案发送给本地改装店进行询价。",
             "image": {
               "src": "/imgs/features/7.png",
-              "alt": "usage"
+              "alt": "获取真实报价"
             }
           },
           {
-            "title": "分享你的作品",
-            "description": "向社区展示你的改装爱车，获取其他爱好者的反馈。",
+            "title": "分享你的概念",
+            "description": "保存到你的账户，分享给朋友或社区。",
             "image": {
               "src": "/imgs/features/8.png",
-              "alt": "usage"
+              "alt": "分享你的概念"
             }
           }
         ],
@@ -233,187 +192,87 @@
       },
       "features": {
         "id": "features",
-        "title": "CarModSnap 核心功能",
-        "description": "一切你需要的工具，让你自信地改造你的爱车。",
+        "title": "主要功能",
+        "description": "规划一台真实改装车所需的功能。",
         "items": [
           {
-            "title": "3D 可视化",
-            "description": "你的爱车与各种改装选项的逼真 3D 渲染。",
-            "icon": "RiNextjsFill"
+            "title": "改色与漆面预览",
+            "description": "AI 在你的实际车型上渲染漆面与改色膜效果。",
+            "icon": "Palette"
           },
           {
-            "title": "社区展示",
-            "description": "浏览和分享与其他汽车爱好者的改装创意。",
-            "icon": "RiKey2Fill"
+            "title": "轮毂搭配预览",
+            "description": "浏览轮毂款式并查看上车效果。",
+            "icon": "CircleDot"
           },
           {
-            "title": "本地服务连接",
-            "description": "找到你所在地区的可信 mechanic 和店铺。",
-            "icon": "RiDatabase2Line"
+            "title": "包围套件可视化",
+            "description": "前唇、侧裙、后扩散器与空气动力学套件，结合实车渲染。",
+            "icon": "Layers"
           },
           {
-            "title": "AI 智能推荐",
-            "description": "基于你的车型和偏好，获得个性化的改装建议。",
-            "icon": "RiCloudy2Fill"
+            "title": "改装前后对比",
+            "description": "原厂状态与改装后并排对比，方便保存与分享。",
+            "icon": "ArrowLeftRight"
           },
           {
-            "title": "移动友好",
-            "description": "随时随地从任何设备访问 CarModSnap。",
-            "icon": "RiBarChart2Line"
+            "title": "移动端友好",
+            "description": "任何设备、任何地点都能使用。",
+            "icon": "Smartphone"
           },
           {
-            "title": "安全私密",
-            "description": "你的个人信息和改装计划得到安全保护。",
-            "icon": "RiRobot2Line"
-          }
-        ]
-      },
-      "stats": {
-        "id": "stats",
-        "title": "用户喜爱 CarModSnap",
-        "description": "因其逼真的可视化效果和易用的平台。",
-        "items": [
-          {
-            "title": "999+",
-            "description": "位用户"
-          },
-          {
-            "title": "200+",
-            "description": "款车型"
-          },
-          {
-            "title": "50+",
-            "description": "种改装选项"
-          }
-        ],
-        "className": "bg-muted"
-      },
-      "testimonials": {
-        "id": "testimonials",
-        "title": "用户对 CarModSnap 的评价",
-        "description": "听听汽车爱好者如何通过 CarModSnap 改造他们的爱车。",
-        "items": [
-          {
-            "name": "David Chen",
-            "role": "汽车爱好者",
-            "quote": "CarModSnap 帮助我在进行任何改动之前可视化我的梦想座驾。3D 渲染效果非常逼真！",
-            "image": {
-              "src": "/imgs/avatars/1.png",
-              "alt": "david"
-            }
-          },
-          {
-            "name": "Rachel Kim",
-            "role": "车主",
-            "quote": "通过 CarModSnap，我找到了当地可信的 mechanic。整个过程非常顺畅！",
-            "image": {
-              "src": "/imgs/avatars/2.png",
-              "alt": "rachel"
-            }
-          },
-          {
-            "name": "Marcus Thompson",
-            "role": "汽车收藏家",
-            "quote": "社区展示给我的经典车收藏提供了很多创意。CarModSnap 是一个游戏规则改变者！",
-            "image": {
-              "src": "/imgs/avatars/3.png",
-              "alt": "marcus"
-            }
-          },
-          {
-            "name": "Sofia Garcia",
-            "role": "汽车定制师",
-            "quote": "作为专业定制师，CarModSnap 已成为向客户展示他们的汽车将会是什么样子的必备工具。",
-            "image": {
-              "src": "/imgs/avatars/4.png",
-              "alt": "sofia"
-            }
-          },
-          {
-            "name": "James Wilson",
-            "role": "汽车爱好者",
-            "quote": "AI 推荐非常准确！我从未想过一些被推荐的改装方案。",
-            "image": {
-              "src": "/imgs/avatars/5.png",
-              "alt": "james"
-            }
-          },
-          {
-            "name": "Anna Zhang",
-            "role": "首次车主",
-            "quote": "CarModSnap 让我轻松了解改装会如何改变我的第一辆车。我对结果非常满意！",
-            "image": {
-              "src": "/imgs/avatars/6.png",
-              "alt": "anna"
-            }
+            "title": "尊重隐私",
+            "description": "我们不会使用你上传的照片训练 AI 模型，详见《隐私政策》。",
+            "icon": "ShieldCheck"
           }
         ]
       },
       "faq": {
         "id": "faq",
-        "title": "关于 CarModSnap 的常见问题",
-        "description": "还有其他问题？欢迎加入 Discord 或发邮件联系我们。",
+        "title": "常见问题",
+        "description": "还有其他问题？欢迎邮件 support@carmodsnap.com。",
         "items": [
           {
-            "question": "CarModSnap 是什么？它如何帮助我？",
-            "answer": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台，允许你使用 3D 技术可视化和定制你的爱车。它还帮助你连接本地服务商，将你的创意变为现实。"
+            "question": "CarModSnap 是什么？",
+            "answer": "CarModSnap 是一个 AI 驱动的汽车改装可视化平台，让你在花钱去店里之前先预览改色、轮毂与包围效果。"
           },
           {
-            "question": "使用 CarModSnap 需要技术技能吗？",
-            "answer": "不需要！CarModSnap 设计为用户友好。你不需要任何技术技能来使用我们的 3D 配置器或浏览社区展示。"
+            "question": "需要 3D 或设计基础吗？",
+            "answer": "不需要。CarModSnap 面向普通车主和爱好者——选车、选方向，AI 负责渲染。"
           },
           {
-            "question": "CarModSnap 支持哪些类型的汽车？",
-            "answer": "CarModSnap 支持广泛的汽车品牌和车型，从流行品牌到稀有经典车型。我们的数据库不断增长。"
+            "question": "可以预览哪些改装类型？",
+            "answer": "改色与漆面、轮毂尺寸与款式、包围套件与空气动力学部件，以及原厂与改装后的并排对比。"
           },
           {
-            "question": "3D 渲染效果有多逼真？",
-            "answer": "我们的 3D 渲染效果非常逼真，让你清楚地了解改装在现实生活中的样子。我们使用先进的渲染技术确保准确性。"
+            "question": "渲染结果有多准？",
+            "answer": "CarModSnap 适合做方案规划与概念验证。最终颜色、漆面、装配尺寸仍需结合实物样品与施工方确认。"
           },
           {
-            "question": "如何连接服务商？",
-            "answer": "CarModSnap 拥有可信的本地 mechanic 和店铺目录。你可以浏览你所在地区的服务商，阅读评论，并通过平台直接联系他们。"
-          },
-          {
-            "question": "CarModSnap 是免费使用的吗？",
-            "answer": "CarModSnap 提供免费和高级计划。免费计划允许你使用基本的 3D 配置器和浏览社区。高级计划提供额外功能，如高级定制选项、AI 生成效果图和优先服务商连接。支付通过 Creem 安全处理。"
+            "question": "可以免费使用吗？",
+            "answer": "提供免费体验入口；付费套餐解锁更多积分、高级 AI 生成、更高分辨率导出与商用授权。付款由 Creem 处理。"
           }
         ]
       },
       "cta": {
         "id": "cta",
-        "title": "今天就改造你的爱车",
-        "description": "从这里出发，用 CarModSnap 创造你的梦想座驾。",
+        "title": "准备好可视化下一台改装车了吗？",
+        "description": "免费体验入门，或者直接选一个套餐。",
         "buttons": [
           {
-            "title": "获取 CarModSnap",
-            "url": "#",
-            "target": "_blank",
+            "title": "开始改装",
+            "url": "/carmodder",
+            "target": "_self",
             "icon": "Zap"
           },
           {
-            "title": "阅读文档",
-            "url": "/docs",
-            "target": "_blank",
+            "title": "查看价格",
+            "url": "/pricing",
+            "target": "_self",
             "variant": "outline",
-            "icon": "BookOpenText"
+            "icon": "DollarSign"
           }
         ],
-        "className": "bg-muted"
-      },
-      "subscribe": {
-        "id": "subscribe",
-        "title": "订阅我们的邮件通知",
-        "description": "获取 CarModSnap 最新资讯与产品动态。",
-        "submit": {
-          "input": {
-            "placeholder": "输入邮箱"
-          },
-          "button": {
-            "title": "订阅"
-          },
-          "action": "/api/subscribe"
-        },
         "className": "bg-muted"
       }
     }

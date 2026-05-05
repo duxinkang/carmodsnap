@@ -8,25 +8,30 @@
     "sections": {
       "pricing": {
         "id": "pricing",
-        "title": "Monthly Subscription",
-        "description": "AI-powered car modification visualization, visualize your car's modified look instantly.",
+        "title": "Plans for every kind of build",
+        "description": "Visualize wraps, wheels, and body kits with AI. Pick monthly to try things out, or save 20% with annual billing.",
         "groups": [
           {
             "name": "monthly",
-            "title": "Monthly Subscription",
+            "title": "Monthly",
             "is_featured": true
+          },
+          {
+            "name": "yearly",
+            "title": "Yearly (save 20%)",
+            "is_featured": false
           }
         ],
         "items": [
           {
             "title": "Starter",
-            "description": "Experience AI car modification, 100 credits/month.",
+            "description": "Try AI-powered car visualization with 100 credits per month.",
             "features_title": "Includes",
             "features": [
-              "100 credits/month",
-              "AI car modification visualization",
-              "Basic modification effects",
-              "HD image download",
+              "100 credits per month",
+              "Wrap color visualizer",
+              "Wheel fitment preview",
+              "HD (1080p) image export",
               "Multi-language support"
             ],
             "interval": "month",
@@ -36,9 +41,9 @@
             "original_price": "$19.9",
             "unit": "/ month",
             "is_featured": false,
-            "tip": "Low-cost AI modification experience!",
+            "tip": "Lowest-cost way to try CarModSnap.",
             "button": {
-              "title": "Subscribe Starter",
+              "title": "Get Starter",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
@@ -52,15 +57,16 @@
           },
           {
             "title": "Standard",
-            "description": "Advanced modification design, 300 credits/month.",
+            "description": "More credits, all build modes, and project saving.",
             "label": "Popular",
             "features_title": "Everything in Starter, plus",
             "features": [
-              "300 credits/month",
-              "Advanced modification effects",
+              "300 credits per month",
+              "Body kit visualizer",
+              "Before / after comparisons",
               "Multi-angle views",
-              "4K HD download",
-              "Save modification projects",
+              "4K image export",
+              "Save build projects",
               "Priority generation queue"
             ],
             "interval": "month",
@@ -70,9 +76,9 @@
             "original_price": "$39.9",
             "unit": "/ month",
             "is_featured": true,
-            "tip": "Most popular choice!",
+            "tip": "Most chosen plan for serious modders.",
             "button": {
-              "title": "Subscribe Standard",
+              "title": "Get Standard",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
@@ -86,16 +92,15 @@
           },
           {
             "title": "Premium",
-            "description": "Professional modification studio, 800 credits/month.",
+            "description": "Everything unlocked, with commercial license and API access.",
             "features_title": "Everything in Standard, plus",
             "features": [
-              "800 credits/month",
-              "All modification modes",
+              "800 credits per month",
               "Batch generation",
-              "8K Ultra HD download",
-              "Commercial license",
+              "8K image export",
+              "Commercial usage license",
               "API access",
-              "Exclusive technical support"
+              "Priority email support"
             ],
             "interval": "month",
             "amount": 2990,
@@ -104,9 +109,9 @@
             "original_price": "$59.9",
             "unit": "/ month",
             "is_featured": false,
-            "tip": "Best for power users!",
+            "tip": "Best for shops and content creators.",
             "button": {
-              "title": "Subscribe Premium",
+              "title": "Get Premium",
               "url": "/#pricing",
               "icon": "RiFlashlightFill"
             },
@@ -117,11 +122,114 @@
             "valid_days": 30,
             "group": "monthly",
             "plan_name": "Premium"
+          },
+          {
+            "title": "Starter",
+            "description": "Same as Starter, billed yearly. Save 20%.",
+            "features_title": "Includes",
+            "features": [
+              "100 credits per month",
+              "Wrap color visualizer",
+              "Wheel fitment preview",
+              "HD (1080p) image export",
+              "Multi-language support",
+              "Save 20% vs monthly"
+            ],
+            "interval": "year",
+            "amount": 9500,
+            "currency": "USD",
+            "price": "$95",
+            "original_price": "$118.8",
+            "unit": "/ year",
+            "is_featured": false,
+            "tip": "About $7.92 / month, billed once a year.",
+            "button": {
+              "title": "Get Starter Yearly",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "starter-yearly",
+            "payment_product_id": "REPLACE_WITH_CREEM_STARTER_YEARLY_ID",
+            "product_name": "CarModSnap Starter Yearly",
+            "credits": 1200,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "Starter"
+          },
+          {
+            "title": "Standard",
+            "description": "Same as Standard, billed yearly. Save 20%.",
+            "label": "Popular",
+            "features_title": "Everything in Starter, plus",
+            "features": [
+              "300 credits per month",
+              "Body kit visualizer",
+              "Before / after comparisons",
+              "Multi-angle views",
+              "4K image export",
+              "Save build projects",
+              "Priority generation queue",
+              "Save 20% vs monthly"
+            ],
+            "interval": "year",
+            "amount": 19100,
+            "currency": "USD",
+            "price": "$191",
+            "original_price": "$238.8",
+            "unit": "/ year",
+            "is_featured": true,
+            "tip": "About $15.92 / month, billed once a year.",
+            "button": {
+              "title": "Get Standard Yearly",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "standard-yearly",
+            "payment_product_id": "REPLACE_WITH_CREEM_STANDARD_YEARLY_ID",
+            "product_name": "CarModSnap Standard Yearly",
+            "credits": 3600,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "Standard"
+          },
+          {
+            "title": "Premium",
+            "description": "Everything unlocked, billed yearly. Save 20%.",
+            "features_title": "Everything in Standard, plus",
+            "features": [
+              "800 credits per month",
+              "Batch generation",
+              "8K image export",
+              "Commercial usage license",
+              "API access",
+              "Priority email support",
+              "Save 20% vs monthly"
+            ],
+            "interval": "year",
+            "amount": 28700,
+            "currency": "USD",
+            "price": "$287",
+            "original_price": "$358.8",
+            "unit": "/ year",
+            "is_featured": false,
+            "tip": "About $23.92 / month, billed once a year.",
+            "button": {
+              "title": "Get Premium Yearly",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "premium-yearly",
+            "payment_product_id": "REPLACE_WITH_CREEM_PREMIUM_YEARLY_ID",
+            "product_name": "CarModSnap Premium Yearly",
+            "credits": 9600,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "Premium"
           }
         ],
         "feature_comparison": {
           "title": "Feature Comparison",
-          "description": "Compare features across all plans to find the best fit for your needs",
+          "description": "Compare features across all plans to find the best fit for your build.",
           "features": [
             {
               "name": "Monthly Credits",
@@ -225,7 +333,7 @@
         },
         "features_detail": {
           "title": "Detailed Features",
-          "description": "Everything you need to visualize and plan your car modification",
+          "description": "Everything you need to visualize and plan your car modification.",
           "sections": [
             {
               "title": "AI-Powered Visualization",
@@ -289,22 +397,61 @@
         },
         "trust_badges": {
           "money_back": {
-            "title": "30-Day Money-Back Guarantee",
-            "description": "Full refund if not satisfied within the first 30 days"
+            "title": "7-Day Refund Window",
+            "description": "Refund within 7 days if you've used less than 20% of credits. See refund policy."
           },
           "secure_payment": {
-            "title": "Secure Payment",
-            "description": "Encrypted transactions via Stripe, PayPal, and trusted providers"
+            "title": "Secure Payment via Creem",
+            "description": "Encrypted checkout via Creem. Card data never touches our servers."
           },
           "cancel_anytime": {
             "title": "Cancel Anytime",
-            "description": "No long-term contracts. Cancel your subscription at any time."
+            "description": "No long-term contracts. Cancel from Settings → Billing in one click."
           },
           "instant_access": {
             "title": "Instant Access",
-            "description": "Get immediate access to all features after payment"
+            "description": "Credits and paid features unlock immediately after checkout."
           }
         }
+      },
+      "faq": {
+        "id": "faq",
+        "title": "Pricing FAQ",
+        "description": "Quick answers to the questions we get most about plans, credits, and refunds.",
+        "items": [
+          {
+            "question": "What's a credit, and what does it cost?",
+            "answer": "One credit covers one AI generation request (for example, one wrap-color render or one body-kit preview). Credits are granted at the start of each billing period. Higher plans grant more credits and unlock advanced modes such as body kits, batch generation, and 8K export."
+          },
+          {
+            "question": "What's the difference between monthly and yearly?",
+            "answer": "Yearly billing charges once for 12 months at a 20% discount versus paying monthly. Yearly plans grant the full annual credit allowance up front (Starter 1,200 / Standard 3,600 / Premium 9,600), valid until the next renewal — you decide your own pace across the year. Yearly is the better deal if you plan to use CarModSnap for at least a few months."
+          },
+          {
+            "question": "Can I cancel anytime?",
+            "answer": "Yes. You can cancel from Settings → Billing at any time. Your subscription stays active until the end of the current billing period (the month or the year you paid for), and it won't renew after that."
+          },
+          {
+            "question": "Do unused credits roll over?",
+            "answer": "Credits granted at the start of a billing period are valid until that period ends. Monthly credits expire at the end of the month; yearly credits are valid for the full year. They do not stockpile across periods."
+          },
+          {
+            "question": "What's your refund policy?",
+            "answer": "First-time charges are eligible for a full refund within 7 days, as long as no more than 20% of the credits granted by that charge have been used. Renewals, heavily-used credit packs, and accounts terminated for abuse are generally not refundable. For full details, see our Refund Policy."
+          },
+          {
+            "question": "Can I upgrade or downgrade later?",
+            "answer": "Yes. You can change plans from Settings → Billing. Upgrades take effect immediately and any difference is prorated. Downgrades typically take effect at the start of the next billing period."
+          },
+          {
+            "question": "How does payment work? Is it safe?",
+            "answer": "Checkout is handled by our payment provider Creem (with Stripe and PayPal supported in some flows). Your card details are entered on the provider's secure environment and are never stored on CarModSnap servers."
+          },
+          {
+            "question": "Can I use generated images commercially?",
+            "answer": "The Premium plan includes a commercial usage license for the AI-generated images you create on CarModSnap (subject to our Terms of Service and any rights of the underlying vehicle / brand owners)."
+          }
+        ]
       }
     }
   },

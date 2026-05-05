@@ -2,7 +2,6 @@
   "page": {
     "show_sections": [
       "hero",
-      "logos",
       "introduce",
       "benefits",
       "usage",
@@ -13,43 +12,43 @@
     "sections": {
       "hero": {
         "id": "hero",
-        "title": "Transform Your Car with AI-Powered Modifications",
-        "highlight_text": "AI-Powered",
-        "description": "CarModSnap is an AI-powered car modification platform.<br/>Visualize and customize your car with cutting-edge 3D technology.",
+        "title": "AI Car Modification Visualizer for Wraps, Wheels, and Body Kits",
+        "highlight_text": "AI Car Modification",
+        "description": "CarModSnap helps you preview wraps, wheels, and body kits on your own car before you spend a dollar at the shop.",
         "announcement": {
           "badge": "New",
-          "title": "🎉 CarModSnap Platform Launch",
+          "title": "Annual plans now available — save 20%",
           "url": "/pricing"
         },
-        "tip": "🎁 Special offer for early adopters",
+        "tip": "",
         "buttons": [
           {
-            "title": "Get Started",
+            "title": "Start Modding",
             "icon": "Zap",
-            "url": "/pricing",
+            "url": "/carmodder",
             "target": "_self",
             "variant": "default"
           },
           {
-            "title": "Read Document",
-            "icon": "BookOpenText",
-            "url": "/docs",
-            "target": "_blank",
+            "title": "View Showcases",
+            "icon": "Layers",
+            "url": "/showcases",
+            "target": "_self",
             "variant": "outline"
           }
         ],
-        "show_avatars": true,
-        "avatars_tip": "Users are exploring CarModSnap in beta",
+        "show_avatars": false,
+        "avatars_tip": "",
         "show_award": false,
         "image": {
           "src": "/imgs/features/admin.png",
-          "alt": "CarModSnap AI car modification visualizer dashboard - 3D configurator interface",
+          "alt": "CarModSnap AI car modification visualizer dashboard",
           "width": 1200,
           "height": 800
         },
         "image_invert": {
           "src": "/imgs/features/admin-dark.png",
-          "alt": "CarModSnap dark mode dashboard - AI car customization platform",
+          "alt": "CarModSnap dark mode dashboard",
           "width": 1200,
           "height": 800
         },
@@ -58,92 +57,51 @@
           "alt": "CarModSnap car modification platform background"
         }
       },
-      "logos": {
-        "id": "logos",
-        "title": "CarModSnap is built on the shoulders of giants",
-        "items": [
-          {
-            "title": "Next.js",
-            "image": {
-              "src": "/imgs/logos/nextjs.svg",
-              "alt": "Next.js"
-            }
-          },
-          {
-            "title": "React",
-            "image": {
-              "src": "/imgs/logos/react.svg",
-              "alt": "React"
-            }
-          },
-          {
-            "title": "TailwindCSS",
-            "image": {
-              "src": "/imgs/logos/tailwindcss.svg",
-              "alt": "TailwindCSS"
-            }
-          },
-          {
-            "title": "Shadcn/UI",
-            "image": {
-              "src": "/imgs/logos/shadcn.svg",
-              "alt": "Shadcn/UI"
-            }
-          },
-          {
-            "title": "Vercel",
-            "image": {
-              "src": "/imgs/logos/vercel.svg",
-              "alt": "Vercel"
-            }
-          }
-        ]
-      },
       "introduce": {
         "block": "features-list",
         "id": "introduce",
-        "title": "What is CarModSnap",
+        "title": "What CarModSnap is",
         "label": "Introduce",
-        "description": "CarModSnap is an AI-powered car modification platform, including 3D visualization, community showcases, and local service provider connections.",
+        "description": "An AI-powered visualizer for car appearance modifications: wraps, wheels, body kits, and before/after comparisons.",
         "image": {
           "src": "/imgs/features/landing-page.png",
-          "alt": "CarModSnap car modification platform overview - 3D visualization and community features"
+          "alt": "CarModSnap car modification platform overview"
         },
         "items": [
           {
-            "title": "3D Car Configurator",
-            "description": "Visualize your car modifications in real-time with our advanced 3D rendering technology.",
-            "icon": "RiNextjsFill",
+            "title": "Wrap & Paint Visualizer",
+            "description": "Preview matte, satin, gloss, and chrome finishes on your exact vehicle. Compare colors before booking installation.",
+            "icon": "Palette",
             "image": {
               "src": "/imgs/features/1.png",
-              "alt": "3D car configurator showing vehicle customization interface"
+              "alt": "Wrap and paint color visualizer interface"
             }
           },
           {
-            "title": "Community Showcases",
-            "description": "Explore and share car modification ideas with our vibrant community of car enthusiasts.",
-            "icon": "RiDatabase2Line",
+            "title": "Wheel Fitment Preview",
+            "description": "See how different wheel sizes, offsets, and styles look on your build before you buy.",
+            "icon": "CircleDot",
             "image": {
               "src": "/imgs/features/2.png",
-              "alt": "introduce"
+              "alt": "Wheel fitment preview interface"
             }
           },
           {
-            "title": "Local Service Providers",
-            "description": "Connect with trusted local mechanics and shops to bring your modification ideas to life.",
-            "icon": "RiCloudyFill",
+            "title": "Body Kit Visualizer",
+            "description": "Try aero kits, lips, side skirts, and diffusers in photorealistic quality.",
+            "icon": "Layers",
             "image": {
               "src": "/imgs/features/3.png",
-              "alt": "introduce"
+              "alt": "Body kit visualizer interface"
             }
           },
           {
-            "title": "AI-Powered Suggestions",
-            "description": "Get personalized modification suggestions based on your car model and preferences.",
-            "icon": "RiRobot2Line",
+            "title": "Local Wrap Shop Quotes",
+            "description": "Share your build direction with local wrap and customization shops in supported markets.",
+            "icon": "MapPin",
             "image": {
               "src": "/imgs/features/4.png",
-              "alt": "introduce"
+              "alt": "Local wrap shop quote request interface"
             }
           }
         ],
@@ -152,35 +110,35 @@
       "benefits": {
         "block": "features-accordion",
         "id": "benefits",
-        "title": "Why Choose CarModSnap",
+        "title": "Why CarModSnap",
         "label": "Benefits",
-        "description": "Get everything you need to transform your car - from 3D visualization to local service connections.",
+        "description": "Plan your build with concrete visuals — not just descriptions and swatches.",
         "items": [
           {
-            "title": "Complete Platform",
-            "description": "Built on Next.js with 3D rendering, community features, and service provider integration - everything works out of the box.",
-            "icon": "RiNextjsFill",
+            "title": "See it before you buy",
+            "description": "Preview real wraps, wheels, and body kits on your own car so you can commit with confidence.",
+            "icon": "Eye",
             "image": {
               "src": "/imgs/features/user-billing.png",
-              "alt": "benefits"
+              "alt": "Preview modifications before purchase"
             }
           },
           {
-            "title": "Realistic Visualization",
-            "description": "See exactly how your modifications will look before making any changes to your car.",
-            "icon": "RiClapperboardAiLine",
+            "title": "Compare directions side by side",
+            "description": "Generate multiple concepts and compare them in a before/after slider before deciding.",
+            "icon": "Layers",
             "image": {
               "src": "/imgs/features/admin-settings.png",
-              "alt": "benefits"
+              "alt": "Compare modification concepts side by side"
             }
           },
           {
-            "title": "Community Support",
-            "description": "Join our community of car enthusiasts and get feedback on your modification ideas.",
-            "icon": "RiCodeFill",
+            "title": "Take your build to a real shop",
+            "description": "Send your concept and vehicle details to local wrap shops to request quotes and book installation.",
+            "icon": "MapPin",
             "image": {
               "src": "/imgs/features/landing-page.png",
-              "alt": "benefits"
+              "alt": "Send concept to a local wrap shop"
             }
           }
         ]
@@ -188,45 +146,45 @@
       "usage": {
         "block": "features-step",
         "id": "usage",
-        "title": "How to Use CarModSnap",
-        "description": "Transform your car in three simple steps:",
+        "title": "How to use CarModSnap",
+        "description": "Three steps from idea to a build you can actually book:",
         "image": {
           "src": "/imgs/features/1.png",
-          "alt": "usage"
+          "alt": "How to use CarModSnap"
         },
         "image_position": "left",
         "text_align": "center",
         "items": [
           {
-            "title": "Select Your Car",
-            "description": "Choose your car model from our extensive database of makes and models.",
+            "title": "Pick your car",
+            "description": "Select your make and model, or upload a photo of your own car.",
             "image": {
               "src": "/imgs/features/5.png",
-              "alt": "usage"
+              "alt": "Pick your car"
             }
           },
           {
-            "title": "Customize Your Modifications",
-            "description": "Use our 3D configurator to experiment with different modifications and see the results in real-time.",
+            "title": "Visualize the build",
+            "description": "Try wraps, wheels, and body kits and watch the AI render your build.",
             "image": {
               "src": "/imgs/features/6.png",
-              "alt": "usage"
+              "alt": "Visualize the build"
             }
           },
           {
-            "title": "Connect with Service Providers",
-            "description": "Find trusted local mechanics and shops to bring your modification ideas to life.",
+            "title": "Get a real quote",
+            "description": "Send the concept to a local wrap shop in supported markets to request a quote.",
             "image": {
               "src": "/imgs/features/7.png",
-              "alt": "usage"
+              "alt": "Get a real quote"
             }
           },
           {
-            "title": "Share Your Creation",
-            "description": "Show off your modified car to the community and get feedback from other enthusiasts.",
+            "title": "Share your concept",
+            "description": "Save the build to your account and share it with friends or the community.",
             "image": {
               "src": "/imgs/features/8.png",
-              "alt": "usage"
+              "alt": "Share your concept"
             }
           }
         ],
@@ -234,187 +192,87 @@
       },
       "features": {
         "id": "features",
-        "title": "Key Features of CarModSnap",
-        "description": "Everything you need to transform your car with confidence.",
+        "title": "Key features",
+        "description": "Everything you need to plan a real-world build.",
         "items": [
           {
-            "title": "3D Visualization",
-            "description": "Realistic 3D rendering of your car with various modification options.",
-            "icon": "RiNextjsFill"
+            "title": "Wrap & paint visualizer",
+            "description": "Realistic AI rendering of paint and wrap finishes on your exact vehicle.",
+            "icon": "Palette"
           },
           {
-            "title": "Community Showcases",
-            "description": "Browse and share modification ideas with other car enthusiasts.",
-            "icon": "RiKey2Fill"
+            "title": "Wheel fitment preview",
+            "description": "Browse wheel styles and see them mounted on your car before you buy.",
+            "icon": "CircleDot"
           },
           {
-            "title": "Local Service Connections",
-            "description": "Find trusted mechanics and shops in your area.",
-            "icon": "RiDatabase2Line"
+            "title": "Body kit visualizer",
+            "description": "Aero kits, lips, side skirts, and diffusers, rendered in context.",
+            "icon": "Layers"
           },
           {
-            "title": "AI-Powered Suggestions",
-            "description": "Get personalized modification recommendations based on your car and preferences.",
-            "icon": "RiCloudy2Fill"
+            "title": "Before / after comparisons",
+            "description": "Side-by-side renders of stock vs. modified, ready to share.",
+            "icon": "ArrowLeftRight"
           },
           {
-            "title": "Mobile-Friendly",
-            "description": "Access CarModSnap from any device, anywhere.",
-            "icon": "RiBarChart2Line"
+            "title": "Mobile-friendly",
+            "description": "Use CarModSnap from any device, anywhere.",
+            "icon": "Smartphone"
           },
           {
-            "title": "Secure & Private",
-            "description": "Your personal information and modification plans are kept secure.",
-            "icon": "RiRobot2Line"
-          }
-        ]
-      },
-      "stats": {
-        "id": "stats",
-        "title": "People Love CarModSnap",
-        "description": "for its realistic visualization and easy-to-use platform.",
-        "items": [
-          {
-            "title": "999+",
-            "description": "Users"
-          },
-          {
-            "title": "200+",
-            "description": "Car Models"
-          },
-          {
-            "title": "50+",
-            "description": "Modification Options"
-          }
-        ],
-        "className": "bg-muted"
-      },
-      "testimonials": {
-        "id": "testimonials",
-        "title": "What Users Say About CarModSnap",
-        "description": "Hear from car enthusiasts who transformed their vehicles with CarModSnap.",
-        "items": [
-          {
-            "name": "David Chen",
-            "role": "Car Enthusiast",
-            "quote": "CarModSnap helped me visualize my dream car before making any changes. The 3D renderings were incredibly realistic!",
-            "image": {
-              "src": "/imgs/avatars/1.png",
-              "alt": "David Chen - CarModSnap user testimonial - car enthusiast"
-            }
-          },
-          {
-            "name": "Rachel Kim",
-            "role": "Car Owner",
-            "quote": "I was able to find a trusted mechanic in my area through CarModSnap. The entire process was seamless!",
-            "image": {
-              "src": "/imgs/avatars/2.png",
-              "alt": "Rachel Kim - CarModSnap user testimonial - satisfied car owner"
-            }
-          },
-          {
-            "name": "Marcus Thompson",
-            "role": "Car Collector",
-            "quote": "The community showcases gave me so many ideas for my classic car collection. CarModSnap is a game-changer!",
-            "image": {
-              "src": "/imgs/avatars/3.png",
-              "alt": "Marcus Thompson - CarModSnap user testimonial - classic car collector"
-            }
-          },
-          {
-            "name": "Sofia Garcia",
-            "role": "Car Customizer",
-            "quote": "As a professional customizer, CarModSnap has become an essential tool for showing clients what their car will look like.",
-            "image": {
-              "src": "/imgs/avatars/4.png",
-              "alt": "Sofia Garcia - CarModSnap user testimonial - professional car customizer"
-            }
-          },
-          {
-            "name": "James Wilson",
-            "role": "Car Enthusiast",
-            "quote": "The AI suggestions were spot-on! I never would have thought of some of the modifications that were recommended.",
-            "image": {
-              "src": "/imgs/avatars/5.png",
-              "alt": "James Wilson - CarModSnap user testimonial - car enthusiast"
-            }
-          },
-          {
-            "name": "Anna Zhang",
-            "role": "First-time Car Owner",
-            "quote": "CarModSnap made it easy for me to understand what modifications would look like on my first car. I'm thrilled with the results!",
-            "image": {
-              "src": "/imgs/avatars/6.png",
-              "alt": "Anna Zhang - CarModSnap user testimonial - first-time car owner"
-            }
+            "title": "Privacy-respecting",
+            "description": "We do not use your uploaded photos to train AI models. See our Privacy Policy for details.",
+            "icon": "ShieldCheck"
           }
         ]
       },
       "faq": {
         "id": "faq",
-        "title": "Frequently Asked Questions About CarModSnap",
-        "description": "Have another question? Contact us on Discord or by email.",
+        "title": "Frequently asked questions",
+        "description": "Have another question? Email support@carmodsnap.com.",
         "items": [
           {
-            "question": "What exactly is CarModSnap and how does it work?",
-            "answer": "CarModSnap is an AI-powered car modification platform that allows you to visualize and customize your car with 3D technology. It also helps you connect with local service providers to bring your ideas to life."
+            "question": "What is CarModSnap?",
+            "answer": "CarModSnap is an AI-powered car modification visualizer for testing wrap colors, wheel styles, and body kits before you spend money at the shop."
           },
           {
-            "question": "Do I need technical skills to use CarModSnap?",
-            "answer": "No! CarModSnap is designed to be user-friendly. You don't need any technical skills to use our 3D configurator or browse the community showcases."
+            "question": "Do I need any 3D or design skills?",
+            "answer": "No. CarModSnap is built for everyday drivers and car enthusiasts — pick a car, pick a direction, let the AI do the rendering."
           },
           {
-            "question": "What types of cars does CarModSnap support?",
-            "answer": "CarModSnap supports a wide range of car makes and models, from popular brands to rare classics. Our database is constantly growing."
+            "question": "What kinds of modifications can I preview?",
+            "answer": "Wraps and paint colors, wheel sizes and styles, body kits and aero parts, plus before/after comparisons of stock vs. modified."
           },
           {
-            "question": "How realistic are the 3D renderings?",
-            "answer": "Our 3D renderings are highly realistic, giving you a clear idea of how your modifications will look in real life. We use advanced rendering technology to ensure accuracy."
-          },
-          {
-            "question": "How do I connect with service providers?",
-            "answer": "CarModSnap has a directory of trusted local mechanics and shops. You can browse providers in your area, read reviews, and contact them directly through the platform."
+            "question": "How accurate are the renderings?",
+            "answer": "CarModSnap is meant for planning and concept validation. Final color, finish, and fitment decisions should still be confirmed with physical samples and the installer."
           },
           {
             "question": "Is CarModSnap free to use?",
-            "answer": "CarModSnap offers both free and premium plans. The free plan allows you to use the basic 3D configurator and browse the community. Premium plans offer additional features like advanced customization options, AI-generated images, and priority service provider connections. Payment is processed securely through Creem."
+            "answer": "There are free entry points to explore the product. Paid plans unlock more credits, advanced AI generation, higher-resolution exports, and commercial usage. Payments are processed by our provider Creem."
           }
         ]
       },
       "cta": {
         "id": "cta",
-        "title": "Transform Your Car Today",
-        "description": "Start from here, create with CarModSnap.",
+        "title": "Ready to visualize your next build?",
+        "description": "Try CarModSnap with a free entry point, or jump straight into a plan.",
         "buttons": [
           {
-            "title": "Get CarModSnap",
-            "url": "#",
-            "target": "_blank",
+            "title": "Start Modding",
+            "url": "/carmodder",
+            "target": "_self",
             "icon": "Zap"
           },
           {
-            "title": "Read Document",
-            "url": "/docs",
-            "target": "_blank",
+            "title": "See Pricing",
+            "url": "/pricing",
+            "target": "_self",
             "variant": "outline",
-            "icon": "BookOpenText"
+            "icon": "DollarSign"
           }
         ],
-        "className": "bg-muted"
-      },
-      "subscribe": {
-        "id": "subscribe",
-        "title": "Subscribe to our newsletter",
-        "description": "Get the latest news and updates from CarModSnap.",
-        "submit": {
-          "input": {
-            "placeholder": "Enter your email"
-          },
-          "button": {
-            "title": "Subscribe"
-          },
-          "action": "/api/subscribe"
-        },
         "className": "bg-muted"
       }
     }

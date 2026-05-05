@@ -8,25 +8,30 @@
     "sections": {
       "pricing": {
         "id": "pricing",
-        "title": "包月订阅",
-        "description": "订阅制，按月付费，使用 AI 即时可视化你的汽车改装效果。",
+        "title": "适合每一类玩家的套餐",
+        "description": "用 AI 可视化改色、轮毂与包围套件。月付灵活体验，年付立省 20%。",
         "groups": [
           {
             "name": "monthly",
-            "title": "包月订阅",
+            "title": "月付",
             "is_featured": true
+          },
+          {
+            "name": "yearly",
+            "title": "年付（立省 20%）",
+            "is_featured": false
           }
         ],
         "items": [
           {
             "title": "入门版",
-            "description": "体验 AI 汽车改装，每月 100 积分。",
+            "description": "体验 AI 汽车改装可视化，每月 100 积分。",
             "features_title": "包含",
             "features": [
-              "100 积分/月",
-              "AI 汽车改装可视化",
-              "基础改装效果生成",
-              "高清图片下载",
+              "每月 100 积分",
+              "改色膜可视化",
+              "轮毂搭配预览",
+              "高清 (1080p) 图片导出",
               "多语言支持"
             ],
             "interval": "month",
@@ -45,7 +50,7 @@
             ],
             "unit": "/ 月",
             "is_featured": false,
-            "tip": "低成本体验 AI 改装！",
+            "tip": "最低门槛体验 CarModSnap。",
             "button": {
               "title": "订阅入门版",
               "url": "/#pricing",
@@ -61,14 +66,15 @@
           },
           {
             "title": "标准版",
-            "description": "深度改装设计，每月 300 积分。",
+            "description": "更多积分、解锁全部改装模式与方案保存。",
             "label": "热门",
             "features_title": "包含入门版功能，此外",
             "features": [
-              "300 积分/月",
-              "高级改装效果生成",
+              "每月 300 积分",
+              "包围套件可视化",
+              "改装前后对比",
               "多角度视图",
-              "4K 高清下载",
+              "4K 图片导出",
               "改装方案保存",
               "优先生成队列"
             ],
@@ -88,7 +94,7 @@
             ],
             "unit": "/ 月",
             "is_featured": true,
-            "tip": "最受欢迎的选择！",
+            "tip": "认真改装玩家最多人选择。",
             "button": {
               "title": "订阅标准版",
               "url": "/#pricing",
@@ -104,16 +110,15 @@
           },
           {
             "title": "高级版",
-            "description": "专业改装工作室，每月 800 积分。",
+            "description": "全部功能解锁，含商用授权与 API 访问。",
             "features_title": "包含标准版功能，此外",
             "features": [
-              "800 积分/月",
-              "所有改装模式",
+              "每月 800 积分",
               "批量生成",
-              "8K 超清下载",
+              "8K 图片导出",
               "商用授权",
               "API 访问",
-              "专属技术支持"
+              "优先邮件支持"
             ],
             "interval": "month",
             "amount": 2990,
@@ -131,7 +136,7 @@
             ],
             "unit": "/ 月",
             "is_featured": false,
-            "tip": "专业玩家首选！",
+            "tip": "适合改装店与内容创作者。",
             "button": {
               "title": "订阅高级版",
               "url": "/#pricing",
@@ -143,6 +148,136 @@
             "credits": 800,
             "valid_days": 30,
             "group": "monthly",
+            "plan_name": "高级版"
+          },
+          {
+            "title": "入门版",
+            "description": "入门版年付，立省 20%。",
+            "features_title": "包含",
+            "features": [
+              "每月 100 积分",
+              "改色膜可视化",
+              "轮毂搭配预览",
+              "高清 (1080p) 图片导出",
+              "多语言支持",
+              "比月付立省 20%"
+            ],
+            "interval": "year",
+            "amount": 9500,
+            "currency": "USD",
+            "price": "$95",
+            "original_price": "$118.8",
+            "currencies": [
+              {
+                "currency": "CNY",
+                "amount": 66000,
+                "price": "¥660",
+                "original_price": "¥828",
+                "payment_providers": ["stripe"]
+              }
+            ],
+            "unit": "/ 年",
+            "is_featured": false,
+            "tip": "约 ¥55 / 月，年付一次到位。",
+            "button": {
+              "title": "订阅入门版年付",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "starter-yearly",
+            "payment_product_id": "REPLACE_WITH_CREEM_STARTER_YEARLY_ID",
+            "product_name": "CarModSnap 入门版年付",
+            "credits": 1200,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "入门版"
+          },
+          {
+            "title": "标准版",
+            "description": "标准版年付，立省 20%。",
+            "label": "热门",
+            "features_title": "包含入门版功能，此外",
+            "features": [
+              "每月 300 积分",
+              "包围套件可视化",
+              "改装前后对比",
+              "多角度视图",
+              "4K 图片导出",
+              "改装方案保存",
+              "优先生成队列",
+              "比月付立省 20%"
+            ],
+            "interval": "year",
+            "amount": 19100,
+            "currency": "USD",
+            "price": "$191",
+            "original_price": "$238.8",
+            "currencies": [
+              {
+                "currency": "CNY",
+                "amount": 133000,
+                "price": "¥1330",
+                "original_price": "¥1668",
+                "payment_providers": ["stripe"]
+              }
+            ],
+            "unit": "/ 年",
+            "is_featured": true,
+            "tip": "约 ¥111 / 月，年付一次到位。",
+            "button": {
+              "title": "订阅标准版年付",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "standard-yearly",
+            "payment_product_id": "REPLACE_WITH_CREEM_STANDARD_YEARLY_ID",
+            "product_name": "CarModSnap 标准版年付",
+            "credits": 3600,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "标准版"
+          },
+          {
+            "title": "高级版",
+            "description": "高级版年付，立省 20%。",
+            "features_title": "包含标准版功能，此外",
+            "features": [
+              "每月 800 积分",
+              "批量生成",
+              "8K 图片导出",
+              "商用授权",
+              "API 访问",
+              "优先邮件支持",
+              "比月付立省 20%"
+            ],
+            "interval": "year",
+            "amount": 28700,
+            "currency": "USD",
+            "price": "$287",
+            "original_price": "$358.8",
+            "currencies": [
+              {
+                "currency": "CNY",
+                "amount": 200000,
+                "price": "¥2000",
+                "original_price": "¥2508",
+                "payment_providers": ["stripe", "creem"]
+              }
+            ],
+            "unit": "/ 年",
+            "is_featured": false,
+            "tip": "约 ¥167 / 月，年付一次到位。",
+            "button": {
+              "title": "订阅高级版年付",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "premium-yearly",
+            "payment_product_id": "REPLACE_WITH_CREEM_PREMIUM_YEARLY_ID",
+            "product_name": "CarModSnap 高级版年付",
+            "credits": 9600,
+            "valid_days": 365,
+            "group": "yearly",
             "plan_name": "高级版"
           }
         ],
@@ -316,22 +451,61 @@
         },
         "trust_badges": {
           "money_back": {
-            "title": "30 天退款保证",
-            "description": "30 天内不满意可获全额退款"
+            "title": "7 天退款窗口",
+            "description": "首次扣款后 7 天内、积分使用未超 20% 可全额退款，详见退款政策。"
           },
           "secure_payment": {
-            "title": "安全支付",
-            "description": "通过 Stripe、PayPal 等可信服务商进行加密交易"
+            "title": "Creem 安全支付",
+            "description": "通过 Creem 加密结账，卡信息不经过 CarModSnap 服务器。"
           },
           "cancel_anytime": {
             "title": "随时取消",
-            "description": "无长期合约限制，可随时取消订阅"
+            "description": "无长期合约，设置 → 账单 一键取消。"
           },
           "instant_access": {
-            "title": "即时访问",
-            "description": "支付后立即解锁所有功能"
+            "title": "即时到账",
+            "description": "支付后积分与付费功能立即解锁。"
           }
         }
+      },
+      "faq": {
+        "id": "faq",
+        "title": "定价常见问题",
+        "description": "关于套餐、积分与退款，最常被问到的几个问题。",
+        "items": [
+          {
+            "question": "什么是积分？一次生成消耗多少？",
+            "answer": "一个积分对应一次 AI 生成请求（例如一次改色渲染或一次包围套件预览）。每个计费周期开始时一次性发放。更高套餐发放更多积分，并解锁包围套件、批量生成和 8K 导出等高级模式。"
+          },
+          {
+            "question": "月付和年付有什么区别？",
+            "answer": "年付一次性结算 12 个月，相比月付立省 20%。年付会在订阅生效时一次性发放全年配额（入门版 1200、标准版 3600、高级版 9600 积分），有效期至下次续费日，全年节奏由你自己决定。如果你计划使用 CarModSnap 至少几个月，年付更划算。"
+          },
+          {
+            "question": "可以随时取消吗？",
+            "answer": "可以。你可在 设置 → 账单 中随时取消。订阅持续到当前已付费的周期（月或年）结束，到期后不再续费。"
+          },
+          {
+            "question": "未用完的积分会累计吗？",
+            "answer": "每个计费周期发放的积分在该周期内有效。月付积分在月末过期，年付积分在年度到期日过期，不会跨周期累计。"
+          },
+          {
+            "question": "你们的退款政策是什么？",
+            "answer": "首次扣款，在 7 天内、且该笔扣款发放的积分使用未超 20%，可全额退款。续费、已大量消耗的积分包，以及因违规被终止的账户原则上不予退款。完整规则请见《退款政策》。"
+          },
+          {
+            "question": "可以升级或降级套餐吗？",
+            "answer": "可以。你可在 设置 → 账单 中切换套餐。升级立即生效，差额按比例计算；降级通常在下一个计费周期开始时生效。"
+          },
+          {
+            "question": "怎么付款？安全吗？",
+            "answer": "结账由我们的支付服务商 Creem 处理（部分流程支持 Stripe 与 PayPal）。卡信息在支付服务商的安全环境中输入和处理，不会存储在 CarModSnap 服务器上。"
+          },
+          {
+            "question": "生成的图片可以商用吗？",
+            "answer": "高级版套餐包含商用授权，允许将你在 CarModSnap 生成的 AI 图片用于商业用途（仍受《服务条款》以及相关车辆/品牌权利的约束）。"
+          }
+        ]
       }
     }
   },

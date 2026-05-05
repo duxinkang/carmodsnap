@@ -2,62 +2,138 @@
 title: Privacy Policy
 description: Privacy policy for CarModSnap
 created_at: 2025-10-24
-updated_at: 2026-02-28
+updated_at: 2026-05-05
 ---
 
-## Introduction
+## 1. Who We Are
 
-Welcome to **CarModSnap**, the AI-powered car modification visualization platform. At CarModSnap, your privacy is of utmost importance to us, and this privacy policy outlines how we collect, use, and protect your personal information when you use our services.
+**CarModSnap** (https://carmodsnap.com) is an AI-powered car modification visualization service operated by **Frank**, an independent developer ("we", "us", "our"). This Privacy Policy explains what personal data we collect when you use CarModSnap, how we use it, who we share it with, and the rights you have over it.
 
-The merchant legal entity and business address for this service are the details
-shown in our checkout/store settings and customer invoices.
+If you have any question about this policy or wish to exercise any of the rights described below, contact us at:
+**support@carmodsnap.com**
 
-## Information Collection and Use
+## 2. Information We Collect
 
-We collect the following types of data to provide you with a better experience while using CarModSnap:
+### 2.1 Information you provide
 
-1. **Account Information**
-   - **What We Collect**: This includes your name, email address, and any other information you provide when creating an account.
-   - **Purpose**: To manage your account and provide customer support.
+- **Account information** — name, email address, password (hashed), and any profile details you choose to add.
+- **Authentication identifiers** — if you sign in via a third-party provider (e.g. Google), we receive your basic profile information from that provider per their consent flow.
+- **Uploaded vehicle images and prompts** — images of your vehicle, reference photos, text prompts, and configuration choices you submit to our visualization tools.
+- **Payment-related information you enter on Creem's checkout** — your payment details are entered on, and stored by, our payment provider's environment, not on CarModSnap servers (see Section 4).
+- **Support correspondence** — messages and attachments you send to support@carmodsnap.com.
 
-2. **Usage Details**
-   - **What We Collect**: Information about how you use CarModSnap, including your interactions, features accessed, and usage frequency.
-   - **Purpose**: To analyze user engagement and improve our services.
+### 2.2 Information we generate or derive
 
-3. **Device Information**
-   - **What We Collect**: Data regarding the devices you use to access CarModSnap, such as device type, operating system, and browser type.
-   - **Purpose**: To optimize our services for different devices and ensure compatibility.
+- **AI generation outputs** — images and metadata produced by our AI generation tools from your inputs.
+- **Account activity** — credits balance, generation history, plan, billing status, invoices and receipts metadata returned by the payment provider.
 
-4. **Cookies**
-   - **What We Collect**: Small data files placed on your device that help us track user preferences and improve user experience.
-   - **Purpose**: To enhance the functionality of our services and personalize your experience.
+### 2.3 Information collected automatically
 
-5. **Payment and Billing Information**
-   - **What We Collect**: Billing-relevant information such as plan, transaction status, payer email, country, and invoice/receipt metadata returned by our payment provider.
-   - **What We Do Not Store**: We do not store full card numbers or card security codes on CarModSnap servers.
-   - **Purpose**: To facilitate billing, subscription management, invoicing, and payment support.
+- **Device & technical data** — device type, operating system, browser, language, screen size, IP address (in truncated/hashed form for analytics), referrer URL.
+- **Usage data** — pages visited, features used, generation requests, error logs, performance metrics.
+- **Cookies & similar technologies** — see Section 7.
 
-## Data Storage and Security
+### 2.4 Information we do not store
 
-We take the security of your personal information seriously. The data we collect is stored securely on our servers, and we implement a variety of security measures including encryption and access controls to protect against unauthorized access, alteration, disclosure, or destruction of your personal information. However, please be aware that no method of transmission over the Internet, or method of electronic storage, is 100% secure, and we cannot guarantee its absolute security.
+- We **do not store full card numbers or card security codes** on CarModSnap servers. Card data is handled directly by our payment provider.
+- We **do not knowingly collect** sensitive personal categories such as government IDs, financial account numbers, biometric data, or health data. Please do not submit such information to CarModSnap.
 
-## Information Sharing and Disclosure
+## 3. How We Use Information
 
-We do not sell, trade, or otherwise transfer your personal information to outside parties, except in the following circumstances:
+We use the information described in Section 2 for the following purposes:
 
-- To comply with legal obligations or respond to lawful requests from public authorities.
-- To protect our rights, property, or safety, or that of our users or others.
-- To provide services through trusted third-party partners who assist us in operating our website or conducting our business, subject to confidentiality agreements.
+- **Provide the service** — render your account, run AI visualization, store and display your generated outputs.
+- **Billing and account management** — process payments via our payment provider, manage subscriptions, send invoices and receipts.
+- **Customer support** — respond to questions, troubleshoot issues, prevent abuse.
+- **Service improvement (aggregated/anonymized only)** — measure feature usage and reliability in aggregate; we do **not** train AI models on your uploaded images or prompts (see Section 5).
+- **Security and fraud prevention** — detect abuse, payment fraud, account compromise.
+- **Legal compliance** — comply with applicable law and respond to lawful requests.
 
-## Changes to This Policy
+## 4. Third-Party Service Providers
 
-We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "effective date" at the top of this policy. You are advised to review this privacy policy periodically for any changes. Changes to this privacy policy are effective when they are posted on this page.
+We rely on the following categories of providers to operate CarModSnap. These providers process limited personal data on our behalf as data processors, under their own privacy commitments:
 
-## Contact Us
+| Purpose | Provider |
+|---|---|
+| Payments and billing | **Creem**, **Stripe**, **PayPal** (depending on the option you select at checkout) |
+| Authentication | **Better Auth**, third-party OAuth providers you sign in with |
+| AI image / video / music / text generation | **Replicate**, **OpenRouter** (and the underlying model providers they route to) |
+| Hosting & content delivery | **Vercel**, **Cloudflare** |
+| Transactional email | **Resend** |
+| Product analytics | **Vercel Analytics** |
 
-If you have any questions or concerns about this privacy policy or our data practices, please contact us at:
+We share with each provider only the data necessary for that purpose. We do **not** sell or rent your personal data, and we do not share it with advertising networks for cross-context behavioral advertising.
 
-**Copyright Owner**: [carmodsnap.com](https://carmodsnap.com)
-**Email**: [support@carmodsnap.com](mailto:support@carmodsnap.com)
+A current list of subprocessors will be maintained on this page; we may add or replace providers from this list as the service evolves, and significant changes will be reflected by updating the "updated_at" date above.
 
-By using CarModSnap, you consent to our privacy policy and agree to its terms. Thank you for trusting us with your information!
+## 5. AI Inputs and Model Training
+
+- The vehicle images, reference photos, prompts, and configuration data you submit to CarModSnap visualization tools are used **only to produce the output you requested** and to provide the service to you (e.g. to display your generation history and credits usage).
+- **We do not use your uploaded images or prompts to train, fine-tune, or evaluate AI models.**
+- AI generation requests are forwarded to upstream model providers (see Section 4) so that they can produce the output, subject to their respective data-handling commitments. Your inputs and outputs are not used by us to build any proprietary training dataset.
+- Aggregated, fully de-identified usage statistics (such as request volume per feature) may be used to improve service reliability and product decisions.
+
+## 6. International Data Transfers
+
+CarModSnap and its providers operate globally. Your personal data may be processed in countries other than the one you reside in (including the United States and other jurisdictions where Vercel, Cloudflare, Creem, Replicate, OpenRouter, Resend, and similar providers operate).
+
+Where such transfers are subject to GDPR, UK GDPR, or comparable rules, we rely on legally recognized transfer mechanisms (such as the EU Standard Contractual Clauses) where required by law.
+
+## 7. Cookies and Similar Technologies
+
+We use the following categories of cookies and similar storage:
+
+- **Strictly necessary** — sign-in, session, security, fraud prevention. These cannot be turned off.
+- **Functional** — language, theme, and other preferences you have set.
+- **Analytics** — aggregated, privacy-respecting usage measurement (e.g. Vercel Analytics) to understand which features are used and to detect errors.
+
+We do not use third-party advertising or cross-site tracking cookies.
+
+You can manage cookies through your browser settings; disabling strictly necessary cookies will prevent the service from functioning correctly.
+
+## 8. Data Retention
+
+- **Account data** — kept while your account is active. If you delete your account, we delete or irreversibly anonymize your account profile and uploaded images within **30 days**, except where retention is required by law (e.g. tax, accounting, fraud prevention) or to resolve an open dispute.
+- **Generation history and uploaded images** — kept while your account is active and accessible from your dashboard. You can delete individual items at any time.
+- **Billing records** — retained for as long as required by applicable tax and accounting law (typically up to 7–10 years depending on jurisdiction).
+- **Server logs and security events** — retained in a reduced form for up to **12 months** for security, debugging, and abuse prevention purposes.
+
+## 9. Your Rights
+
+Depending on where you live, you may have the following rights over your personal data:
+
+- **Access** — request a copy of the personal data we hold about you.
+- **Rectification** — ask us to correct inaccurate or incomplete data.
+- **Erasure / "right to be forgotten"** — ask us to delete your account and associated personal data, subject to legal retention requirements.
+- **Restriction / objection** — ask us to limit how we process your data, or object to certain processing.
+- **Portability** — request a machine-readable copy of the personal data you provided to us.
+- **Withdraw consent** — where processing is based on consent, withdraw it at any time without affecting the lawfulness of prior processing.
+- **Lodge a complaint** — with the data protection authority in your country of residence.
+
+If you are a **California resident**, you also have the right to know what personal information we collect, the right to delete personal information, the right to correct inaccurate information, the right to limit the use of sensitive personal information, and the right not to be discriminated against for exercising these rights. CarModSnap does **not** sell or "share" personal information for cross-context behavioral advertising as those terms are defined under the CCPA/CPRA.
+
+To exercise any of these rights, email **support@carmodsnap.com** from the address associated with your account. We will respond within the timeframe required by applicable law (typically 30 days).
+
+## 10. Children's Privacy
+
+CarModSnap is not directed to children under **13** (or under **16** in the EEA/UK), and we do not knowingly collect personal data from such users. If you believe a child has created an account or sent us personal data, contact us and we will delete the account and data.
+
+## 11. Security
+
+We use industry-standard technical and organizational measures to protect your personal data, including encryption in transit (HTTPS), encryption of secrets at rest, access controls, and audit logging. No method of transmission or storage is 100% secure; in the unlikely event of a personal data breach affecting you, we will notify you and any required regulator in line with applicable law.
+
+## 12. Changes to This Policy
+
+We may update this Privacy Policy from time to time to reflect changes in the service, our providers, or applicable law. The latest version is always available on this page; the date in the "updated_at" field reflects the most recent material change. If we make a material change, we will give you reasonable notice (e.g. by email or in-product notice) before it takes effect.
+
+## 13. Contact
+
+**Operator:** Frank, an independent developer
+**Service:** CarModSnap (https://carmodsnap.com)
+**Email:** [support@carmodsnap.com](mailto:support@carmodsnap.com)
+
+By using CarModSnap, you acknowledge that you have read this Privacy Policy.
+
+---
+
+**Last updated:** 2026-05-05
