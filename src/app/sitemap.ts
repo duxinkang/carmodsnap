@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-import { postsSource } from '@/core/docs/source';
+import { guidesSource, postsSource } from '@/core/docs/source';
 import { envConfigs } from '@/config';
 import { defaultLocale, locales } from '@/config/locale';
 import { getShowcaseUrl, showcaseEntries } from '@/shared/data/showcases';
@@ -10,6 +10,7 @@ const staticPaths = [
   '/pricing',
   '/showcases',
   '/blog',
+  '/guides',
   '/contact',
   '/privacy-policy',
   '/terms-of-service',
@@ -21,11 +22,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const appUrl = envConfigs.app_url;
   const now = new Date();
   const blogPaths = getBlogPaths();
+  const guidePaths = getGuidePaths();
   const showcasePaths = showcaseEntries.map((entry) =>
     getShowcaseUrl(entry.slug)
   );
   const allPaths = Array.from(
-    new Set([...staticPaths, ...blogPaths, ...showcasePaths])
+    new Set([...staticPaths, ...blogPaths, ...guidePaths, ...showcasePaths])
   );
 
   return locales.flatMap((locale) =>
@@ -46,6 +48,22 @@ function getBlogPaths() {
     for (const page of pages) {
       const path = normalizePath(page.url, locale);
       if (path.startsWith('/blog/')) {
+        paths.add(path);
+      }
+    }
+  }
+
+  return Array.from(paths);
+}
+
+function getGuidePaths() {
+  const paths = new Set<string>();
+
+  for (const locale of locales) {
+    const pages = guidesSource.getPages(locale);
+    for (const page of pages) {
+      const path = normalizePath(page.url, locale);
+      if (path.startsWith('/guides')) {
         paths.add(path);
       }
     }

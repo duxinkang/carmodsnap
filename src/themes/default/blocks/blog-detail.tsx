@@ -14,16 +14,25 @@ import '@/config/style/docs.css';
 export function BlogDetail({ post }: { post: PostType }) {
   const t = useTranslations('pages.blog.messages');
 
+  const isGuide = (post.url || '').includes('/guides/');
+
   const crumbItems: NavItem[] = [
-    {
-      title: t('crumb'),
-      url: '/blog',
-      icon: 'Newspaper',
-      is_active: false,
-    },
+    isGuide
+      ? {
+          title: 'Guides',
+          url: '/guides',
+          icon: 'BookOpen',
+          is_active: false,
+        }
+      : {
+          title: t('crumb'),
+          url: '/blog',
+          icon: 'Newspaper',
+          is_active: false,
+        },
     {
       title: post.title || '',
-      url: `/blog/${post.slug}`,
+      url: post.url || `/blog/${post.slug}`,
       is_active: true,
     },
   ];

@@ -12,6 +12,10 @@ export const posts = defineDocs({
   dir: 'content/posts',
 });
 
+export const guides = defineDocs({
+  dir: 'content/guides',
+});
+
 export const logs = defineDocs({
   dir: 'content/logs',
 });
