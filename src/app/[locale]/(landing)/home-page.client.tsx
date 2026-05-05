@@ -104,7 +104,7 @@ export default function CarModderLanding() {
         <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 px-6 lg:grid-cols-12">
           <div className="order-2 flex flex-col justify-center pt-10 text-center lg:order-1 lg:col-span-5 lg:pt-0 lg:text-left">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               className="mb-6 inline-flex items-center gap-2 self-center rounded-full border border-[#4725f4]/30 bg-[#4725f4]/10 px-3 py-1 text-xs font-bold tracking-wider text-[#4725f4] lg:self-start"
@@ -114,7 +114,7 @@ export default function CarModderLanding() {
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mb-6 text-5xl leading-[1.1] font-bold tracking-tight text-white lg:text-7xl"
@@ -126,7 +126,7 @@ export default function CarModderLanding() {
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mx-auto mb-10 max-w-lg text-lg leading-relaxed font-light text-slate-200/90 lg:mx-0"
@@ -135,7 +135,7 @@ export default function CarModderLanding() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start"
@@ -163,7 +163,7 @@ export default function CarModderLanding() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               className="mt-12 flex items-center justify-center gap-8 border-t border-white/10 pt-8 lg:justify-start"
@@ -309,7 +309,7 @@ export default function CarModderLanding() {
         </motion.div>
       </div>
 
-      <section className="relative bg-[#131022] px-6 py-24">
+      <section className="relative bg-[#131022] px-6 pt-24 pb-12">
         <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-[#4725f4]/50 to-transparent"></div>
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 flex items-end justify-between">
@@ -373,10 +373,10 @@ export default function CarModderLanding() {
       </section>
 
       {/* Before/After Comparison Section */}
-      <section className="relative bg-[#0a0a14] px-6 py-24">
+      <section className="relative bg-[#0a0a14] px-6 pt-12 pb-24">
         <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-[#4725f4]/50 to-transparent"></div>
         <div className="mx-auto max-w-7xl">
-          <div className="mb-16 text-center">
+          <div className="mb-12 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

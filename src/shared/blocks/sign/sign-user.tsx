@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
-import { Coins, LayoutDashboard, Loader2, LogOut, User } from 'lucide-react';
+import { Coins, LayoutDashboard, LogOut, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { authClient, signOut, useSession } from '@/core/auth/client';
@@ -139,9 +139,7 @@ export function SignUser({
   return (
     <>
       {isCheckSign || !mounted ? (
-        <div>
-          <Loader2 className="size-4 animate-spin" />
-        </div>
+        <div className="size-9" aria-hidden />
       ) : displayUser ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
