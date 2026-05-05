@@ -1139,8 +1139,9 @@ function extractImageUrls(result: TaskResultPayload): string[] {
       .filter(Boolean);
   }
   if (typeof output === 'object') {
+    const obj = output as Exclude<TaskResultItem, string>;
     const candidate =
-      output.url ?? output.uri ?? output.image ?? output.src ?? output.imageUrl;
+      obj.url ?? obj.uri ?? obj.image ?? obj.src ?? obj.imageUrl;
     if (typeof candidate === 'string') return [candidate];
   }
   return [];
@@ -2184,7 +2185,7 @@ export default function CarModderConfigurator() {
           ...prev[shotType],
           status: AITaskStatus.FAILED,
           taskId: null,
-          error: error.message || t('generationFailed'),
+          error: message || t('generationFailed'),
         },
       }));
     }
