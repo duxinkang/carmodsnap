@@ -10,6 +10,7 @@ const staticPaths = [
   '/pricing',
   '/showcases',
   '/blog',
+  '/contact',
   '/privacy-policy',
   '/terms-of-service',
   '/refund-policy',
@@ -20,7 +21,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const appUrl = envConfigs.app_url;
   const now = new Date();
   const blogPaths = getBlogPaths();
-  const showcasePaths = showcaseEntries.map((entry) => getShowcaseUrl(entry.slug));
+  const showcasePaths = showcaseEntries.map((entry) =>
+    getShowcaseUrl(entry.slug)
+  );
   const allPaths = Array.from(
     new Set([...staticPaths, ...blogPaths, ...showcasePaths])
   );

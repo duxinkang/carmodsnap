@@ -158,6 +158,11 @@
           "title": "Contact",
           "children": [
             {
+              "title": "Contact",
+              "url": "/contact",
+              "target": "_self"
+            },
+            {
               "title": "Support Email",
               "url": "mailto:support@carmodsnap.com",
               "target": "_self"
