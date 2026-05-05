@@ -164,7 +164,7 @@
             },
             {
               "title": "Support Email",
-              "url": "mailto:support@carmodsnap.com",
+              "url": "mailto:admin@carmodsnap.com",
               "target": "_self"
             },
             {
@@ -181,7 +181,7 @@
         {
           "title": "Email",
           "icon": "Mail",
-          "url": "mailto:support@carmodsnap.com",
+          "url": "mailto:admin@carmodsnap.com",
           "target": "_self"
         }
       ]

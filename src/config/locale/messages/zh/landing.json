@@ -164,7 +164,7 @@
             },
             {
               "title": "支持邮箱",
-              "url": "mailto:support@carmodsnap.com",
+              "url": "mailto:admin@carmodsnap.com",
               "target": "_self"
             },
             {
@@ -181,7 +181,7 @@
         {
           "title": "邮箱",
           "icon": "Mail",
-          "url": "mailto:support@carmodsnap.com",
+          "url": "mailto:admin@carmodsnap.com",
           "target": "_self"
         }
       ]
