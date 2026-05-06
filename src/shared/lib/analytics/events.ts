@@ -25,6 +25,8 @@ export type ProductEventName =
   | 'carmodder_generation_failed'
   | 'carmodder_generation_timeout'
   | 'pricing_viewed'
+  | 'pricing_cta_click'
+  | 'save_image'
   | 'checkout_started'
   | 'checkout_created'
   | 'payment_succeeded'
@@ -110,6 +112,16 @@ export type ProductEventPayloadMap = {
     duration_ms?: number;
   };
   pricing_viewed: BaseAnalyticsPayload;
+  pricing_cta_click: BaseAnalyticsPayload & {
+    cta_location: string;
+    current_plan?: string;
+  };
+  save_image: BaseAnalyticsPayload & {
+    image_id: string;
+    save_method?: 'download' | 'copy_link' | 'share_native' | 'save_to_gallery';
+    format?: string;
+    resolution?: 'low' | 'standard' | 'hd';
+  };
   checkout_started: BaseAnalyticsPayload & {
     source: 'pricing' | 'carmodder_insufficient_credits';
     product_id: string;
