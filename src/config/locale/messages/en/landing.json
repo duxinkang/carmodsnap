@@ -40,8 +40,21 @@
         },
         {
           "title": "Blog",
-          "url": "/blog",
-          "icon": "Newspaper"
+          "icon": "Newspaper",
+          "children": [
+            {
+              "title": "Blog",
+              "url": "/blog",
+              "icon": "Newspaper",
+              "description": "Product updates, use cases, and car modification ideas"
+            },
+            {
+              "title": "Guides",
+              "url": "/guides",
+              "icon": "BookOpen",
+              "description": "In-depth wrap, wheel, and car modification guides"
+            }
+          ]
         }
       ]
     },

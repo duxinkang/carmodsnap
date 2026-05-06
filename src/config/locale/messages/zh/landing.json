@@ -40,8 +40,21 @@
         },
         {
           "title": "博客",
-          "url": "/blog",
-          "icon": "Newspaper"
+          "icon": "Newspaper",
+          "children": [
+            {
+              "title": "博客",
+              "url": "/blog",
+              "icon": "Newspaper",
+              "description": "产品更新、使用场景和汽车改装灵感"
+            },
+            {
+              "title": "指南",
+              "url": "/guides",
+              "icon": "BookOpen",
+              "description": "改色膜、轮毂和汽车改装深度指南"
+            }
+          ]
         }
       ]
     },
