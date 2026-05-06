@@ -15,6 +15,11 @@
             "name": "monthly",
             "title": "月付",
             "is_featured": true
+          },
+          {
+            "name": "yearly",
+            "title": "年付",
+            "label": "5 折"
           }
         ],
         "items": [
@@ -144,6 +149,103 @@
             "credits": 800,
             "valid_days": 30,
             "group": "monthly",
+            "plan_name": "高级版"
+          },
+          {
+            "title": "入门版",
+            "description": "适合体验 CarModSnap，并为一台车生成少量概念图。",
+            "features_title": "适合第一次项目",
+            "features": [
+              "每年 1,200 积分",
+              "车衣 / 车漆颜色概念",
+              "轮毂样式预览",
+              "前后对比图",
+              "标准分辨率下载"
+            ],
+            "interval": "year",
+            "amount": 5940,
+            "currency": "USD",
+            "price": "$59.4",
+            "original_price": "$118.8",
+            "unit": "/ 年",
+            "is_featured": false,
+            "tip": "折合每月 $4.95，相比月付 5 折。",
+            "button": {
+              "title": "开始入门版",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "starter-yearly",
+            "payment_product_id": "prod_TODO_starter_yearly",
+            "product_name": "CarModSnap 入门版年付",
+            "credits": 1200,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "入门版"
+          },
+          {
+            "title": "标准版",
+            "description": "适合在购买配件或预约改装店之前，比较多种改装方向。",
+            "label": "热门",
+            "features_title": "包含入门版功能，并新增",
+            "features": [
+              "每年 3,600 积分",
+              "车身套件与饰条概念",
+              "多个保存的方案",
+              "高峰期优先生成",
+              "更高分辨率下载"
+            ],
+            "interval": "year",
+            "amount": 11940,
+            "currency": "USD",
+            "price": "$119.4",
+            "original_price": "$238.8",
+            "unit": "/ 年",
+            "is_featured": true,
+            "tip": "折合每月 $9.95，相比月付 5 折。",
+            "button": {
+              "title": "选择标准版",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "standard-yearly",
+            "payment_product_id": "prod_TODO_standard_yearly",
+            "product_name": "CarModSnap 标准版年付",
+            "credits": 3600,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "标准版"
+          },
+          {
+            "title": "高级版",
+            "description": "适合改装店、内容创作者和需要更多概念图与商用授权的重度用户。",
+            "features_title": "包含标准版功能，并新增",
+            "features": [
+              "每年 9,600 积分",
+              "每个项目可做更多变体",
+              "输出物商用授权",
+              "邮件优先支持",
+              "新车型工作流抢先体验"
+            ],
+            "interval": "year",
+            "amount": 17940,
+            "currency": "USD",
+            "price": "$179.4",
+            "original_price": "$358.8",
+            "unit": "/ 年",
+            "is_featured": false,
+            "tip": "折合每月 $14.95，相比月付 5 折。",
+            "button": {
+              "title": "选择高级版",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "premium-yearly",
+            "payment_product_id": "prod_TODO_premium_yearly",
+            "product_name": "CarModSnap 高级版年付",
+            "credits": 9600,
+            "valid_days": 365,
+            "group": "yearly",
             "plan_name": "高级版"
           }
         ],
@@ -343,6 +445,14 @@
   },
   "messages": {
     "current_plan": "当前方案",
-    "processing": "处理中"
+    "processing": "处理中",
+    "trust_money_back": "7 天可退款",
+    "trust_cancel": "随时取消",
+    "trust_secure": "安全支付",
+    "support_prompt": "订阅前还有疑问？",
+    "support_email_label": "邮件咨询",
+    "trusted_by_prefix": "已有",
+    "trusted_by_count": "2,400+",
+    "trusted_by_suffix": "位车友信赖"
   }
 }

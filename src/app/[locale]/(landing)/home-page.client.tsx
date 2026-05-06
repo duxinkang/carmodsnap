@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { trackProductEvent } from '@/shared/lib/analytics/track';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -49,19 +51,22 @@ export default function CarModderLanding() {
   const featuredConfigs = [
     {
       id: 1,
-      name: 'Concept Alpha',
+      nameKey: 'conceptAlphaName',
+      descKey: 'conceptAlphaDesc',
       image:
         'https://lh3.googleusercontent.com/aida-public/AB6AXuBwFUIkDnnZFtjiE_Az2t2eZMLbdlxQrl5X3sv5TNIDWTCz6Fk6VagQYgu9ZXDZL-eexnEWR_N8ZUgvD_fO9IhWXey9NZQT3W4HfulSMuySYECdEQkHCh6NluWMCOtmudPsKzhXLZUzzjHBRFnMA-_5eQHaOAICHXw6qpZhiIvvB71IPHvqAD6Gy8ORicIH6wQWQDZ7lFkX_gNExsXpnQGL5_9A_jNcy_AiU35NqLtLy0HruH5iI0QLUr3-v19ydlJJzGJaH1jVpZud',
     },
     {
       id: 2,
-      name: 'Concept Beta',
+      nameKey: 'conceptBetaName',
+      descKey: 'conceptBetaDesc',
       image:
         'https://lh3.googleusercontent.com/aida-public/AB6AXuAZJvt63WYUuL2rBEN0penNHC-MVt8r0vCXfTJLc0RlHIwk7aSEZmkXDBw-CQ52X5kyevCFsNb8q466y6VwgPW7e233OM9c9D3Nn1YkvGFjlal2xxH7yFUBKGbeAagvIjPvNzo6RY4OCtdipEHNRFJmV-kGooKQMTFkHRwbvTQRkfzef0enbxCwtOJpn2lRhcXK0LEQpruslRI7TTzMHLFt5fYuvHv3ZFr6TJlXVNIjnHEUHLviyoaZyyws1x0XrJNBBBlgMRgT7hgp',
     },
     {
       id: 3,
-      name: 'Concept Gamma',
+      nameKey: 'conceptGammaName',
+      descKey: 'conceptGammaDesc',
       image:
         'https://lh3.googleusercontent.com/aida-public/AB6AXuCzbp2MbIqzBn3pXHxon0WsA6vmwUohT2KrYHcpRu6raupupn4_5EEnKwfDu3cajBpSOcNyXJULCs70ji5DBX5Fr_u6IH_1bq_hMJ7jnN4szTaqU1x6FuRQer1nD-ipFnixr4C4oDVzenzUh4hpisLPL61cmtDyRvpWGUoPKcFZfutO3pg-6sr_f5Wo8h5_Byz3CA-TjSkbtyRLUTNJKrUZimWlAGLU14wTESDsCXKzoo_ZcVnWjdRNuyzHwkDPVCG7SGxs97--j7l5',
     },
@@ -343,7 +348,7 @@ export default function CarModderLanding() {
                   <Image
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     src={config.image}
-                    alt={`${config.name} - Custom car modification with wheels and body kit - CarModSnap community build`}
+                    alt={`${t(config.nameKey)} - Custom car modification with wheels and body kit - CarModSnap community build`}
                     width={960}
                     height={720}
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -355,10 +360,10 @@ export default function CarModderLanding() {
                   <div className="flex items-end justify-between">
                     <div>
                       <h3 className="mb-1 text-xl font-bold text-white">
-                        {config.name}
+                        {t(config.nameKey)}
                       </h3>
                       <p className="text-sm text-slate-200/90">
-                        {t('sampleConcept')}
+                        {t(config.descKey)}
                       </p>
                     </div>
                     <span className="inline-flex h-10 min-w-10 items-center justify-center rounded-full border border-[#4725f4]/40 bg-[#4725f4]/15 px-3 text-xs font-semibold tracking-wide text-[#a5b4fc] uppercase">
@@ -454,6 +459,87 @@ export default function CarModderLanding() {
               </span>
             </Link>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials Section (Demo data) */}
+      <section className="relative bg-[#131022] px-6 py-20">
+        <div className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-[#4725f4]/50 to-transparent"></div>
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#4725f4]/30 bg-[#4725f4]/10 px-3 py-1 text-xs font-bold tracking-wider text-[#4725f4]">
+              {t('testimonialsBadge')}
+            </div>
+            <h2 className="mt-4 mb-3 text-3xl font-bold text-white md:text-4xl">
+              {t('testimonialsTitle')}
+            </h2>
+            <p className="mx-auto max-w-2xl text-slate-200/85">
+              {t('testimonialsDescription')}
+            </p>
+            <p className="mt-3 text-xs text-amber-400/80">
+              {t('testimonialsDemoNotice')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {[
+              {
+                nameKey: 'testimonial1Name',
+                carKey: 'testimonial1Car',
+                quoteKey: 'testimonial1Quote',
+                initial: 'M',
+                bg: 'bg-blue-500',
+              },
+              {
+                nameKey: 'testimonial2Name',
+                carKey: 'testimonial2Car',
+                quoteKey: 'testimonial2Quote',
+                initial: 'J',
+                bg: 'bg-emerald-500',
+              },
+              {
+                nameKey: 'testimonial3Name',
+                carKey: 'testimonial3Car',
+                quoteKey: 'testimonial3Quote',
+                initial: 'A',
+                bg: 'bg-rose-500',
+              },
+            ].map((tm, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+                className="relative overflow-hidden rounded-xl border border-white/12 bg-white/[0.04] p-6"
+              >
+                <span className="absolute top-3 right-3 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-amber-300 uppercase">
+                  {t('sampleLabel')}
+                </span>
+
+                <p className="text-base leading-relaxed text-slate-100/95">
+                  &ldquo;{t(tm.quoteKey)}&rdquo;
+                </p>
+
+                <div className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
+                  <div
+                    aria-hidden
+                    className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white ${tm.bg}`}
+                  >
+                    {tm.initial}
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white">
+                      {t(tm.nameKey)}
+                    </div>
+                    <div className="text-xs text-slate-300">
+                      {t(tm.carKey)}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -621,6 +707,11 @@ export default function CarModderLanding() {
               <Link
                 className="text-[#9f8cff] underline hover:text-white"
                 href="/pricing"
+                onClick={() =>
+                  trackProductEvent('pricing_cta_click', {
+                    cta_location: 'landing_seo_link',
+                  })
+                }
               >
                 {t('seoLinkPricing')}
               </Link>

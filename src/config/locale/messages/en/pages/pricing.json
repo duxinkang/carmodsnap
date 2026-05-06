@@ -15,6 +15,11 @@
             "name": "monthly",
             "title": "Monthly",
             "is_featured": true
+          },
+          {
+            "name": "yearly",
+            "title": "Yearly",
+            "label": "Save 50%"
           }
         ],
         "items": [
@@ -110,6 +115,103 @@
             "credits": 800,
             "valid_days": 30,
             "group": "monthly",
+            "plan_name": "Premium"
+          },
+          {
+            "title": "Starter",
+            "description": "For trying CarModSnap and generating a small set of visual concepts.",
+            "features_title": "Best for first projects",
+            "features": [
+              "1,200 credits per year",
+              "Wrap and paint color concepts",
+              "Wheel style previews",
+              "Before-after image view",
+              "Standard image download"
+            ],
+            "interval": "year",
+            "amount": 5940,
+            "currency": "USD",
+            "price": "$59.4",
+            "original_price": "$118.8",
+            "unit": "/ year",
+            "is_featured": false,
+            "tip": "Equivalent to $4.95 / month. 50% off vs monthly.",
+            "button": {
+              "title": "Start with Starter",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "starter-yearly",
+            "payment_product_id": "prod_TODO_starter_yearly",
+            "product_name": "CarModSnap Starter Yearly",
+            "credits": 1200,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "Starter"
+          },
+          {
+            "title": "Standard",
+            "description": "For comparing multiple build directions before buying parts or booking a shop.",
+            "label": "Popular",
+            "features_title": "Everything in Starter, plus",
+            "features": [
+              "3,600 credits per year",
+              "Body kit and trim concepts",
+              "Multiple saved build ideas",
+              "Priority generation during busy periods",
+              "Higher-resolution downloads"
+            ],
+            "interval": "year",
+            "amount": 11940,
+            "currency": "USD",
+            "price": "$119.4",
+            "original_price": "$238.8",
+            "unit": "/ year",
+            "is_featured": true,
+            "tip": "Equivalent to $9.95 / month. 50% off vs monthly.",
+            "button": {
+              "title": "Choose Standard",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "standard-yearly",
+            "payment_product_id": "prod_TODO_standard_yearly",
+            "product_name": "CarModSnap Standard Yearly",
+            "credits": 3600,
+            "valid_days": 365,
+            "group": "yearly",
+            "plan_name": "Standard"
+          },
+          {
+            "title": "Premium",
+            "description": "For shops, creators, and heavy users who need more concepts and commercial usage rights.",
+            "features_title": "Everything in Standard, plus",
+            "features": [
+              "9,600 credits per year",
+              "More variation testing per project",
+              "Commercial usage license for your outputs",
+              "Priority email support",
+              "Early access to new car-mod workflows"
+            ],
+            "interval": "year",
+            "amount": 17940,
+            "currency": "USD",
+            "price": "$179.4",
+            "original_price": "$358.8",
+            "unit": "/ year",
+            "is_featured": false,
+            "tip": "Equivalent to $14.95 / month. 50% off vs monthly.",
+            "button": {
+              "title": "Choose Premium",
+              "url": "/#pricing",
+              "icon": "RiFlashlightFill"
+            },
+            "product_id": "premium-yearly",
+            "payment_product_id": "prod_TODO_premium_yearly",
+            "product_name": "CarModSnap Premium Yearly",
+            "credits": 9600,
+            "valid_days": 365,
+            "group": "yearly",
             "plan_name": "Premium"
           }
         ],
@@ -309,6 +411,14 @@
   },
   "messages": {
     "current_plan": "Current Plan",
-    "processing": "Processing"
+    "processing": "Processing",
+    "trust_money_back": "7-Day Refund",
+    "trust_cancel": "Cancel Anytime",
+    "trust_secure": "Secure Checkout",
+    "support_prompt": "Questions before you subscribe?",
+    "support_email_label": "Email",
+    "trusted_by_prefix": "Trusted by",
+    "trusted_by_count": "2,400+",
+    "trusted_by_suffix": "car enthusiasts"
   }
 }

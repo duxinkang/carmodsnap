@@ -32,6 +32,11 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/shared/components/ui/tooltip';
 import { useAppContext } from '@/shared/contexts/app';
 import { setPendingAuthIntent } from '@/shared/lib/analytics/pending-intent';
 import { trackProductEvent } from '@/shared/lib/analytics/track';
@@ -395,12 +400,58 @@ export function Pricing({
         {section.sr_only_title && (
           <h1 className="sr-only">{section.sr_only_title}</h1>
         )}
+        <div className="mx-auto mb-6 inline-flex flex-wrap items-center justify-center gap-x-4 gap-y-1 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
+          <span className="inline-flex items-center gap-1.5">
+            <Check className="size-3.5" />
+            {t('trust_money_back')}
+          </span>
+          <span aria-hidden className="opacity-50">·</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Check className="size-3.5" />
+            {t('trust_cancel')}
+          </span>
+          <span aria-hidden className="opacity-50">·</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Check className="size-3.5" />
+            {t('trust_secure')}
+          </span>
+        </div>
         <h2 className="mb-6 text-3xl font-bold text-pretty lg:text-4xl">
           {section.title}
         </h2>
         <p className="text-muted-foreground mx-auto mb-4 max-w-xl lg:max-w-none lg:text-lg">
           {section.description}
         </p>
+
+        <div className="mt-6 inline-flex items-center justify-center gap-3">
+          <div className="flex -space-x-2">
+            {[
+              { initial: 'M', bg: 'bg-blue-500' },
+              { initial: 'J', bg: 'bg-emerald-500' },
+              { initial: 'A', bg: 'bg-amber-500' },
+              { initial: 'R', bg: 'bg-rose-500' },
+              { initial: 'K', bg: 'bg-violet-500' },
+            ].map((avatar, idx) => (
+              <div
+                key={idx}
+                aria-hidden
+                className={cn(
+                  'ring-background flex size-8 items-center justify-center rounded-full text-xs font-semibold text-white ring-2',
+                  avatar.bg
+                )}
+              >
+                {avatar.initial}
+              </div>
+            ))}
+          </div>
+          <span className="text-muted-foreground text-sm">
+            {t('trusted_by_prefix')}{' '}
+            <span className="text-foreground font-semibold">
+              {t('trusted_by_count')}
+            </span>{' '}
+            {t('trusted_by_suffix')}
+          </span>
+        </div>
       </div>
 
       <div className="container">
@@ -530,32 +581,64 @@ export function Pricing({
                       </span>
                     </Button>
                   ) : (
-                    <Button
-                      onClick={() => handlePayment(item)}
-                      disabled={isLoading}
-                      className={cn(
-                        'focus-visible:ring-ring inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
-                        'mt-4 h-9 w-full px-4 py-2',
-                        'bg-primary text-primary-foreground hover:bg-primary/90 border-[0.5px] border-white/25 shadow-md shadow-black/20'
-                      )}
-                    >
-                      {isLoading && item.product_id === productId ? (
-                        <>
-                          <Loader2 className="size-4 animate-spin" />
-                          <span className="block">{t('processing')}</span>
-                        </>
-                      ) : (
-                        <>
-                          {item.button?.icon && (
-                            <SmartIcon
-                              name={item.button?.icon as string}
-                              className="size-4"
-                            />
+                    <>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          onClick={() => handlePayment(item)}
+                          disabled={isLoading}
+                          className={cn(
+                            'focus-visible:ring-ring inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+                            'mt-4 h-9 w-full px-4 py-2',
+                            'bg-primary text-primary-foreground hover:bg-primary/90 border-[0.5px] border-white/25 shadow-md shadow-black/20'
                           )}
-                          <span className="block">{item.button?.title}</span>
-                        </>
+                        >
+                          {isLoading && item.product_id === productId ? (
+                            <>
+                              <Loader2 className="size-4 animate-spin" />
+                              <span className="block">{t('processing')}</span>
+                            </>
+                          ) : (
+                            <>
+                              {item.button?.icon && (
+                                <SmartIcon
+                                  name={item.button?.icon as string}
+                                  className="size-4"
+                                />
+                              )}
+                              <span className="block">{item.button?.title}</span>
+                            </>
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      {item.features && item.features.length > 0 && (
+                        <TooltipContent side="top" className="max-w-xs px-3 py-2 text-center">
+                          <div className="text-sm font-semibold">
+                            {item.features[0]}
+                          </div>
+                          <div className="mt-0.5 text-[11px] opacity-90">
+                            {t('trust_money_back')} · {t('trust_cancel')}
+                          </div>
+                        </TooltipContent>
                       )}
-                    </Button>
+                    </Tooltip>
+                    <div className="text-muted-foreground mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px]">
+                      <span className="inline-flex items-center gap-1">
+                        <Shield className="size-3" />
+                        {t('trust_secure')}
+                      </span>
+                      <span aria-hidden>·</span>
+                      <span className="inline-flex items-center gap-1">
+                        <RotateCcw className="size-3" />
+                        {t('trust_money_back')}
+                      </span>
+                      <span aria-hidden>·</span>
+                      <span className="inline-flex items-center gap-1">
+                        <CreditCard className="size-3" />
+                        {t('trust_cancel')}
+                      </span>
+                    </div>
+                    </>
                   )}
                 </CardHeader>
 
@@ -577,6 +660,16 @@ export function Pricing({
               </Card>
             );
           })}
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+          <span>{t('support_prompt')}</span>
+          <a
+            href="mailto:admin@carmodsnap.com"
+            className="text-primary font-medium hover:underline"
+          >
+            {t('support_email_label')}: admin@carmodsnap.com
+          </a>
         </div>
       </div>
 
