@@ -1,9 +1,9 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 
+import { guidesSource } from '@/core/docs/source';
 import { envConfigs } from '@/config';
 import { defaultLocale } from '@/config/locale';
-import { guidesSource } from '@/core/docs/source';
 
 export const runtime = 'nodejs';
 export const revalidate = 3600;
@@ -13,12 +13,26 @@ const SIZE = {
   height: 630,
 };
 
+const DEFAULT_DESCRIPTION =
+  'Pillar guides on car wraps, wheels, and modification rules, built for owners who want to decide once, not three times.';
+
 type GuideOgFrontmatter = {
   title?: string;
   description?: string;
   answer_summary?: string;
   pillar?: boolean;
 };
+
+function getFallbackTitle(slug?: string[]) {
+  if (!slug || slug.length === 0) return 'CarModSnap Guides';
+
+  return slug
+    .at(-1)!
+    .split('-')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
 
 export async function GET(
   _request: NextRequest,
@@ -28,11 +42,9 @@ export async function GET(
   const guidePage = guidesSource.getPage(slug ?? [], defaultLocale);
 
   const data = (guidePage?.data ?? {}) as GuideOgFrontmatter;
-  const title = data.title || 'CarModSnap Guides';
+  const title = data.title || getFallbackTitle(slug);
   const description =
-    data.answer_summary ||
-    data.description ||
-    'Pillar guides on car wraps, wheels, and modification rules — built for owners who want to decide once, not three times.';
+    data.answer_summary || data.description || DEFAULT_DESCRIPTION;
   const isPillar = Boolean(data.pillar);
 
   return new ImageResponse(

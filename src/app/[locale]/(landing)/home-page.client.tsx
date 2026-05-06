@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
-import { trackProductEvent } from '@/shared/lib/analytics/track';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -20,6 +18,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { preconnect, preload } from 'react-dom';
 
+import { BeforeAfterSlider } from '@/shared/components/ui/before-after-slider';
 import {
   Carousel,
   CarouselContent,
@@ -27,8 +26,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/shared/components/ui/carousel';
-import { BeforeAfterSlider } from '@/shared/components/ui/before-after-slider';
 import { beforeAfterItems } from '@/shared/config/before-after';
+import { trackProductEvent } from '@/shared/lib/analytics/track';
 
 export default function CarModderLanding() {
   const t = useTranslations('pages.carmodder');
@@ -145,7 +144,10 @@ export default function CarModderLanding() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start"
             >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Link
                   href="/carmodder"
                   className="group relative block w-full overflow-hidden rounded-full bg-[#4725f4] px-8 py-4 text-base font-bold text-white transition-all hover:shadow-[0_0_30px_rgba(71,37,244,0.4)] sm:w-auto"
@@ -174,21 +176,27 @@ export default function CarModderLanding() {
               className="mt-12 flex items-center justify-center gap-8 border-t border-white/10 pt-8 lg:justify-start"
             >
               <div>
-                <div className="text-2xl font-bold text-white">{t('buildsCreatedCount')}</div>
+                <div className="text-2xl font-bold text-white">
+                  {t('buildsCreatedCount')}
+                </div>
                 <div className="text-xs tracking-widest text-slate-300 uppercase">
                   {t('buildsCreated')}
                 </div>
               </div>
               <div className="h-8 w-px bg-white/20"></div>
               <div>
-                <div className="text-2xl font-bold text-white">{t('texturesCount')}</div>
+                <div className="text-2xl font-bold text-white">
+                  {t('texturesCount')}
+                </div>
                 <div className="text-xs tracking-widest text-slate-300 uppercase">
                   {t('textures')}
                 </div>
               </div>
               <div className="h-8 w-px bg-white/20"></div>
               <div>
-                <div className="text-2xl font-bold text-white">{t('carModelsCount')}</div>
+                <div className="text-2xl font-bold text-white">
+                  {t('carModelsCount')}
+                </div>
                 <div className="text-xs tracking-widest text-slate-300 uppercase">
                   {t('carModels')}
                 </div>
@@ -283,8 +291,7 @@ export default function CarModderLanding() {
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <Share2 className="h-5 w-5 text-[#4725f4]" />{' '}
-            {t('instantSharing')}
+            <Share2 className="h-5 w-5 text-[#4725f4]" /> {t('instantSharing')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
@@ -303,8 +310,7 @@ export default function CarModderLanding() {
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
-            <Share2 className="h-5 w-5 text-[#4725f4]" />{' '}
-            {t('instantSharing')}
+            <Share2 className="h-5 w-5 text-[#4725f4]" /> {t('instantSharing')}
           </div>
           <div className="h-2 w-2 rounded-full bg-white/20"></div>
           <div className="flex items-center gap-3 text-lg font-medium tracking-wider text-white/90">
@@ -532,9 +538,7 @@ export default function CarModderLanding() {
                     <div className="text-sm font-semibold text-white">
                       {t(tm.nameKey)}
                     </div>
-                    <div className="text-xs text-slate-300">
-                      {t(tm.carKey)}
-                    </div>
+                    <div className="text-xs text-slate-300">{t(tm.carKey)}</div>
                   </div>
                 </div>
               </motion.div>
@@ -735,6 +739,14 @@ export default function CarModderLanding() {
             <li>
               <Link
                 className="text-[#9f8cff] underline hover:text-white"
+                href="/guides"
+              >
+                {t('seoLinkGuides')}
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="text-[#9f8cff] underline hover:text-white"
                 href="/carmodder"
               >
                 {t('seoLinkVisualizer')}
@@ -783,7 +795,6 @@ export default function CarModderLanding() {
         <div className="absolute top-0 left-0 h-[500px] w-[500px] animate-pulse rounded-full bg-[#4725f4] mix-blend-screen blur-[128px] filter"></div>
         <div className="absolute right-0 bottom-0 h-[500px] w-[500px] rounded-full bg-purple-600 mix-blend-screen blur-[128px] filter"></div>
       </div>
-
     </div>
   );
 }

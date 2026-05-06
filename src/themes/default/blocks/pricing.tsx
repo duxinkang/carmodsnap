@@ -97,6 +97,12 @@ function getInitialCurrency(
   return defaultCurrency;
 }
 
+function getPricingGridClass(itemCount: number) {
+  if (itemCount <= 1) return 'md:grid-cols-1 md:max-w-sm';
+  if (itemCount === 2) return 'md:grid-cols-2 md:max-w-3xl';
+  return 'md:grid-cols-3';
+}
+
 export function Pricing({
   section,
   className,
@@ -109,13 +115,8 @@ export function Pricing({
   const locale = useLocale();
   const t = useTranslations('pages.pricing.messages');
 
-  const {
-    user,
-    isShowPaymentModal,
-    setIsShowSignModal,
-    setIsShowPaymentModal,
-    configs,
-  } = useAppContext();
+  const { user, setIsShowSignModal, setIsShowPaymentModal, configs } =
+    useAppContext();
 
   const [group, setGroup] = useState(() => {
     // find current pricing item
@@ -257,15 +258,6 @@ export function Pricing({
     }
 
     if (configs.select_payment_enabled === 'true') {
-      trackProductEvent('checkout_started', {
-        locale,
-        user_id: user?.id,
-        is_authenticated: true,
-        source: 'pricing',
-        product_id: displayedItem.product_id,
-        payment_provider: configs.default_payment_provider || undefined,
-        currency: displayedItem.currency,
-      });
       setPricingItem(displayedItem);
       setIsShowPaymentModal(true);
     } else {
@@ -400,17 +392,21 @@ export function Pricing({
         {section.sr_only_title && (
           <h1 className="sr-only">{section.sr_only_title}</h1>
         )}
-        <div className="mx-auto mb-6 inline-flex flex-wrap items-center justify-center gap-x-4 gap-y-1 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
+        <div className="border-primary/30 bg-primary/10 text-primary mx-auto mb-6 inline-flex flex-wrap items-center justify-center gap-x-4 gap-y-1 rounded-full border px-4 py-1.5 text-xs font-medium">
           <span className="inline-flex items-center gap-1.5">
             <Check className="size-3.5" />
             {t('trust_money_back')}
           </span>
-          <span aria-hidden className="opacity-50">·</span>
+          <span aria-hidden className="opacity-50">
+            ·
+          </span>
           <span className="inline-flex items-center gap-1.5">
             <Check className="size-3.5" />
             {t('trust_cancel')}
           </span>
-          <span aria-hidden className="opacity-50">·</span>
+          <span aria-hidden className="opacity-50">
+            ·
+          </span>
           <span className="inline-flex items-center gap-1.5">
             <Check className="size-3.5" />
             {t('trust_secure')}
@@ -475,10 +471,14 @@ export function Pricing({
         )}
 
         <div
-          className={`mx-auto mt-0 grid w-full gap-6 md:grid-cols-${
-            section.items?.filter((item) => !item.group || item.group === group)
-              ?.length
-          }`}
+          className={cn(
+            'mx-auto mt-0 grid w-full gap-6',
+            getPricingGridClass(
+              section.items?.filter(
+                (item) => !item.group || item.group === group
+              ).length ?? 0
+            )
+          )}
         >
           {section.items?.map((item: PricingItem, idx) => {
             if (item.group && item.group !== group) {
@@ -582,62 +582,67 @@ export function Pricing({
                     </Button>
                   ) : (
                     <>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          onClick={() => handlePayment(item)}
-                          disabled={isLoading}
-                          className={cn(
-                            'focus-visible:ring-ring inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
-                            'mt-4 h-9 w-full px-4 py-2',
-                            'bg-primary text-primary-foreground hover:bg-primary/90 border-[0.5px] border-white/25 shadow-md shadow-black/20'
-                          )}
-                        >
-                          {isLoading && item.product_id === productId ? (
-                            <>
-                              <Loader2 className="size-4 animate-spin" />
-                              <span className="block">{t('processing')}</span>
-                            </>
-                          ) : (
-                            <>
-                              {item.button?.icon && (
-                                <SmartIcon
-                                  name={item.button?.icon as string}
-                                  className="size-4"
-                                />
-                              )}
-                              <span className="block">{item.button?.title}</span>
-                            </>
-                          )}
-                        </Button>
-                      </TooltipTrigger>
-                      {item.features && item.features.length > 0 && (
-                        <TooltipContent side="top" className="max-w-xs px-3 py-2 text-center">
-                          <div className="text-sm font-semibold">
-                            {item.features[0]}
-                          </div>
-                          <div className="mt-0.5 text-[11px] opacity-90">
-                            {t('trust_money_back')} · {t('trust_cancel')}
-                          </div>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                    <div className="text-muted-foreground mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px]">
-                      <span className="inline-flex items-center gap-1">
-                        <Shield className="size-3" />
-                        {t('trust_secure')}
-                      </span>
-                      <span aria-hidden>·</span>
-                      <span className="inline-flex items-center gap-1">
-                        <RotateCcw className="size-3" />
-                        {t('trust_money_back')}
-                      </span>
-                      <span aria-hidden>·</span>
-                      <span className="inline-flex items-center gap-1">
-                        <CreditCard className="size-3" />
-                        {t('trust_cancel')}
-                      </span>
-                    </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            onClick={() => handlePayment(item)}
+                            disabled={isLoading}
+                            className={cn(
+                              'focus-visible:ring-ring inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+                              'mt-4 h-9 w-full px-4 py-2',
+                              'bg-primary text-primary-foreground hover:bg-primary/90 border-[0.5px] border-white/25 shadow-md shadow-black/20'
+                            )}
+                          >
+                            {isLoading && item.product_id === productId ? (
+                              <>
+                                <Loader2 className="size-4 animate-spin" />
+                                <span className="block">{t('processing')}</span>
+                              </>
+                            ) : (
+                              <>
+                                {item.button?.icon && (
+                                  <SmartIcon
+                                    name={item.button?.icon as string}
+                                    className="size-4"
+                                  />
+                                )}
+                                <span className="block">
+                                  {item.button?.title}
+                                </span>
+                              </>
+                            )}
+                          </Button>
+                        </TooltipTrigger>
+                        {item.features && item.features.length > 0 && (
+                          <TooltipContent
+                            side="top"
+                            className="max-w-xs px-3 py-2 text-center"
+                          >
+                            <div className="text-sm font-semibold">
+                              {item.features[0]}
+                            </div>
+                            <div className="mt-0.5 text-[11px] opacity-90">
+                              {t('trust_money_back')} · {t('trust_cancel')}
+                            </div>
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                      <div className="text-muted-foreground mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px]">
+                        <span className="inline-flex items-center gap-1">
+                          <Shield className="size-3" />
+                          {t('trust_secure')}
+                        </span>
+                        <span aria-hidden>·</span>
+                        <span className="inline-flex items-center gap-1">
+                          <RotateCcw className="size-3" />
+                          {t('trust_money_back')}
+                        </span>
+                        <span aria-hidden>·</span>
+                        <span className="inline-flex items-center gap-1">
+                          <CreditCard className="size-3" />
+                          {t('trust_cancel')}
+                        </span>
+                      </div>
                     </>
                   )}
                 </CardHeader>
@@ -662,7 +667,7 @@ export function Pricing({
           })}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+        <div className="text-muted-foreground mt-10 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm">
           <span>{t('support_prompt')}</span>
           <a
             href="mailto:admin@carmodsnap.com"

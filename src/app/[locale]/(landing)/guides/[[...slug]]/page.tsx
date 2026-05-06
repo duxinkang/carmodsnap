@@ -2,10 +2,10 @@ import { getMDXComponents } from '@/mdx-components';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import { envConfigs } from '@/config';
-import { defaultLocale } from '@/config/locale';
 import { guidesSource } from '@/core/docs/source';
 import { getThemePage } from '@/core/theme';
+import { envConfigs } from '@/config';
+import { defaultLocale } from '@/config/locale';
 import { Empty } from '@/shared/blocks/common';
 import { BlogPostSchemaMarkup } from '@/shared/components/seo/schema-markup';
 import { buildLocaleAlternates } from '@/shared/lib/seo';
@@ -49,6 +49,17 @@ function buildGuidePath(slug?: string[]) {
   return `/guides/${slug.join('/')}`;
 }
 
+function buildGuideOgApiUrl(slug?: string[]) {
+  if (!slug || slug.length === 0) {
+    return `${envConfigs.app_url}/api/og/guides`;
+  }
+
+  const encodedSlug = slug
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
+  return `${envConfigs.app_url}/api/og/guides/${encodedSlug}`;
+}
+
 function buildGuideCanonicalUrl(locale: string, slug?: string[]) {
   const path = buildGuidePath(slug);
   return locale !== envConfigs.locale
@@ -76,7 +87,13 @@ function getLocalizedGuideUrl(path: string, locale: string) {
   return `/${locale}${path}`;
 }
 
-async function loadGuide({ slug, locale }: { slug?: string[]; locale: string }) {
+async function loadGuide({
+  slug,
+  locale,
+}: {
+  slug?: string[];
+  locale: string;
+}) {
   const guidePage = guidesSource.getPage(slug ?? [], locale);
   if (!guidePage) {
     return null;
@@ -157,10 +174,7 @@ export async function generateMetadata({
   const t = await getTranslations('pages.blog.metadata');
 
   const canonicalUrl = buildGuideCanonicalUrl(locale, slug);
-  const slugPath = (slug ?? []).join('/');
-  const fallbackOgImageUrl = slugPath
-    ? `${envConfigs.app_url}/api/og/guides/${slugPath}`
-    : `${envConfigs.app_url}/api/og/guides`;
+  const fallbackOgImageUrl = buildGuideOgApiUrl(slug);
   const guidePath = buildGuidePath(slug);
 
   const post = await loadGuide({ slug, locale });
@@ -241,6 +255,7 @@ export default async function GuidePage({
 
   const Page = await getThemePage('dynamic-page');
   const canonicalUrl = buildGuideCanonicalUrl(locale, slug);
+  const fallbackOgImageUrl = buildGuideOgApiUrl(slug);
 
   return (
     <>
@@ -249,10 +264,7 @@ export default async function GuidePage({
         post={{
           headline: post.title || '',
           description: post.description || '',
-          image: getGuideOgImageUrl(
-            post.image,
-            `${canonicalUrl}/opengraph-image`
-          ),
+          image: getGuideOgImageUrl(post.image, fallbackOgImageUrl),
           datePublished: post.created_at_iso || '',
           dateModified: post.created_at_iso || '',
           faqs:
