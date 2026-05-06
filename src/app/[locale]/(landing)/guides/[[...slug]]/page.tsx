@@ -157,7 +157,10 @@ export async function generateMetadata({
   const t = await getTranslations('pages.blog.metadata');
 
   const canonicalUrl = buildGuideCanonicalUrl(locale, slug);
-  const fallbackOgImageUrl = `${canonicalUrl}/opengraph-image`;
+  const slugPath = (slug ?? []).join('/');
+  const fallbackOgImageUrl = slugPath
+    ? `${envConfigs.app_url}/api/og/guides/${slugPath}`
+    : `${envConfigs.app_url}/api/og/guides`;
   const guidePath = buildGuidePath(slug);
 
   const post = await loadGuide({ slug, locale });

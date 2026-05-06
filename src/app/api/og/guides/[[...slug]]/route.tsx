@@ -1,13 +1,17 @@
 import { ImageResponse } from 'next/og';
+import { NextRequest } from 'next/server';
 
 import { envConfigs } from '@/config';
+import { defaultLocale } from '@/config/locale';
 import { guidesSource } from '@/core/docs/source';
 
-export const size = {
+export const runtime = 'nodejs';
+export const revalidate = 3600;
+
+const SIZE = {
   width: 1200,
   height: 630,
 };
-export const contentType = 'image/png';
 
 type GuideOgFrontmatter = {
   title?: string;
@@ -16,13 +20,12 @@ type GuideOgFrontmatter = {
   pillar?: boolean;
 };
 
-export default async function OgImage({
-  params,
-}: {
-  params: Promise<{ locale: string; slug?: string[] }>;
-}) {
-  const { locale, slug } = await params;
-  const guidePage = guidesSource.getPage(slug ?? [], locale);
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ slug?: string[] }> }
+) {
+  const { slug } = await params;
+  const guidePage = guidesSource.getPage(slug ?? [], defaultLocale);
 
   const data = (guidePage?.data ?? {}) as GuideOgFrontmatter;
   const title = data.title || 'CarModSnap Guides';
@@ -131,7 +134,7 @@ export default async function OgImage({
       </div>
     ),
     {
-      ...size,
+      ...SIZE,
     }
   );
 }
