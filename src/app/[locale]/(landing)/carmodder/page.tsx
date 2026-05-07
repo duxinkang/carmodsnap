@@ -1282,11 +1282,13 @@ export default function CarModderConfigurator() {
 
   const handleCustomCarSubmit = useCallback(
     (data: CustomCarInputData) => {
+      const fallbackName = t('customInput.title');
+      const displayName = `${data.brand} ${data.model}`.trim() || fallbackName;
       const customCar = {
         id: `custom-${Date.now()}`,
-        name: `${data.brand} ${data.model}`,
-        nameZh: `${data.brand} ${data.model}`,
-        brand: data.brand,
+        name: displayName,
+        nameZh: displayName,
+        brand: data.brand || fallbackName,
         type: data.type,
         image:
           data.imageUrl ||
@@ -2208,6 +2210,14 @@ export default function CarModderConfigurator() {
       link.click();
       document.body.removeChild(link);
       setTimeout(() => URL.revokeObjectURL(blobUrl), 200);
+      trackProductEvent('save_image', {
+        locale,
+        user_id: user?.id,
+        is_authenticated: !!user,
+        image_id: image.id,
+        save_method: 'download',
+        format: 'png',
+      });
       toast.success(isZh ? '图片下载成功' : 'Image downloaded');
     } catch (error) {
       console.error('下载图片失败:', error);

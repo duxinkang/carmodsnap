@@ -67,7 +67,6 @@ export function CustomCarInput({
   const [isUploading, setIsUploading] = useState(false);
 
   const handleSubmit = () => {
-    if (!formData.brand || !formData.model) return;
     onSubmit(formData);
   };
 
@@ -223,7 +222,7 @@ export function CustomCarInput({
       <div className="flex gap-3 pt-4">
         <Button variant="secondary" className="flex-1" onClick={onCancel}>{t('customInput.cancel')}</Button>
         <Button className="flex-1 bg-primary text-primary-foreground hover:opacity-90"
-          onClick={handleSubmit} disabled={!formData.brand || !formData.model || isUploading}>
+          onClick={handleSubmit} disabled={isUploading}>
           {t('customInput.startModding')}
         </Button>
       </div>
